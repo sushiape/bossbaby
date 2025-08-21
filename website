@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+@media (max-width:600px){
+h1{font-size:34px}
+.features{grid-template-columns:1fr}
+.links{display:none}
+}
+</style>
+</head>
+<body>
+<!-- Header -->
+<header>
+<div class="container nav">
+<div class="brand"><span class="logo"></span> MyBrand</div>
+<nav class="links">
+<a href="#features">Features</a>
+<a href="#how">How it works</a>
+<a href="#contact">Contact</a>
+</nav>
+<a class="btn" href="#contact">Get Started</a>
+</div>
+</header>
+
+<!-- Hero -->
+<section class="container hero">
+<div>
+<span class="badge">New • Simple one-page starter</span>
+<h1>Build a clean, responsive website in minutes.</h1>
+<p class="lead">This starter gives you a beautiful layout, ready-made sections, and sensible defaults. Swap in your text, images, and colors—then publish.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+<a class="btn" href="#features">See Features</a>
+<a class="btn" style="background:#0b1225;color:var(--text);border:1px solid #334155" href="#how">How it works</a>
+</div>
+</div>
+<div class="card">
+<!-- Replace this "mock" with your image or product shot -->
+<div class="mock"></div>
+</div>
+</section>
+
+<!-- Features -->
+<section id="features" class="container">
+<div class="features">
+<div class="feature">
+<h3>Responsive by default</h3>
+<p>Looks great on phones, tablets, and desktops without extra work.</p>
+</div>
+<div class="feature">
+<h3>Easy to customize</h3>
+<p>Edit the text, colors, and images right in this file. No build tools needed.</p>
+</div>
+<div class="feature">
+<h3>Fast to publish</h3>
+<p>Host free on GitHub Pages or Netlify in a few minutes.</p>
+</div>
+</div>
+</section>
+
+<!-- How it works -->
+<section id="how" class="container card">
+<h2 style="margin:0 0 10px">How it works</h2>
+<ol>
+<li>Change <strong>MyBrand</strong> and the hero text to your copy.</li>
+<li>Replace the gradient <em>mock</em> box with your product image.</li>
+<li>Customize colors in the <code>:root</code> palette at the top of the CSS.</li>
+<li>Save this file as <code>index.html</code> and open it in your browser.</li>
+</ol>
+</section>
+
+<!-- CTA / Contact -->
+<section id="contact" class="container cta">
+<div>
+<h2>Ready to launch?</h2>
+<p class="lead">Drop your email and a short message. You can wire this form up later to any service (Formspree, Airtable, your backend).</p>
+</div>
+<form onsubmit="event.preventDefault(); alert('Thanks! This is a front-end demo.');">
+<label>Email<input type="email" required placeholder="you@example.com" /></label>
+<label>Message<textarea rows="4" placeholder="Tell us what you’re building"></textarea></label>
+<button class="btn" type="submit">Send</button>
+</form>
+</section>
+
+<footer>
+<div class="container">© <span id="year"></span> MyBrand. All rights reserved.</div>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
