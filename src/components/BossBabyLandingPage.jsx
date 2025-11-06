@@ -74,25 +74,7 @@ export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
               Empowering women with every sip.
             </p>
             
-            {/* Product Image Container */}
-            <div className="mt-8 relative w-full max-w-2xl mx-auto" style={{height: '500px', minHeight: '500px'}}>
-              {/* Two-toned pink background - diagonal split */}
-              <div className="absolute inset-0 rounded-3xl overflow-hidden">
-                {/* Upper left - light pink */}
-                <div 
-                  className="absolute top-0 left-0 w-full h-full"
-                  style={{
-                    background: `linear-gradient(135deg, ${brand.lightPink} 0%, ${brand.lightPink} 50%, transparent 50%)`
-                  }}
-                ></div>
-                {/* Lower right - darker pink */}
-                <div 
-                  className="absolute bottom-0 right-0 w-full h-full"
-                  style={{
-                    background: `linear-gradient(135deg, transparent 50%, ${brand.power + 'CC'} 50%, ${brand.power + 'CC'} 100%)`
-                  }}
-                ></div>
-              </div>
+        
               
               {/* Bossbaby text - centered in the light pink area (upper left) */}
               <div className="absolute top-0 left-0 w-1/2 h-1/2 flex items-center justify-center z-20 px-4">
