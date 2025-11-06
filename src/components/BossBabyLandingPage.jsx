@@ -75,29 +75,30 @@ export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
             </p>
             
             {/* Product Image Container */}
-            <div className="mt-8 relative w-full max-w-2xl mx-auto" style={{height: '400px'}}>
+            <div className="mt-8 relative w-full max-w-2xl mx-auto" style={{height: '450px', minHeight: '450px'}}>
               {/* Two-toned pink background */}
               <div className="absolute inset-0 rounded-3xl overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-1/2" style={{backgroundColor: brand.lightPink}}></div>
                 <div className="absolute bottom-0 left-0 right-0 h-1/2" style={{backgroundColor: brand.power + 'CC'}}></div>
               </div>
               
-              {/* Bossbaby text - large, hot pink, serif */}
-              <div className="absolute inset-0 flex items-center justify-center z-10">
+              {/* Bossbaby text - large, hot pink, serif - fully visible */}
+              <div className="absolute inset-0 flex items-center justify-center z-20 px-4">
                 <h2 
-                  className="text-6xl sm:text-7xl md:text-8xl font-bold"
+                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold whitespace-nowrap"
                   style={{
                     color: brand.power,
                     fontFamily: 'Georgia, serif',
-                    letterSpacing: '0.02em'
+                    letterSpacing: '0.02em',
+                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
                   }}
                 >
                   Bossbaby
                 </h2>
               </div>
               
-              {/* Cream bottle with grey cap - tilted to the right, upper right quadrant */}
-              <div className="absolute top-8 right-8 sm:top-12 sm:right-12 z-20 transform rotate-12">
+              {/* Cream bottle with grey cap - tilted to the right, upper right quadrant - behind text */}
+              <div className="absolute top-8 right-8 sm:top-12 sm:right-12 z-10 transform rotate-12">
                 <div className="relative">
                   <div className="w-24 h-36 sm:w-32 sm:h-48 rounded-t-full rounded-b-lg" style={{backgroundColor: brand.cream}}>
                     <div className="w-full h-6 sm:h-8 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
