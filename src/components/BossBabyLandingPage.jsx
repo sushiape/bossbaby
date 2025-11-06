@@ -1,135 +1,213 @@
-export default function BossBabyLandingPage() {
-  return (
-    <div className="min-h-screen w-full bg-[#FAF5F6] text-black">
-      {/* Nav */}
-      <header className="w-full sticky top-0 bg-white/80 backdrop-blur z-50 border-b">
-        <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
-          <div className="font-bold text-4xl" style={{ fontFamily: 'Judson' }}>Bossbaby</div>
-          <nav className="flex gap-6 text-[20px] font-semibold" style={{ fontFamily: 'Inter' }}>
-            <a href="#home" className="hover:opacity-70">Home</a>
-            <a href="#products" className="hover:opacity-70">Products</a>
-            <a href="#community" className="hover:opacity-70">Community</a>
-            <a href="#about" className="hover:opacity-70">About</a>
-            <a href="#faq" className="hover:opacity-70">FAQ</a>
-          </nav>
-        </div>
-      </header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bossbaby</title>
 
-      {/* Hero */}
-      <section id="home" className="relative isolate overflow-hidden bg-gradient-to-b from-pink-200 to-pink-100">
-        <div className="mx-auto max-w-6xl px-4 py-24 text-center">
-          <h1 className="text-white" style={{ fontFamily: 'Gasoek One', fontSize: '128px', fontWeight: 400, lineHeight: 1 }}>
-            Wellness drinks <br /> made for her.
-          </h1>
-          <p className="mt-6 text-xl md:text-2xl text-black" style={{ fontFamily: 'Inter', fontWeight: 400 }}>
-            Empowering women with every sip.
-          </p>
-          <div className="mt-10">
-            <a
-              href="#buy"
-              className="inline-block rounded-2xl px-8 py-3 text-xl text-[#FFFDFD] shadow hover:opacity-90"
-              style={{ fontFamily: 'Gasoek One', background: '#E97D8F' }}
-            >
-              buy
-            </a>
-          </div>
-        </div>
-      </section>
+  <!-- Poppins font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700;800&display=swap" rel="stylesheet" />
 
-      {/* Email Signup */}
-      <section className="bg-[#FFF8F8]">
-        <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-          <h2 className="text-[40px] font-extralight" style={{ fontFamily: 'Helvetica Neue' }}>
-            Ready to feel unstoppable?
-          </h2>
-          <form className="mt-6 flex items-stretch gap-3 justify-center">
-            <input
-              type="email"
-              placeholder="enter your email"
-              className="w-full max-w-md rounded-xl border px-4 py-3 text-[15px] outline-none focus:ring"
-              style={{ color: 'rgba(0,0,0,0.66)', fontFamily: 'Helvetica Neue', fontWeight: 400 }}
-              required
-            />
-            <button
-              type="submit"
-              className="rounded-xl border px-6 py-3 text-[15px] hover:bg-black hover:text-white transition"
-              style={{ fontFamily: 'Helvetica Neue', fontWeight: 400 }}
-            >
-              GO
-            </button>
-          </form>
-        </div>
-      </section>
+  <style>
+    :root{
+      --pink:#FF89CC;
+      --pink-cta:#FF89CC;
+      --text:#000000;
+      --text-dim:rgba(0,0,0,0.66);
+      --teal:#002B26;
+      --bg:#FAF5F6;
+      --cream:#FFF8F8;
+      --white:#FFFFFF;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:'Poppins',sans-serif;color:var(--text);background:var(--bg)}
+    a{text-decoration:none;color:inherit}
 
-      {/* Product Feature */}
-      <section id="products" className="bg-white">
-        <div className="mx-auto max-w-5xl px-4 py-20 text-center">
-          <h3 className="text-[48px] font-light" style={{ fontFamily: 'Helvetica Neue' }}>
-            World’s first AI-powered smoothie machine
-          </h3>
-          <p className="mt-2 text-[48px] font-light" style={{ fontFamily: 'Helvetica Neue' }}>
-            Stay tuned!
-          </p>
-          {/* Decorative example of the fixed inline-style pattern */}
-          <div className="mx-auto mt-10 flex items-center justify-center gap-3">
-            <div style={{ width: '14.65px', height: '39.46px', background: '#1D3227', borderRadius: '50px' }} />
-            <div style={{ width: '14.65px', height: '39.46px', background: '#E97D8F', borderRadius: '50px' }} />
-            <div style={{ width: '14.65px', height: '39.46px', background: '#FFD1DC', borderRadius: '50px' }} />
-          </div>
-        </div>
-      </section>
+    /* Container helpers */
+    .container{max-width:1120px;margin:0 auto;padding:0 16px}
+    .center{text-align:center}
 
-      {/* Community / Testimonials */}
-      <section id="community" className="bg-[#EAEDDC]">
-        <div className="mx-auto max-w-6xl px-4 py-20">
-          <div className="mb-10">
-            <h4 className="text-[37.03px] font-bold tracking-wide" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '40px', letterSpacing: '0.60px' }}>
-              Real women, real feelings
-            </h4>
-            <p className="text-[23.44px]" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '31.2px', letterSpacing: '0.60px' }}>
-              Because we’re all just trying to feel like ourselves, but better.
-            </p>
-          </div>
+    /* Header */
+    header{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:saturate(180%) blur(6px);
+      background:rgba(255,255,255,0.8);
+      border-bottom:1px solid #eee;
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 0;
+    }
+    .brand{font-size:2.25rem;line-height:1;font-weight:300}
+    .menu{display:flex;gap:24px}
+    .menu a{font-size:20px;font-weight:400;opacity:0.95}
+    .menu a:hover{opacity:0.7}
 
-          <div className="grid gap-6 sm:grid-cols-2">
-            <article className="rounded-2xl bg-white p-6 shadow-sm">
-              <div className="text-[15px] font-bold" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '22.4px', letterSpacing: '0.60px' }}>Sarah</div>
-              <p className="mt-2 text-[16px]" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '24px', letterSpacing: '1px' }}>
-                “Finally, a wellness brand that doesn’t make me feel like I’m failing at life. These shots just... get it.”<br/><br/>— Sarah, 29, Marketing Director
-              </p>
-            </article>
+    /* Hero */
+    .hero{background:var(--pink);padding:96px 0}
+    .hero h1{
+      color:#fff;margin:0;line-height:0.95;
+      font-size:128px;font-weight:800;letter-spacing:-0.5px;
+    }
+    .hero p{
+      margin:24px auto 0;color:var(--text);
+      font-size:22px;max-width:720px;font-weight:400;
+    }
+    .cta{
+      display:inline-block;margin-top:40px;
+      padding:14px 32px;border-radius:16px;
+      background:var(--white);color:var(--pink-cta);
+      font-size:22px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,0.12);
+      transition:opacity .2s ease, transform .06s ease;
+      text-transform:none;
+    }
+    .cta:hover{opacity:0.9}
+    .cta:active{transform:translateY(1px)}
 
-            <article className="rounded-2xl bg-white p-6 shadow-sm">
-              <div className="text-[15.88px] font-bold" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '22.4px', letterSpacing: '0.60px' }}>Maya</div>
-              <p className="mt-2 text-[16px]" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '24px', letterSpacing: '1px' }}>
-                “The POWER shot is my secret weapon for those hormonal weeks when I usually want to hide under a blanket”<br/><br/>— Maya, 34, Entrepreneur
-              </p>
-            </article>
+    /* Email signup */
+    .signup{background:var(--cream);padding:64px 0}
+    .signup h2{font-size:40px;font-weight:200;margin:0}
+    .signup form{margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .input{
+      width:min(420px,90vw);padding:12px 14px;border:1px solid #ddd;border-radius:12px;
+      font-size:15px;color:var(--text-dim);outline:none;
+    }
+    .go{
+      padding:12px 20px;border:1px solid #000;border-radius:12px;
+      font-size:15px;background:transparent;cursor:pointer;
+      transition:all .15s ease;
+    }
+    .go:hover{background:#000;color:#fff}
 
-            <article className="rounded-2xl bg-white p-6 shadow-sm">
-              <div className="text-[15.12px] font-bold" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '22.4px', letterSpacing: '0.60px' }}>Jess</div>
-              <p className="mt-2 text-[16px]" style={{ color: 'black', fontFamily: 'Inter', lineHeight: '24px', letterSpacing: '1px' }}>
-                “I’ve never been consistent with supplements, but this one feels like self-care, not homework.”<br/><br/>— Jess, 26, Designer
-              </p>
-            </article>
+    /* Feature */
+    .feature{background:#fff;padding:80px 0}
+    .feature h3{font-size:48px;font-weight:300;margin:0}
+    .feature p.title{font-size:48px;font-weight:300;margin:8px 0 0}
+    .pills{display:flex;gap:12px;justify-content:center;margin-top:28px}
+    .pill{width:14.65px;height:39.46px;border-radius:50px}
+    .pill.dark{background:#1D3227}
+    .pill.pink{background:#E97D8F}
+    .pill.blush{background:#FFD1DC}
 
-            <article className="rounded-2xl bg-white p-6 shadow-sm">
-              <div className="text-[14.88px] font-bold" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '22.4px', letterSpacing: '0.60px' }}>Julie</div>
-              <p className="mt-2 text-[16px]" style={{ color: '#002B26', fontFamily: 'Inter', lineHeight: '22.4px' }}>
-                “The POWER shot is my go-to boost before training — it helps me push through tough sessions and recover with strength.”<br/>— Julie, 27, Fitness Coach
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
+    /* Community */
+    .community{background:#EAEDDC;padding:80px 0}
+    .community h4{
+      color:var(--teal);font-size:37.03px;line-height:40px;font-weight:700;letter-spacing:.6px;margin:0 0 8px
+    }
+    .community p.lead{
+      color:var(--teal);font-size:23.44px;line-height:31.2px;letter-spacing:.6px;margin:0 0 28px
+    }
+    .grid{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+    .card .name{color:var(--teal);font-size:15px;line-height:22.4px;font-weight:700;letter-spacing:.6px}
+    .card p{color:var(--teal);font-size:16px;line-height:24px;letter-spacing:1px;margin:8px 0 0}
+    .card p.black{color:#000}
 
-      {/* Footer */}
-      <footer className="bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-10 text-center text-[15px] font-light" style={{ fontFamily: 'Helvetica Neue' }}>
-          © 2025 with 🩷 by bossbaby
-        </div>
-      </footer>
+    /* Footer */
+    footer{background:#fff;padding:40px 0;border-top:1px solid #eee}
+    .foottext{font-size:15px;font-weight:300}
+
+    /* Responsive */
+    @media (max-width:1024px){
+      .hero h1{font-size:96px}
+    }
+    @media (max-width:768px){
+      .hero h1{font-size:64px}
+      .brand{font-size:1.75rem}
+      .menu{gap:16px}
+      .menu a{font-size:18px}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <div class="brand">Bossbaby</div>
+      <nav class="menu">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#community">Community</a>
+        <a href="#about">About</a>
+        <a href="#faq">FAQ</a>
+      </nav>
     </div>
-  );
-}
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="hero">
+    <div class="container center">
+      <h1>Nutrition drinks <br /> made for her.</h1>
+      <p>Empowering women with every sip.</p>
+      <a href="#buy" class="cta">buy</a>
+    </div>
+  </section>
+
+  <!-- Email signup -->
+  <section class="signup">
+    <div class="container center">
+      <h2>Ready to feel unstoppable?</h2>
+      <form action="#" method="post" autocomplete="on">
+        <input class="input" type="email" name="email" placeholder="enter your email" required />
+        <button class="go" type="submit">GO</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Product feature -->
+  <section id="products" class="feature">
+    <div class="container center">
+      <h3>World’s first AI-powered smoothie machine</h3>
+      <p class="title">Stay tuned!</p>
+      <div class="pills">
+        <div class="pill dark"></div>
+        <div class="pill pink"></div>
+        <div class="pill blush"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community -->
+  <section id="community" class="community">
+    <div class="container">
+      <div class="center">
+        <h4>Real women, real feelings</h4>
+        <p class="lead">Because we’re all just trying to feel like ourselves, but better.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="name">Sarah</div>
+          <p>“Finally, a wellness brand that doesn’t make me feel like I’m failing at life. These shots just... get it.”<br><br>— Sarah, 29, Marketing Director</p>
+        </article>
+
+        <article class="card">
+          <div class="name">Maya</div>
+          <p>“The POWER shot is my secret weapon for those hormonal weeks when I usually want to hide under a blanket”<br><br>— Maya, 34, Entrepreneur</p>
+        </article>
+
+        <article class="card">
+          <div class="name">Jess</div>
+          <p class="black">“I’ve never been consistent with supplements, but this one feels like self-care, not homework.”<br><br>— Jess, 26, Designer</p>
+        </article>
+
+        <article class="card">
+          <div class="name">Julie</div>
+          <p>“The POWER shot is my go-to boost before training — it helps me push through tough sessions and recover with strength.”<br>— Julie, 27, Fitness Coach</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container center">
+      <div class="foottext">© 2025 with 🩷 by bossbaby</div>
+    </div>
+  </footer>
+
+</body>
+</html>
 
