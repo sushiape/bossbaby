@@ -75,25 +75,7 @@ export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
             </p>
             
         
-              
-              {/* Bossbaby text - centered in the light pink area (upper left) */}
-              <div className="absolute top-0 left-0 w-1/2 h-1/2 flex items-center justify-center z-20 px-4">
-                <h2 
-                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold whitespace-nowrap"
-                  style={{
-                    color: brand.power,
-                    fontFamily: 'Georgia, serif',
-                    letterSpacing: '0.02em',
-                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                  }}
-                >
-                  Bossbaby
-                </h2>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
+      
 
       {/* Section 2: Products Overview Section - White Background */}
       <section className="w-full py-16 sm:py-24 bg-white">
