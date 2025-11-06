@@ -3,6 +3,8 @@ import { Button } from "./ui/button";
 import { ChevronRight, ArrowUpRight, Sparkles, Users, HeartHandshake, ShieldCheck } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
+import Header from "./Header";
+import Footer from "./Footer";
 
 // BossBaby brand palette
 const brand = {
@@ -20,32 +22,10 @@ const Container = ({ children, className = "" }) => (
   <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
 );
 
-export default function BossBabyCommunityPage() {
+export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar */}
-      <header className="bg-white">
-        <Container className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
-            <span className="font-serif text-xl text-black" style={{fontFamily: 'Georgia, serif'}}>Bossbaby</span>
-          </div>
-          <nav className="flex items-center gap-4 sm:gap-6 md:gap-8 text-sm font-sans text-black">
-            <a href="#home" className="hover:opacity-70">Home</a>
-            <a href="#products" className="hover:opacity-70">Products</a>
-            <a href="#community" className="hover:opacity-70">Community</a>
-            <a href="#about" className="hover:opacity-70">About</a>
-            <a href="#faq" className="hover:opacity-70">FAQ</a>
-          </nav>
-          <div className="flex items-center">
-            <Button 
-              className="rounded-md px-4 py-2 text-sm font-sans text-white hover:opacity-90" 
-              style={{backgroundColor: brand.lightPink}}
-            >
-              buy
-            </Button>
-          </div>
-        </Container>
-      </header>
+      <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {/* Hero Section - Cream Background */}
       <section className="w-full py-16 sm:py-24" style={{backgroundColor: brand.cream}}>
@@ -156,6 +136,7 @@ export default function BossBabyCommunityPage() {
         </Container>
       </section>
 
+      <Footer />
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import React from "react";
+import Header from "./Header";
+import Footer from "./Footer";
 
 // BossBaby brand palette
 const brand = {
@@ -54,9 +56,11 @@ const products = [
   }
 ];
 
-export default function BossBabyProductsPage() {
+export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
   return (
     <div className="min-h-screen bg-white">
+      <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      
       {/* Top Banner/Header */}
       <section 
         className="relative pt-16 pb-24 overflow-hidden"
@@ -215,6 +219,8 @@ export default function BossBabyProductsPage() {
           </div>
         </Container>
       </section>
+      
+      <Footer />
     </div>
   );
 }

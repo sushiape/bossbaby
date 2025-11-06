@@ -1,6 +1,8 @@
 import React from "react";
 import { ChevronDown, Bluetooth } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
+import Header from "./Header";
+import Footer from "./Footer";
 
 // BossBaby brand palette
 const brand = {
@@ -39,7 +41,7 @@ const testimonials = [
   },
   {
     name: "Jess",
-    age: 26,
+    age: 28,
     role: "Designer",
     quote: "I've never been consistent with supplements, but this one feels like self-care, not homework.",
     bgColor: brand.power, // hot pink
@@ -49,16 +51,18 @@ const testimonials = [
     name: "Julie",
     age: 27,
     role: "Fitness Coach",
-    quote: "The POWER shot is my go-to before training — It helps me push through my sessions and recover with ease.",
+    quote: "The POWER shot is my go-to before training—it helps me push through tough sessions and recover with strength.",
     bgColor: "#87CEEB", // sky blue
     imageBg: "bg-blue-50"
   }
 ];
 
-export default function BossBabyLandingPage() {
+export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
   return (
     <div className="min-h-screen bg-white">
-      {/* Section 1: Header/Hero Section - Hot Pink Background */}
+      <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      
+      {/* Section 1: Hero Section - Hot Pink Background */}
       <section className="w-full py-16 sm:py-24" style={{backgroundColor: brand.power}}>
         <Container>
           <div className="flex flex-col items-center justify-center text-center">
@@ -137,7 +141,7 @@ export default function BossBabyLandingPage() {
                   <div className="h-full flex flex-col">
                     <h3 className="text-sm font-bold text-gray-900 mb-4">Hi Bossbaby, How are you feeling today?</h3>
                     <div className="grid grid-cols-2 gap-2 mb-4">
-                      {["Tired", "Stressed", "Unfocused", "Motivated", "Fatigued"].map((mood, i) => (
+                      {["Tired", "Stressed", "Unfocused", "Meh", "Motivated", "Fatigued"].map((mood, i) => (
                         <button 
                           key={i}
                           className="px-3 py-2 text-xs rounded-lg border border-gray-300 bg-white text-gray-700"
@@ -172,10 +176,10 @@ export default function BossBabyLandingPage() {
             <div className="flex items-center justify-center">
               <div 
                 className="w-full h-64 rounded-2xl p-8 flex items-center justify-center gap-4"
-                style={{backgroundColor: brand.pastelGreen}}
+                style={{backgroundColor: brand.lightPink}}
               >
                 <div className="w-8 h-24 rounded-t-lg" style={{backgroundColor: brand.energy}}></div>
-                <div className="w-8 h-24 rounded-t-lg" style={{backgroundColor: brand.power}}></div>
+                <div className="w-8 h-24 rounded-t-lg" style={{backgroundColor: brand.lightPink}}></div>
               </div>
             </div>
           </div>
@@ -289,6 +293,8 @@ export default function BossBabyLandingPage() {
           </div>
         </Container>
       </section>
+      
+      <Footer />
     </div>
   );
 }
