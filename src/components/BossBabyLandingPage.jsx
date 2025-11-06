@@ -75,15 +75,27 @@ export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
             </p>
             
             {/* Product Image Container */}
-            <div className="mt-8 relative w-full max-w-2xl mx-auto" style={{height: '450px', minHeight: '450px'}}>
-              {/* Two-toned pink background */}
+            <div className="mt-8 relative w-full max-w-2xl mx-auto" style={{height: '500px', minHeight: '500px'}}>
+              {/* Two-toned pink background - diagonal split */}
               <div className="absolute inset-0 rounded-3xl overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-1/2" style={{backgroundColor: brand.lightPink}}></div>
-                <div className="absolute bottom-0 left-0 right-0 h-1/2" style={{backgroundColor: brand.power + 'CC'}}></div>
+                {/* Upper left - light pink */}
+                <div 
+                  className="absolute top-0 left-0 w-full h-full"
+                  style={{
+                    background: `linear-gradient(135deg, ${brand.lightPink} 0%, ${brand.lightPink} 50%, transparent 50%)`
+                  }}
+                ></div>
+                {/* Lower right - darker pink */}
+                <div 
+                  className="absolute bottom-0 right-0 w-full h-full"
+                  style={{
+                    background: `linear-gradient(135deg, transparent 50%, ${brand.power + 'CC'} 50%, ${brand.power + 'CC'} 100%)`
+                  }}
+                ></div>
               </div>
               
-              {/* Bossbaby text - large, hot pink, serif - fully visible */}
-              <div className="absolute inset-0 flex items-center justify-center z-20 px-4">
+              {/* Bossbaby text - centered in the light pink area (upper left) */}
+              <div className="absolute top-0 left-0 w-1/2 h-1/2 flex items-center justify-center z-20 px-4">
                 <h2 
                   className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold whitespace-nowrap"
                   style={{
@@ -97,11 +109,66 @@ export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
                 </h2>
               </div>
               
-              {/* Cream bottle with grey cap - tilted to the right, upper right quadrant - behind text */}
-              <div className="absolute top-8 right-8 sm:top-12 sm:right-12 z-10 transform rotate-12">
+              {/* Cream bottle - tall, slender, tapered, with grey cap - tilted to the right */}
+              <div className="absolute bottom-8 right-8 sm:bottom-12 sm:right-12 z-10 transform rotate-12">
                 <div className="relative">
-                  <div className="w-24 h-36 sm:w-32 sm:h-48 rounded-t-full rounded-b-lg" style={{backgroundColor: brand.cream}}>
-                    <div className="w-full h-6 sm:h-8 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
+                  {/* Shadow */}
+                  <div 
+                    className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-3 rounded-full blur-sm opacity-30"
+                    style={{backgroundColor: '#000000'}}
+                  ></div>
+                  
+                  {/* Bottle body - tall, slender, slightly tapered */}
+                  <div 
+                    className="relative"
+                    style={{
+                      width: '32px',
+                      height: '200px',
+                      backgroundColor: '#F5E6D3', // creamy off-white/beige
+                      borderRadius: '4px',
+                      boxShadow: 'inset -2px 0 4px rgba(255,255,255,0.3), inset 2px 0 4px rgba(0,0,0,0.1)',
+                      clipPath: 'polygon(15% 0%, 85% 0%, 90% 100%, 10% 100%)' // slightly tapered
+                    }}
+                  >
+                    {/* Highlight on right side */}
+                    <div 
+                      className="absolute top-0 right-0 w-1/3 h-full rounded-r"
+                      style={{
+                        background: 'linear-gradient(to left, rgba(255,255,255,0.4), transparent)'
+                      }}
+                    ></div>
+                  </div>
+                  
+                  {/* Bottle neck */}
+                  <div 
+                    className="absolute top-0 left-1/2 transform -translate-x-1/2"
+                    style={{
+                      width: '20px',
+                      height: '30px',
+                      backgroundColor: '#F5E6D3',
+                      borderRadius: '2px 2px 0 0',
+                      boxShadow: 'inset -1px 0 2px rgba(255,255,255,0.3)'
+                    }}
+                  ></div>
+                  
+                  {/* Grey cap - slightly wider than neck */}
+                  <div 
+                    className="absolute -top-6 left-1/2 transform -translate-x-1/2"
+                    style={{
+                      width: '28px',
+                      height: '24px',
+                      backgroundColor: '#9CA3AF',
+                      borderRadius: '2px',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }}
+                  >
+                    {/* Cap highlight */}
+                    <div 
+                      className="absolute top-0 left-0 w-full h-1/2 rounded-t"
+                      style={{
+                        background: 'linear-gradient(to bottom, rgba(255,255,255,0.3), transparent)'
+                      }}
+                    ></div>
                   </div>
                 </div>
               </div>
