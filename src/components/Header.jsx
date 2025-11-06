@@ -17,8 +17,7 @@ export default function Header({ currentPage, setCurrentPage }) {
         <Container className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <span 
-              className="font-serif text-xl text-black cursor-pointer" 
-              style={{fontFamily: 'Georgia, serif'}}
+              className="font-sans text-xl text-black cursor-pointer" 
               onClick={() => setCurrentPage('landing')}
             >
               Bossbaby

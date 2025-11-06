@@ -34,8 +34,7 @@ export default function Footer() {
           {/* Right: Logo and Social */}
           <div className="flex flex-col items-end md:items-start">
             <span 
-              className="font-serif text-2xl text-black mb-4" 
-              style={{fontFamily: 'Georgia, serif'}}
+              className="font-sans text-2xl text-black mb-4"
             >
               Bossbaby
             </span>
@@ -51,7 +50,7 @@ export default function Footer() {
         </div>
         <div className="pt-8 border-t">
           <p className="text-xs text-gray-600">
-            © 2023 velt ❤️ by bossbaby
+            © 2025 ❤️ by bossbaby
           </p>
         </div>
       </Container>

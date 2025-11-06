@@ -75,17 +75,32 @@ export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
             </p>
             
             {/* Product Image Container */}
-            <div className="mt-8 rounded-3xl p-8" style={{backgroundColor: brand.lightPink}}>
-              <div className="relative">
-                <div className="w-32 h-48 sm:w-40 sm:h-60 mx-auto rounded-t-full rounded-b-lg transform rotate-3" style={{backgroundColor: brand.cream}}>
-                  <div className="w-full h-8 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
-                  <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center">
-                    <span 
-                      className="text-xs sm:text-sm font-bold uppercase transform -rotate-90 whitespace-nowrap"
-                      style={{color: brand.power}}
-                    >
-                      BOSSBABY
-                    </span>
+            <div className="mt-8 relative w-full max-w-2xl mx-auto" style={{height: '400px'}}>
+              {/* Two-toned pink background */}
+              <div className="absolute inset-0 rounded-3xl overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1/2" style={{backgroundColor: brand.lightPink}}></div>
+                <div className="absolute bottom-0 left-0 right-0 h-1/2" style={{backgroundColor: brand.power + 'CC'}}></div>
+              </div>
+              
+              {/* Bossbaby text - large, hot pink, serif */}
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <h2 
+                  className="text-6xl sm:text-7xl md:text-8xl font-bold"
+                  style={{
+                    color: brand.power,
+                    fontFamily: 'Georgia, serif',
+                    letterSpacing: '0.02em'
+                  }}
+                >
+                  Bossbaby
+                </h2>
+              </div>
+              
+              {/* Cream bottle with grey cap - tilted to the right, upper right quadrant */}
+              <div className="absolute top-8 right-8 sm:top-12 sm:right-12 z-20 transform rotate-12">
+                <div className="relative">
+                  <div className="w-24 h-36 sm:w-32 sm:h-48 rounded-t-full rounded-b-lg" style={{backgroundColor: brand.cream}}>
+                    <div className="w-full h-6 sm:h-8 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
                   </div>
                 </div>
               </div>

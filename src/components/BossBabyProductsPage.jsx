@@ -71,10 +71,9 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
         <Container className="relative z-10">
           <div className="text-center">
             <h1 
-              className="text-6xl sm:text-7xl md:text-8xl font-serif mb-2"
+              className="text-6xl sm:text-7xl md:text-8xl font-bold font-sans mb-2"
               style={{ 
-                color: brand.power,
-                fontFamily: 'Georgia, serif'
+                color: brand.power
               }}
             >
               Bossbaby
