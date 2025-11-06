@@ -1,10 +1,10 @@
 import React from 'react';
-import BossBabyCommunityPage from './components/BossBabyCommunityPage';
+import BossBabyLandingPage from './components/BossBabyLandingPage';
 
 function App() {
   return (
     <div className="App">
-      <BossBabyCommunityPage />
+      <BossBabyLandingPage />
     </div>
   );
 }
