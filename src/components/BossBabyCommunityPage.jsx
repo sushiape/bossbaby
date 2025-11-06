@@ -25,7 +25,7 @@ import { Badge } from "./ui/badge";
 
 // BossBaby brand palette
 const brand = {
-  power: "#F3AFC3",    // pink
+  power: "#FF1493",    // vibrant hot pink
   energy: "#F79A3E",   // orange
   glow: "#F9D44A",     // yellow
   calm: "#8BC374",     // green
@@ -87,8 +87,15 @@ export default function BossBabyCommunityPage() {
       <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/80 border-b">
         <Container className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-2xl" style={{backgroundColor: brand.power}} />
-            <span className="font-semibold text-gray-900">BossBaby</span>
+            <div 
+              className="flex items-center justify-center px-4 py-2 rounded-lg"
+              style={{
+                backgroundColor: brand.power,
+                fontFamily: 'serif'
+              }}
+            >
+              <span className="text-white font-serif text-lg" style={{fontFamily: 'Georgia, serif'}}>Bossbaby</span>
+            </div>
             <span className="ml-2 rounded-full px-2 py-0.5 text-xs" style={{backgroundColor: brand.power + "33", color: brand.ink}}>Community</span>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-sm">
@@ -327,8 +334,15 @@ export default function BossBabyCommunityPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-2xl" style={{backgroundColor: brand.power}} />
-                <span className="font-semibold">BossBaby</span>
+                <div 
+                  className="flex items-center justify-center px-3 py-1.5 rounded-lg"
+                  style={{
+                    backgroundColor: brand.power,
+                    fontFamily: 'serif'
+                  }}
+                >
+                  <span className="text-white font-serif text-base" style={{fontFamily: 'Georgia, serif'}}>Bossbaby</span>
+                </div>
               </div>
               <p className="mt-3 text-sm text-gray-600">Wellness that fits you — for Energy, Focus, Calm & Glow.</p>
             </div>
