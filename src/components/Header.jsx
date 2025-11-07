@@ -12,82 +12,77 @@ const Container = ({ children, className = "" }) => (
 
 export default function Header({ currentPage, setCurrentPage }) {
   return (
-    <>
-      <header className="bg-white">
-        <Container className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
-            <span 
-              className="font-sans text-xl text-black cursor-pointer" 
-              onClick={() => setCurrentPage('landing')}
-            >
-              Bossbaby
-            </span>
-          </div>
-          <nav className="flex items-center gap-4 sm:gap-6 md:gap-8 text-sm font-sans text-black">
-            <a 
-              href="#" 
-              className="hover:opacity-70"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage('landing');
-              }}
-            >
-              Home
-            </a>
-            <a 
-              href="#" 
-              className="hover:opacity-70"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage('products');
-              }}
-            >
-              Products
-            </a>
-            <a 
-              href="#" 
-              className="hover:opacity-70"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage('community');
-              }}
-            >
-              Community
-            </a>
-            <a 
-              href="#" 
-              className="hover:opacity-70"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage('about');
-              }}
-            >
-              About
-            </a>
-            <a 
-              href="#" 
-              className="hover:opacity-70"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage('faq');
-              }}
-            >
-              FAQ
-            </a>
-          </nav>
-          <div className="flex items-center">
-            <Button 
-              className="rounded-md px-4 py-2 text-sm font-sans text-white hover:opacity-90" 
-              style={{backgroundColor: brand.lightPink}}
-            >
-              buy
-            </Button>
-          </div>
-        </Container>
-      </header>
-      {/* Separator Line */}
-      <div className="w-full h-px" style={{backgroundColor: brand.lightPurple}}></div>
-    </>
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-2">
+        <div 
+          className="text-xl font-light cursor-pointer" 
+          style={{fontFamily: 'Poppins, sans-serif'}}
+          onClick={() => setCurrentPage('landing')}
+        >
+          Bossbaby
+        </div>
+        <nav className="flex items-center gap-4 sm:gap-6 md:gap-8" style={{fontFamily: 'Poppins, sans-serif'}}>
+          <a 
+            href="#" 
+            className="text-sm font-normal hover:opacity-70 transition-opacity"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPage('landing');
+            }}
+          >
+            Home
+          </a>
+          <a 
+            href="#" 
+            className="text-sm font-normal hover:opacity-70 transition-opacity"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPage('products');
+            }}
+          >
+            Products
+          </a>
+          <a 
+            href="#" 
+            className="text-sm font-normal hover:opacity-70 transition-opacity"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPage('community');
+            }}
+          >
+            Community
+          </a>
+          <a 
+            href="#" 
+            className="text-sm font-normal hover:opacity-70 transition-opacity"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPage('about');
+            }}
+          >
+            About
+          </a>
+          <a 
+            href="#" 
+            className="text-sm font-normal hover:opacity-70 transition-opacity"
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPage('faq');
+            }}
+          >
+            FAQ
+          </a>
+        </nav>
+        <div className="flex items-center">
+          <Button 
+            className="rounded-full px-6 py-2 text-sm font-normal text-white hover:opacity-90 transition-opacity" 
+            style={{backgroundColor: '#E992C0', fontFamily: 'Poppins, sans-serif'}}
+          >
+            buy
+          </Button>
+        </div>
+      </div>
+    </header>
   );
 }
 

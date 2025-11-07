@@ -1,384 +1,206 @@
-import React from "react";
-import { ChevronDown, Bluetooth } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
+import React, { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
-// BossBaby brand palette
 const brand = {
-  power: "#FF1493",    // vibrant hot pink
-  lightPink: "#FFB6C1", // lighter pink
-  pastelPink: "#FFE4E1", // pastel pink
-  pastelGreen: "#E0F2E0", // pastel green
-  energy: "#F79A3E",   // orange
-  glow: "#F9D44A",     // yellow
-  calm: "#8BC374",     // green
-  cream: "#F5EBDC",    // soft cream background
-  ink: "#111827",      // gray-900
-  darkGreen: "#2D5016", // dark green for PRODUCTS logo
+  pink: "#FF89CC",
+  bg: "#FAF5F6",
+  white: "#fff",
+  text: "#000",
+  communityBg: "#EAEDDC",
+  communityText: "#002B26",
 };
 
 const Container = ({ children, className = "" }) => (
   <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
 );
 
+const drinks = [
+  {
+    name: "Power",
+    description: "Hormone-balancing blend with adaptogenic herbs. For the days when you need your body to cooperate with your ambitions."
+  },
+  {
+    name: "Energy",
+    description: "Mental clarity and sustained focus without the crash. Because your brain deserves premium fuel."
+  },
+  {
+    name: "Glow",
+    description: "Skin-loving antioxidants and collagen support. Radiance that starts from the inside out."
+  },
+  {
+    name: "Calm",
+    description: "Nervous system support for when you need to actually breathe. Calm without the drowsy."
+  }
+];
+
 const testimonials = [
   {
     name: "Sarah",
-    age: 29,
-    role: "Marketing Director",
     quote: "Finally, a wellness brand that doesn't make me feel like I'm failing at life. These shots just... get it.",
-    bgColor: "#D2691E", // orange-brown
-    imageBg: "bg-white"
+    role: "Sarah, 29, Marketing Director"
   },
   {
     name: "Maya",
-    age: 34,
-    role: "Entrepreneur",
     quote: "The POWER shot is my secret weapon for those hormonal weeks when I usually want to hide under a blanket",
-    bgColor: "#DDA0DD", // light purple
-    imageBg: "bg-blue-100"
+    role: "Maya, 34, Entrepreneur"
   },
   {
     name: "Jess",
-    age: 28,
-    role: "Designer",
     quote: "I've never been consistent with supplements, but this one feels like self-care, not homework.",
-    bgColor: brand.power, // hot pink
-    imageBg: "bg-pink-100"
+    role: "Jess, 26, Designer"
   },
   {
     name: "Julie",
-    age: 27,
-    role: "Fitness Coach",
-    quote: "The POWER shot is my go-to before training—it helps me push through tough sessions and recover with strength.",
-    bgColor: "#87CEEB", // sky blue
-    imageBg: "bg-blue-50"
+    quote: "The energy shot is my go-to boost before training, it helps me push through tough sessions and recover with strength.",
+    role: "Julie, 27, Fitness Coach"
   }
 ];
 
 export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log("Email submitted:", email);
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{backgroundColor: brand.bg, fontFamily: 'Poppins, sans-serif'}}>
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      
-      {/* Section 1: Hero Section - Hot Pink Background */}
-      <section className="w-full py-16 sm:py-24" style={{backgroundColor: brand.power}}>
-        <Container>
-          <div className="flex flex-col items-center justify-center text-center">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white font-sans leading-tight mb-4">
-              <span className="block">Wellness drinks</span>
-              <span className="block ml-8 sm:ml-12">made for her.</span>
-            </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-black font-sans mb-8">
-              Empowering women with every sip.
-            </p>
-            
-            {/* Product Image Container */}
-            <div className="mt-8 relative w-full max-w-2xl mx-auto" style={{height: '500px', minHeight: '500px'}}>
-              {/* Two-toned pink background - diagonal split */}
-              <div className="absolute inset-0 rounded-3xl overflow-hidden">
-                {/* Upper left - light pink */}
-                <div 
-                  className="absolute top-0 left-0 w-full h-full"
-                  style={{
-                    background: `linear-gradient(135deg, ${brand.lightPink} 0%, ${brand.lightPink} 50%, transparent 50%)`
-                  }}
-                ></div>
-                {/* Lower right - darker pink */}
-                <div 
-                  className="absolute bottom-0 right-0 w-full h-full"
-                  style={{
-                    background: `linear-gradient(135deg, transparent 50%, ${brand.power + 'CC'} 50%, ${brand.power + 'CC'} 100%)`
-                  }}
-                ></div>
-              </div>
-              
-              {/* Bossbaby text - centered in the light pink area (upper left) */}
-              <div className="absolute top-0 left-0 w-1/2 h-1/2 flex items-center justify-center z-20 px-4">
-                <h2 
-                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold whitespace-nowrap"
-                  style={{
-                    color: brand.power,
-                    fontFamily: 'Georgia, serif',
-                    letterSpacing: '0.02em',
-                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                  }}
-                >
-                  Bossbaby
-                </h2>
-              </div>
-              
-              {/* Cream bottle - tall, slender, tapered, with grey cap - tilted to the right */}
-              <div className="absolute bottom-8 right-8 sm:bottom-12 sm:right-12 z-10 transform rotate-12">
-                <div className="relative">
-                  {/* Shadow */}
-                  <div 
-                    className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-3 rounded-full blur-sm opacity-30"
-                    style={{backgroundColor: '#000000'}}
-                  ></div>
-                  
-                  {/* Bottle body - tall, slender, slightly tapered */}
-                  <div 
-                    className="relative"
-                    style={{
-                      width: '32px',
-                      height: '200px',
-                      backgroundColor: '#F5E6D3', // creamy off-white/beige
-                      borderRadius: '4px',
-                      boxShadow: 'inset -2px 0 4px rgba(255,255,255,0.3), inset 2px 0 4px rgba(0,0,0,0.1)',
-                      clipPath: 'polygon(15% 0%, 85% 0%, 90% 100%, 10% 100%)' // slightly tapered
-                    }}
-                  >
-                    {/* Highlight on right side */}
-                    <div 
-                      className="absolute top-0 right-0 w-1/3 h-full rounded-r"
-                      style={{
-                        background: 'linear-gradient(to left, rgba(255,255,255,0.4), transparent)'
-                      }}
-                    ></div>
-                  </div>
-                  
-                  {/* Bottle neck */}
-                  <div 
-                    className="absolute top-0 left-1/2 transform -translate-x-1/2"
-                    style={{
-                      width: '20px',
-                      height: '30px',
-                      backgroundColor: '#F5E6D3',
-                      borderRadius: '2px 2px 0 0',
-                      boxShadow: 'inset -1px 0 2px rgba(255,255,255,0.3)'
-                    }}
-                  ></div>
-                  
-                  {/* Grey cap - slightly wider than neck */}
-                  <div 
-                    className="absolute -top-6 left-1/2 transform -translate-x-1/2"
-                    style={{
-                      width: '28px',
-                      height: '24px',
-                      backgroundColor: '#9CA3AF',
-                      borderRadius: '2px',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                    }}
-                  >
-                    {/* Cap highlight */}
-                    <div 
-                      className="absolute top-0 left-0 w-full h-1/2 rounded-t"
-                      style={{
-                        background: 'linear-gradient(to bottom, rgba(255,255,255,0.3), transparent)'
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
 
-      {/* Section 2: Products Overview Section - White Background */}
-      <section className="w-full py-16 sm:py-24 bg-white">
-        <Container>
-          {/* PRODUCTS Logo */}
-          <div className="mb-8">
-            <div 
-              className="inline-block px-6 py-4 rounded-2xl mb-4"
-              style={{backgroundColor: brand.darkGreen}}
+      {/* Hero Section */}
+      <section className="text-center py-32 px-4" style={{backgroundColor: brand.pink}}>
+        <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[128px] font-extrabold text-white leading-tight mb-6" style={{fontWeight: 800}}>
+          Nutrition drinks <br /> made for her.
+        </h1>
+        <p className="text-xl sm:text-2xl text-black mb-12">
+          Empowering women with every sip.
+        </p>
+
+        {/* Waitlist Form */}
+        <div className="mt-8">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2" style={{fontSize: '42px'}}>
+            Ready to feel unstoppable?
+          </h2>
+          <p className="text-xl sm:text-2xl text-white mb-4">Join the waitlist</p>
+          <form onSubmit={handleSubmit} className="flex gap-3 justify-center flex-wrap max-w-2xl mx-auto">
+            <Input
+              type="email"
+              placeholder="enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="px-4 py-3 rounded-lg border border-white bg-white text-black text-base"
+              style={{width: '300px', maxWidth: '80vw'}}
+            />
+            <Button
+              type="submit"
+              className="px-6 py-3 rounded-lg border border-white bg-white font-bold text-base hover:bg-pink-100 transition-colors"
+              style={{color: brand.pink}}
             >
-              <span className="text-4xl sm:text-5xl font-bold tracking-wide" style={{color: brand.power}}>
-                PRODUCTS
-              </span>
-            </div>
-            
-            {/* Dropdown Menu */}
-            <div className="mt-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white">
-                <span className="text-gray-700 font-sans">Classic Drinks</span>
-                <ChevronDown className="h-4 w-4 text-gray-500" />
-              </div>
-            </div>
-          </div>
-
-          {/* Product Visuals - 3 items in a row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-            {/* Left: Green Bottle */}
-            <div className="flex items-center justify-center">
-              <div 
-                className="w-full h-64 rounded-2xl p-8 flex items-center justify-center"
-                style={{backgroundColor: brand.pastelGreen}}
-              >
-                <div className="w-20 h-32 rounded-t-full rounded-b-lg" style={{backgroundColor: brand.calm}}>
-                  <div className="w-full h-6 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Middle: Smartphone App */}
-            <div className="flex items-center justify-center">
-              <div 
-                className="w-full h-64 rounded-2xl p-4 flex items-center justify-center"
-                style={{backgroundColor: brand.pastelGreen}}
-              >
-                <div className="w-48 h-96 bg-white rounded-2xl shadow-lg p-4 overflow-hidden">
-                  <div className="h-full flex flex-col">
-                    <h3 className="text-sm font-bold text-gray-900 mb-4">Hi Bossbaby, How are you feeling today?</h3>
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      {["Tired", "Stressed", "Unfocused", "Meh", "Motivated", "Fatigued"].map((mood, i) => (
-                        <button 
-                          key={i}
-                          className="px-3 py-2 text-xs rounded-lg border border-gray-300 bg-white text-gray-700"
-                        >
-                          {mood}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="mb-4 p-2 bg-yellow-50 rounded">
-                      <p className="text-xs font-bold text-gray-900 mb-1">AI insight</p>
-                      <p className="text-xs text-gray-700">STUDIES SUGGEST VITAMIN C AND MAGNESIUM MAY HELP REDUCE FATIGUE</p>
-                    </div>
-                    <div className="mb-4">
-                      <p className="text-xs font-bold text-gray-900 mb-2">Recommended Smoothie</p>
-                      <div className="flex items-center gap-2">
-                        <div className="w-12 h-12 rounded-lg" style={{backgroundColor: brand.calm}}></div>
-                        <span className="text-xs text-gray-700">Spinach Blueberry</span>
-                      </div>
-                    </div>
-                    <button 
-                      className="mt-auto px-4 py-2 text-xs font-bold text-white rounded-lg"
-                      style={{backgroundColor: brand.power}}
-                    >
-                      Generate Mix
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Popsicles */}
-            <div className="flex items-center justify-center">
-              <div 
-                className="w-full h-64 rounded-2xl p-8 flex items-center justify-center gap-4"
-                style={{backgroundColor: brand.lightPink}}
-              >
-                <div className="w-8 h-24 rounded-t-lg" style={{backgroundColor: brand.energy}}></div>
-                <div className="w-8 h-24 rounded-t-lg" style={{backgroundColor: brand.lightPink}}></div>
-              </div>
-            </div>
-          </div>
-        </Container>
+              GO
+            </Button>
+          </form>
+        </div>
       </section>
 
-      {/* Section 3: AI-Powered Smoothie Machine Section */}
-      <section className="w-full py-16 sm:py-24 bg-white">
+      {/* About Section */}
+      <section className="bg-white py-20 px-4 text-center">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Text Content */}
-            <div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black font-sans mb-4">
-                World's first AI-powered smoothie machine
-              </h2>
-              <p className="text-2xl sm:text-3xl font-bold text-black font-sans">
-                Stay tuned!
-              </p>
-            </div>
-
-            {/* Right: Machine and App */}
-            <div className="relative">
-              <div 
-                className="rounded-3xl p-8"
-                style={{backgroundColor: brand.cream}}
-              >
-                <div className="flex items-end gap-4">
-                  {/* Smoothie Machine */}
-                  <div className="relative">
-                    <div 
-                      className="w-24 h-48 sm:w-32 sm:h-64 rounded-2xl"
-                      style={{backgroundColor: brand.lightPink}}
-                    >
-                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-8 rounded-lg bg-white"></div>
-                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full border-4 border-white" style={{backgroundColor: brand.calm}}></div>
-                    </div>
-                    {/* Glass with smoothie */}
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -mb-4">
-                      <div className="w-12 h-16 rounded-t-lg" style={{backgroundColor: brand.calm + '80'}}>
-                        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full bg-white"></div>
-                      </div>
-                    </div>
-                    {/* Bluetooth Symbol */}
-                    <div className="absolute top-4 right-4">
-                      <Bluetooth className="h-6 w-6 text-blue-500" />
-                    </div>
-                  </div>
-
-                  {/* Phone App */}
-                  <div className="w-48 h-80 bg-white rounded-2xl shadow-lg p-4">
-                    <div className="h-full flex flex-col">
-                      <h3 className="text-sm font-bold text-gray-900 mb-2">Today's smoothie</h3>
-                      <p className="text-xs font-bold mb-2" style={{color: brand.calm}}>CALM & FOCUS</p>
-                      <div className="w-full h-24 rounded-lg mb-2" style={{backgroundColor: brand.calm + '60'}}></div>
-                      <p className="text-xs text-gray-700 mb-4">
-                        You're taking an exam soon. To promote relaxation and concentration, add L-theanine and some B vitamins.
-                      </p>
-                      <button 
-                        className="mt-auto px-4 py-2 text-xs font-bold text-white rounded-lg"
-                        style={{backgroundColor: brand.calm}}
-                      >
-                        Make smoothie
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Section 4: Testimonials Section */}
-      <section className="w-full py-16 sm:py-24 bg-white">
-        <Container>
-          {/* Separator */}
-          <div className="w-full h-px mb-12" style={{backgroundColor: brand.calm + '40'}}></div>
-          
-          {/* Headlines */}
-          <div className="mb-12">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black font-sans mb-4">
-              Real women, real feelings
-            </h2>
-            <p className="text-lg sm:text-xl text-black font-sans">
-              Because we're all just trying to feel like ourselves, but better.
+          <div className="max-w-3xl mx-auto">
+            <p className="text-lg leading-relaxed text-black">
+              We make nutritious drinks for women that taste amazing, fit busy routines, and turn wellness into a moment of empowerment and identity.
+              <br /><br />
+              We started Bossbaby because we couldn't find wellness products that truly reflect the way women live and feel. Most supplements are generic, masculine-default, or overly aesthetic without real function. We wanted something real, created by women, for women, that's both functional and emotionally resonant.
+              <br /><br />
+              Our formulas are developed together with nutrition experts and based on scientific research to align with women's physiological and emotional needs. Each shot, Power, Energy, Glow, and Calm, corresponds to a specific physical-emotional state, transforming supplements into an enjoyable, empowering daily ritual.
+              <br /><br />
+              Our mission is simple: to empower women with delicious nutrient drinks that taste amazing, fit busy routines, and turn wellness into a daily moment of strength, science, and self-expression.
             </p>
           </div>
+        </Container>
+      </section>
 
-          {/* Testimonial Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="rounded-2xl overflow-hidden shadow-sm">
-                <div style={{backgroundColor: testimonial.bgColor}} className="h-48 flex items-center justify-center relative">
-                  {/* Placeholder for woman image */}
-                  <div className={`w-32 h-40 ${testimonial.imageBg} rounded-lg flex items-center justify-center`}>
-                    <div className="w-16 h-24 rounded-t-full rounded-b-lg" style={{backgroundColor: brand.cream}}>
-                      <div className="w-full h-4 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
-                    </div>
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <p className="text-sm text-gray-800 font-sans mb-4 leading-relaxed">
-                    "{testimonial.quote}"
-                  </p>
-                  <p className="text-xs text-gray-600 font-sans">
-                    — {testimonial.name}, {testimonial.age}, {testimonial.role}
-                  </p>
-                </CardContent>
-              </Card>
+      {/* Drinks Section */}
+      <section className="py-20 px-4 text-center" style={{backgroundColor: '#FFF8F8'}}>
+        <Container>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light mb-4" style={{fontSize: '40px'}}>
+            Our Four Signature Formulas
+          </h2>
+          <p className="text-lg text-gray-700 mb-12">
+            Each blend empowers a different side of life, from focus and vitality to confidence and calm.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {drinks.map((drink, index) => (
+              <div
+                key={index}
+                className="relative rounded-2xl p-8 bg-white border transition-all hover:-translate-y-1 hover:shadow-lg"
+                style={{
+                  borderColor: '#FFD1EB',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.05)'
+                }}
+              >
+                <h3 className="text-2xl font-bold mb-4" style={{color: brand.pink}}>
+                  {drink.name}
+                </h3>
+                <p className="text-sm sm:text-base leading-relaxed text-gray-700">
+                  {drink.description}
+                </p>
+              </div>
             ))}
           </div>
         </Container>
       </section>
-      
+
+      {/* Products Section */}
+      <section className="py-20 px-4 text-center bg-white">
+        <Container>
+          <h3 className="text-4xl sm:text-5xl md:text-6xl font-light mb-4" style={{fontSize: '48px'}}>
+            World's first AI-powered smoothie machine
+          </h3>
+          <p className="text-4xl sm:text-5xl md:text-6xl font-light" style={{fontSize: '48px'}}>
+            Stay tuned!
+          </p>
+        </Container>
+      </section>
+
+      {/* Community Section */}
+      <section className="py-20 px-4" style={{backgroundColor: brand.communityBg}}>
+        <Container>
+          <h4 className="text-3xl sm:text-4xl font-bold mb-4" style={{fontSize: '37px', color: brand.communityText}}>
+            Real women, real feelings
+          </h4>
+          <p className="text-xl sm:text-2xl mb-8" style={{fontSize: '23px', color: brand.communityText}}>
+            Because we're all just trying to feel like ourselves, but better.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl p-6 shadow-md"
+                style={{
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                }}
+              >
+                <div className="font-bold mb-2" style={{color: brand.communityText}}>
+                  {testimonial.name}
+                </div>
+                <p className="text-base leading-relaxed" style={{color: brand.communityText}}>
+                  "{testimonial.quote}"
+                  <br /><br />
+                  — {testimonial.role}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
       <Footer />
     </div>
   );
 }
-
