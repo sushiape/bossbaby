@@ -14,18 +14,19 @@
       body{font-family:Poppins,sans-serif;background:var(--bg);color:var(--text)}
       a{text-decoration:none;color:inherit}
 
+      /* header smaller and cleaner */
       header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border-bottom:1px solid #e5e5e5}
-      .nav{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:.75rem 1.5rem}
-      .brand{font-size:1.5rem;font-weight:300}
-      .menu a{margin-left:1.25rem;font-size:16px;font-weight:400}
+      .nav{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:.5rem 1rem}
+      .brand{font-size:1.25rem;font-weight:300}
+      .menu a{margin-left:1rem;font-size:14px;font-weight:400;transition:opacity .2s ease}
       .menu a:hover{opacity:.7}
 
       .hero{background:var(--pink);text-align:center;padding:8rem 1rem}
       .hero h1{color:#fff;font-size:128px;font-weight:800;line-height:1;margin:0}
       .hero p{font-size:22px;color:#000;margin-top:1.5rem;margin-bottom:3rem}
       
-      .waitlist h2{font-size:42px;font-weight:700;color:#fff;margin-top:2rem;margin-bottom:0.5rem}
-      .waitlist p{font-size:22px;color:#fff;margin-top:0;margin-bottom:0.5rem}
+      .waitlist h2{font-size:42px;font-weight:700;color:#fff;margin-top:2rem;margin-bottom:0.3rem}
+      .waitlist p{font-size:22px;color:#fff;margin-top:0;margin-bottom:0.3rem}
       .waitlist form{margin-top:0.5rem;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
       .waitlist input{padding:.75rem 1rem;border-radius:10px;border:1px solid #fff;background:#fff;font-size:15px;width:300px;max-width:80vw;color:#000}
       .waitlist button{padding:.75rem 1.5rem;border-radius:10px;border:1px solid #fff;background:#fff;color:var(--pink);font-weight:700;font-size:15px;cursor:pointer;transition:.3s}
@@ -33,6 +34,15 @@
 
       .products{text-align:center;background:#fff;padding:5rem 1rem}
       .products h3{font-size:48px;font-weight:300;margin:0}
+
+      .drinks{text-align:center;background:#FFF8F8;padding:5rem 1rem}
+      .drinks h2{font-size:40px;font-weight:300;margin-bottom:2rem}
+      .drinks .lead{font-size:18px;color:#333;margin-bottom:3rem}
+      .drink-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem;max-width:1000px;margin:0 auto}
+      .drink-card{position:relative;border-radius:20px;padding:2rem;background:#fff;border:1px solid #FFD1EB;box-shadow:0 4px 15px rgba(0,0,0,.05);transition:transform .2s ease, box-shadow .2s ease}
+      .drink-card:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,.1)}
+      .drink-card h3{font-size:22px;font-weight:700;color:var(--pink);margin:0 0 .5rem}
+      .drink-card p{font-size:15px;line-height:1.6;color:#333;margin:0}
 
       .community{background:#EAEDDC;padding:5rem 1rem}
       .community h4{font-size:37px;font-weight:700;color:#002B26;margin-bottom:1rem}
@@ -45,15 +55,6 @@
       footer{background:#fff;text-align:center;padding:2rem;font-size:15px;font-weight:300}
       @media(max-width:1024px){.hero h1{font-size:96px}}
       @media(max-width:768px){.hero h1{font-size:64px}}
-      .drinks{text-align:center;background:#FFF8F8;padding:5rem 1rem}
-      .drinks h2{font-size:40px;font-weight:300;margin-bottom:2rem}
-      .drinks .lead{font-size:18px;color:#333;margin-bottom:3rem}
-      .drink-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem;max-width:1000px;margin:0 auto}
-      .drink-card{position:relative;border-radius:20px;padding:1.5rem;background:linear-gradient(#fff,#fff) padding-box, linear-gradient(135deg, rgba(255,137,204,.5), rgba(255,255,255,0)) border-box;border:1px solid transparent;box-shadow:0 6px 20px rgba(0,0,0,.06);transition:transform .2s ease, box-shadow .2s ease}
-      .drink-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.1)}
-      .drink-card h3{font-size:22px;font-weight:600;margin:0 0 .5rem}
-      .drink-card p{font-size:15px;line-height:1.6;color:#444;margin:0}
-
     </style>
   </head>
   <body>
