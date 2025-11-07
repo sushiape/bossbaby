@@ -1,4 +1,18 @@
 <!DOCTYPE html>
+<!--
+  Deployment note for Vercel (static HTML):
+  - This site is a pure static page. Do NOT run a build.
+  - Repo should contain: index.html and vercel.json only.
+  - vercel.json contents:
+      {
+        "buildCommand": "",
+        "outputDirectory": ".",
+        "framework": null
+      }
+  - Remove package.json, vite.config.js, and any vercel.json with a "builds" array.
+  - In Vercel settings: Framework = Other, Build Command = (blank), Output Directory = .
+-->
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
