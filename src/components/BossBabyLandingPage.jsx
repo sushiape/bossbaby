@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 
 const brand = {
   pink: "#FF89CC",
@@ -88,7 +86,7 @@ export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
           </h2>
           <p className="text-xl sm:text-2xl text-white mb-4">Join the waitlist</p>
           <form onSubmit={handleSubmit} className="flex gap-3 justify-center flex-wrap max-w-2xl mx-auto">
-            <Input
+            <input
               type="email"
               placeholder="enter your email"
               value={email}
@@ -97,13 +95,13 @@ export default function BossBabyLandingPage({ currentPage, setCurrentPage }) {
               className="px-4 py-3 rounded-lg border border-white bg-white text-black text-base"
               style={{width: '300px', maxWidth: '80vw'}}
             />
-            <Button
+            <button
               type="submit"
               className="px-6 py-3 rounded-lg border border-white bg-white font-bold text-base hover:bg-pink-100 transition-colors"
               style={{color: brand.pink}}
             >
               GO
-            </Button>
+            </button>
           </form>
         </div>
       </section>
