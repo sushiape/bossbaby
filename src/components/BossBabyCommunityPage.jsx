@@ -40,18 +40,18 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
             </Badge>
             <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 font-sans leading-tight mb-4">
               Your community for wellness that actually fits your life.
-            </h1>
+              </h1>
             <p className="text-lg text-gray-700 font-sans mb-6">
-              Connect with founders, experts, and the BossBaby crew. Recipes, routines, product testing & exclusive early‑access drops — all in one place.
-            </p>
+                Connect with founders, experts, and the BossBaby crew. Recipes, routines, product testing & exclusive early‑access drops — all in one place.
+              </p>
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
               <Button 
                 className="rounded-xl px-6 py-3 text-white font-sans hover:opacity-90 flex items-center justify-center gap-2" 
                 style={{backgroundColor: brand.lightPink}}
               >
-                Join the community
+                  Join the community
                 <ChevronRight className="h-4 w-4" />
-              </Button>
+                </Button>
               <Button 
                 variant="outline" 
                 className="rounded-xl px-6 py-3 font-sans border flex items-center justify-center gap-2" 
@@ -61,22 +61,22 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
                   backgroundColor: brand.cream
                 }}
               >
-                Learn more
+                  Learn more
                 <ArrowUpRight className="h-4 w-4" />
-              </Button>
-            </div>
+                </Button>
+              </div>
             <div className="flex items-center gap-4 text-sm text-gray-700">
-              <div className="flex -space-x-2">
-                {[...Array(5)].map((_, i) => (
+                <div className="flex -space-x-2">
+                  {[...Array(5)].map((_, i) => (
                   <div 
                     key={i} 
                     className="h-8 w-8 rounded-full ring-2 ring-white" 
                     style={{backgroundColor: brand.lightPink}} 
                   />
-                ))}
+                  ))}
+                </div>
+                <span>3.2k+ members · 92% would recommend</span>
               </div>
-              <span>3.2k+ members · 92% would recommend</span>
-            </div>
           </div>
         </Container>
       </section>
@@ -106,8 +106,8 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
                   <h3 className="text-lg font-semibold text-gray-900 font-sans">Circle Groups</h3>
                 </div>
                 <p className="text-sm text-gray-600 font-sans">Topic circles for Energy, Focus, Skin & Cycle.</p>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
             <Card className="rounded-2xl shadow-sm bg-white">
               <CardContent className="p-6">
@@ -118,8 +118,8 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
                   <h3 className="text-lg font-semibold text-gray-900 font-sans">Expert AMAs</h3>
                 </div>
                 <p className="text-sm text-gray-600 font-sans">Live Q&As with nutrition & hormone health pros.</p>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
             <Card className="rounded-2xl shadow-sm bg-white">
               <CardContent className="p-6">
@@ -128,7 +128,7 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
                     <ShieldCheck className="h-5 w-5" style={{color: brand.glow}} />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 font-sans">Product Testers</h3>
-                </div>
+                  </div>
                 <p className="text-sm text-gray-600 font-sans">Try new flavors first & share feedback.</p>
               </CardContent>
             </Card>
