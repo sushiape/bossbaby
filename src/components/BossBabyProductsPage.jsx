@@ -1,226 +1,200 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import { ChevronRight } from "lucide-react";
 
-// BossBaby brand palette
 const brand = {
-  power: "#FF1493",    // vibrant hot pink
-  lightPink: "#FFB6C1", // lighter pink
-  pastelPink: "#FFE4E1", // pastel pink
-  pastelOrange: "#FFE4B5", // pastel orange
-  pastelYellow: "#FFF8DC", // pastel yellow
-  pastelGreen: "#E0F2E0", // pastel green
-  energy: "#F79A3E",   // orange
-  glow: "#F9D44A",     // yellow
-  calm: "#8BC374",     // green
-  cream: "#F5EBDC",    // soft cream background
-  ink: "#111827",      // gray-900
+  pink: "#FF89CC",
+  pink2: "#FFE3F2",
+  bg: "#FFD2E9",
+  ink: "#0f0f0f",
+  muted: "#6b7280",
+  card: "#fff",
+  border: "#efeff0",
+  hover: "#ffb8dd",
 };
 
 const Container = ({ children, className = "" }) => (
-  <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
+  <div className={`max-w-[1180px] mx-auto px-5 ${className}`}>{children}</div>
 );
 
-const products = [
+const moods = [
   {
+    letter: "P",
     name: "Power",
-    label: "POWER",
-    color: brand.power,
-    pastelColor: brand.pastelPink,
-    description: "Hormone-balancing blend with adaptogenic herbs. For the days when you need your body to cooperate with your ambitions.",
-    ingredients: ["Strawberries", "Blueberries"]
+    description: "Hormonal support with iron and vitamin B6 to help balance and recharge.",
+    bgColor: "#ff6b6b"
   },
   {
-    name: "Energy",
-    label: "ENERGY",
-    color: brand.energy,
-    pastelColor: brand.pastelOrange,
-    description: "Mental clarity and sustained focus without the crash. Because your brain deserves premium fuel.",
-    ingredients: ["Turmeric", "Cinnamon"]
+    letter: "E",
+    name: "WaKe Up! (Energy)",
+    description: "Mental clarity with B-complex, guarana, and L-theanine for sustained focus.",
+    bgColor: "#ff8a00"
   },
   {
+    letter: "G",
     name: "Glow",
-    label: "GLOW",
-    color: brand.glow,
-    pastelColor: brand.pastelYellow,
-    description: "Skin-loving antioxidants and collagen support. Radiance that starts from the inside out.",
-    ingredients: ["Lemon", "Honey"]
+    description: "Skin and cell nourishment with collagen peptides, vitamin C, and hyaluronic acid.",
+    bgColor: "#ff2d83"
   },
   {
-    name: "Calm",
-    label: "CALM",
-    color: brand.calm,
-    pastelColor: brand.pastelGreen,
-    description: "Nervous system support for the moment when you need to actually breath. Calm without the drowsy.",
-    ingredients: ["Green Apples", "Celery"]
+    letter: "C",
+    name: "lazy juice (Calm)",
+    description: "Nervous system regulation with magnesium, lemon balm, and chamomile.",
+    bgColor: "#f39c12"
   }
 ];
 
 export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Email submitted:", email);
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{backgroundColor: brand.bg, fontFamily: 'Poppins, sans-serif', color: brand.ink}}>
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      
-      {/* Top Banner/Header */}
-      <section 
-        className="relative pt-16 pb-24 overflow-hidden"
-        style={{
-          background: `linear-gradient(to bottom, ${brand.lightPink}40, ${brand.cream})`
-        }}
-      >
-        <Container className="relative z-10">
-          <div className="text-center">
-            <h1 
-              className="text-6xl sm:text-7xl md:text-8xl font-bold font-sans mb-2"
-              style={{ 
-                color: brand.power
-              }}
-            >
-              Bossbaby
-            </h1>
-            <p className="text-xl sm:text-2xl text-gray-600 font-sans">Products</p>
-          </div>
-          {/* Product bottle illustration - positioned behind text */}
-          <div className="absolute top-20 right-10 sm:right-20 opacity-30">
-            <div className="w-32 h-48 sm:w-40 sm:h-60 rounded-t-full rounded-b-lg" style={{backgroundColor: brand.cream}}>
-              <div className="w-full h-8 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
-            </div>
-          </div>
-        </Container>
-      </section>
 
       {/* Hero Section */}
-      <section className="py-16 sm:py-24 bg-white">
+      <section className="relative text-center py-24 px-4">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Text Content */}
-            <div>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-black font-sans mb-4">
-                Four moods. Four formulas. One ritual.
-              </h2>
-              <p className="text-xl sm:text-2xl text-black font-sans">
-                Choose your feeling, grab your shot, and go be unstoppable.
-              </p>
-            </div>
-
-            {/* Right Side - Image Placeholder */}
-            <div className="relative">
-              <div 
-                className="w-full h-96 sm:h-[500px] rounded-3xl flex items-center justify-center"
-                style={{backgroundColor: brand.power}}
-              >
-                <div className="text-center text-white">
-                  <div className="w-32 h-48 mx-auto mb-4 rounded-t-full rounded-b-lg" style={{backgroundColor: brand.cream}}>
-                    <div className="w-full h-8 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
-                  </div>
-                  <p className="text-sm opacity-80">Product Image Placeholder</p>
-                </div>
-              </div>
-            </div>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 max-w-[900px] mx-auto" style={{fontWeight: 800, letterSpacing: '-0.02em'}}>
+            Nutrition drinks made for her, backed with science.
+          </h1>
+          <p className="text-lg text-gray-600 max-w-[780px] mx-auto mt-4">
+            Bossbaby shots are designed to empower women through nutrition and science.
+          </p>
+          <div className="flex gap-3 justify-center flex-wrap mt-6">
+            <a 
+              href="#moods" 
+              className="inline-flex items-center gap-2 rounded-full px-5 py-3.5 font-extrabold text-base border border-black bg-black text-white hover:-translate-y-0.5 transition-transform"
+              style={{fontWeight: 800}}
+            >
+              Explore formulas
+            </a>
+            <a 
+              href="#waitlist" 
+              className="inline-flex items-center gap-2 rounded-full px-5 py-3.5 font-extrabold text-base border border-gray-300 bg-white text-black hover:-translate-y-0.5 transition-transform"
+              style={{fontWeight: 800}}
+            >
+              Join waitlist
+            </a>
           </div>
         </Container>
       </section>
 
-      {/* Product Categories Section */}
-      <section className="py-16 sm:py-24 bg-white">
+      {/* Intro Section */}
+      <section id="moods" className="py-16">
         <Container>
-          {/* Row 1: Product Bottles - Isolated */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12">
-            {products.map((product, index) => (
-              <div key={index} className="text-center">
-                <div 
-                  className="rounded-2xl p-6 mb-4 flex items-center justify-center"
-                  style={{backgroundColor: product.pastelColor}}
-                >
-                  <div className="w-20 h-32 sm:w-24 sm:h-40 rounded-t-full rounded-b-lg relative" style={{backgroundColor: brand.cream}}>
-                    <div className="w-full h-6 sm:h-8 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
-                    <div 
-                      className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 rounded-b-lg flex items-center justify-center"
-                      style={{backgroundColor: product.color + '20'}}
-                    >
-                      <span 
-                        className="text-xs sm:text-sm font-bold uppercase"
-                        style={{color: product.color}}
-                      >
-                        {product.label}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-sm sm:text-base text-black font-sans lowercase">{product.name}</p>
-              </div>
-            ))}
+          <div className="text-center mb-10">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3" style={{fontSize: 'clamp(22px, 3.2vw, 34px)'}}>
+              Four moods. Four formulas. One ritual.
+            </h2>
+            <p className="text-base text-gray-600">
+              Choose your feeling, grab your shot, and go be unstoppable.
+            </p>
           </div>
 
-          {/* Row 2: Product Descriptions */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8 mb-12">
-            {products.map((product, index) => (
-              <div key={index}>
-                <h3 className="text-2xl sm:text-3xl font-bold text-black font-sans mb-3">
-                  {product.name}
-                </h3>
-                <p className="text-sm sm:text-base text-black font-sans leading-relaxed">
-                  {product.description}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Row 3: Product Bottles with Context/Ingredients */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {products.map((product, index) => (
-              <div 
+          {/* Mood Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {moods.map((mood, index) => (
+              <article
                 key={index}
-                className="rounded-2xl p-6"
-                style={{backgroundColor: product.pastelColor}}
+                className="relative overflow-hidden rounded-2xl bg-white border-0 shadow-lg hover:-translate-y-1 transition-all min-h-[140px] grid grid-cols-[160px_1fr] items-center"
+                style={{
+                  boxShadow: '0 16px 50px rgba(17,17,17,0.08)'
+                }}
+                tabIndex={0}
               >
-                <div className="flex items-end gap-3 mb-4">
-                  <div className="w-16 h-24 sm:w-20 sm:h-32 rounded-t-full rounded-b-lg relative" style={{backgroundColor: brand.cream}}>
-                    <div className="w-full h-5 sm:h-6 rounded-t-full" style={{backgroundColor: '#9CA3AF'}}></div>
-                    <div 
-                      className="absolute bottom-0 left-0 right-0 h-12 sm:h-16 rounded-b-lg flex items-center justify-center"
-                      style={{backgroundColor: product.color + '20'}}
+                {/* Mono Letter */}
+                <div 
+                  className="relative h-full flex items-center justify-center font-black text-7xl text-white"
+                  style={{
+                    backgroundColor: mood.bgColor,
+                    fontWeight: 900,
+                    letterSpacing: '-0.04em'
+                  }}
+                >
+                  <div 
+                    className="absolute inset-0 opacity-28"
+                    style={{
+                      clipPath: 'polygon(0 0, 85% 0, 70% 100%, 0 100%)',
+                      backgroundColor: '#000'
+                    }}
+                  ></div>
+                  {mood.letter}
+                </div>
+
+                {/* Content */}
+                <div className="p-4 pr-5">
+                  <h3 className="text-xl font-extrabold mb-1" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
+                    {mood.name}
+                  </h3>
+                  <p className="text-sm text-gray-700 mb-3 leading-relaxed">
+                    {mood.description}
+                  </p>
+                  <div className="flex gap-2 flex-wrap">
+                    <a 
+                      href="#waitlist" 
+                      className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 font-bold text-sm bg-white"
+                      style={{fontWeight: 700}}
                     >
-                      <span 
-                        className="text-xs font-bold uppercase"
-                        style={{color: product.color}}
-                      >
-                        {product.label}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div 
-                      className="w-full h-20 sm:h-24 rounded-lg mb-2"
-                      style={{
-                        backgroundColor: product.color + '40',
-                        border: `2px solid ${product.color}30`
-                      }}
-                    ></div>
-                    <div className="flex flex-wrap gap-1">
-                      {product.ingredients.map((ingredient, i) => (
-                        <div 
-                          key={i}
-                          className="text-xs px-2 py-1 rounded"
-                          style={{
-                            backgroundColor: product.color + '30',
-                            color: product.color
-                          }}
-                        >
-                          {ingredient}
-                        </div>
-                      ))}
-                    </div>
+                      <ChevronRight className="w-4 h-4" />
+                      Join waitlist
+                    </a>
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </Container>
       </section>
-      
+
+      {/* Waitlist CTA Section */}
+      <section id="waitlist" className="py-16 px-4 text-center" style={{backgroundColor: brand.pink, color: brand.ink, borderTop: '1px solid #ffd2ea', borderBottom: '1px solid #ffd2ea'}}>
+        <Container>
+          <h3 className="text-2xl sm:text-3xl font-bold mb-1" style={{fontSize: 'clamp(22px, 3.2vw, 30px)'}}>
+            Ready to feel unstoppable?
+          </h3>
+          <p className="mb-4">Join the waitlist</p>
+          <form onSubmit={handleSubmit} className="flex gap-2 justify-center flex-wrap mt-4">
+            <input
+              type="email"
+              placeholder="enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="px-4 py-4 rounded-2xl border border-white bg-white text-base min-w-[280px] max-w-[80vw] text-black"
+              style={{fontSize: '15px'}}
+            />
+            <button
+              type="submit"
+              className="px-4 py-4 rounded-2xl border border-black bg-black text-white font-extrabold text-base hover:opacity-95 transition-opacity"
+              style={{fontWeight: 800, fontSize: '15px'}}
+            >
+              GO
+            </button>
+          </form>
+        </Container>
+      </section>
+
+      {/* Sticky Bar */}
+      <div className="sticky bottom-0 z-40 bg-black text-white">
+        <div className="flex gap-4 justify-center items-center py-3 px-4">
+          <span><strong className="font-extrabold">Early access</strong> drops first to the list</span>
+          <a 
+            href="#waitlist" 
+            className="bg-white text-black rounded-full px-4 py-2.5 font-extrabold border border-white"
+            style={{fontWeight: 800}}
+          >
+            Join waitlist
+          </a>
+        </div>
+      </div>
+
       <Footer />
     </div>
   );
 }
-
