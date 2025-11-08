@@ -27,16 +27,6 @@ export default function Header({ currentPage, setCurrentPage }) {
             className="text-sm font-normal hover:opacity-70 transition-opacity"
             onClick={(e) => {
               e.preventDefault();
-              setCurrentPage('landing');
-            }}
-          >
-            Home
-          </a>
-          <a 
-            href="#" 
-            className="text-sm font-normal hover:opacity-70 transition-opacity"
-            onClick={(e) => {
-              e.preventDefault();
               setCurrentPage('products');
             }}
           >
@@ -61,16 +51,6 @@ export default function Header({ currentPage, setCurrentPage }) {
             }}
           >
             About
-          </a>
-          <a 
-            href="#" 
-            className="text-sm font-normal hover:opacity-70 transition-opacity"
-            onClick={(e) => {
-              e.preventDefault();
-              setCurrentPage('faq');
-            }}
-          >
-            FAQ
           </a>
         </nav>
         <div className="flex items-center">
