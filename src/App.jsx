@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BossBabyLandingPage from './components/BossBabyLandingPage';
 import BossBabyProductsPage from './components/BossBabyProductsPage';
 import BossBabyCommunityPage from './components/BossBabyCommunityPage';
+import BossBabyAboutPage from './components/BossBabyAboutPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -12,6 +13,8 @@ function App() {
         return <BossBabyProductsPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'community':
         return <BossBabyCommunityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'about':
+        return <BossBabyAboutPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'landing':
       default:
         return <BossBabyLandingPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
