@@ -1,137 +1,239 @@
 import React from "react";
-import { Button } from "./ui/button";
-import { ChevronRight, ArrowUpRight, Sparkles, Users, HeartHandshake, ShieldCheck } from "lucide-react";
-import { Badge } from "./ui/badge";
-import { Card, CardContent } from "./ui/card";
 import Header from "./Header";
 import Footer from "./Footer";
 
-// BossBaby brand palette
 const brand = {
-  power: "#FF1493",    // vibrant hot pink
-  lightPink: "#FFB6C1", // lighter pink for buy button
-  lightPurple: "#DDA0DD", // light purple for separator
-  energy: "#F79A3E",   // orange
-  glow: "#F9D44A",     // yellow
-  calm: "#8BC374",     // green
-  cream: "#F5EBDC",    // soft cream background
-  ink: "#111827",      // gray-900
+  pink: "#FF89CC",
+  lightPink: "#FFE3F2",
+  bg: "#FFD2E9",
+  text: "#1f1f1f",
+  muted: "#6b7280",
+  white: "#fff",
+  border: "#f1f1f1",
 };
 
 const Container = ({ children, className = "" }) => (
-  <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
+  <div className={`max-w-[1200px] mx-auto px-4 sm:px-6 ${className}`}>{children}</div>
 );
+
+const features = [
+  {
+    title: "Daily Tips",
+    description: "Tiny routines, recipe bites and science nuggets read in 60s."
+  },
+  {
+    title: "Circle Groups",
+    description: "Topic circles for Energy, Focus, Skin and Cycle."
+  },
+  {
+    title: "Expert AMAs",
+    description: "Live Q&As with nutrition and hormone health professionals."
+  },
+  {
+    title: "Product Testers",
+    description: "Try new flavors first and share feedback."
+  }
+];
+
+const topics = [
+  {
+    title: "Hormone Harmony",
+    description: "Cycle sync tips, energy balancing, and expert AMAs.",
+    tags: ["luteal", "PMS", "supplements"]
+  },
+  {
+    title: "Deep Work",
+    description: "Body double sessions and weekly focus sprints.",
+    tags: ["cowork", "accountability", "systems"]
+  },
+  {
+    title: "Skin and Glow",
+    description: "Ingredient breakdowns and before afters.",
+    tags: ["SPF", "collagen", "hydration"]
+  },
+  {
+    title: "Calm Club",
+    description: "Nervous system resets, breathwork, and sleep swaps.",
+    tags: ["sleep", "journaling", "magnesium"]
+  },
+  {
+    title: "Food and Fuel",
+    description: "Quick recipes and what I eat in a day threads.",
+    tags: ["protein", "macro friendly", "budget"]
+  },
+  {
+    title: "Wins Wall",
+    description: "Hype each other up, tiny to epic.",
+    tags: ["PRs", "presentations", "habits"]
+  }
+];
+
+const feedPosts = [
+  {
+    author: "@nadiac",
+    time: "2h ago",
+    replies: 24,
+    title: "What is one small habit that calmed your afternoons?"
+  },
+  {
+    author: "@samj",
+    time: "1d ago",
+    replies: 8,
+    title: "I swapped coffee for WaKe Up! and my 2pm crash vanished"
+  },
+  {
+    author: "@miri",
+    time: "3d ago",
+    replies: 19,
+    title: "Share your favorite protein forward 10 min lunch"
+  }
+];
+
+const ambassadors = [
+  {
+    name: "Maya Berlin",
+    description: "Runs Calm Club walks and weekly breathwork."
+  },
+  {
+    name: "Zee Munich",
+    description: "Kicks off Deep Work sprints every Tuesday."
+  },
+  {
+    name: "Anika Hamburg",
+    description: "Hosts skin science AMAs with dermatology friends."
+  }
+];
 
 export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{backgroundColor: brand.bg, fontFamily: 'Poppins, sans-serif', color: brand.text}}>
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-      {/* Hero Section - Cream Background */}
-      <section className="w-full py-16 sm:py-24" style={{backgroundColor: brand.cream}}>
+      {/* Hero Section */}
+      <section className="text-center py-20 px-4">
         <Container>
-          <div className="max-w-3xl">
-            <Badge className="mb-4 rounded-full px-3 py-1 text-xs font-medium border" style={{
-              backgroundColor: brand.lightPink + "80",
-              color: brand.ink,
-              borderColor: brand.lightPink
-            }}>
-              Women‑led · Science‑informed · Delicious
-            </Badge>
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 font-sans leading-tight mb-4">
-              Your community for wellness that actually fits your life.
-              </h1>
-            <p className="text-lg text-gray-700 font-sans mb-6">
-                Connect with founders, experts, and the BossBaby crew. Recipes, routines, product testing & exclusive early‑access drops — all in one place.
-              </p>
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <Button 
-                className="rounded-xl px-6 py-3 text-white font-sans hover:opacity-90 flex items-center justify-center gap-2" 
-                style={{backgroundColor: brand.lightPink}}
-              >
-                  Join the community
-                <ChevronRight className="h-4 w-4" />
-                </Button>
-              <Button 
-                variant="outline" 
-                className="rounded-xl px-6 py-3 font-sans border flex items-center justify-center gap-2" 
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4" style={{fontWeight: 800, fontSize: 'clamp(32px, 5vw, 56px)'}}>
+            Where wellness meets real talk.
+          </h1>
+          <p className="text-lg text-gray-600 max-w-[700px] mx-auto mt-4 mb-8" style={{fontSize: '1.1rem'}}>
+            A kind, hype heavy space to swap routines, ask smart questions, and celebrate micro wins.
+          </p>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 max-w-[1100px] mx-auto">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white border rounded-3xl p-8 shadow-md flex flex-col items-center text-center hover:-translate-y-1 transition-all"
                 style={{
-                  borderColor: brand.energy,
-                  color: brand.ink,
-                  backgroundColor: brand.cream
+                  borderColor: '#ffeaf4',
+                  boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
                 }}
               >
-                  Learn more
-                <ArrowUpRight className="h-4 w-4" />
-                </Button>
+                <h3 className="text-xl font-extrabold mb-3" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed max-w-[240px]">
+                  {feature.description}
+                </p>
               </div>
-            <div className="flex items-center gap-4 text-sm text-gray-700">
-                <div className="flex -space-x-2">
-                  {[...Array(5)].map((_, i) => (
-                  <div 
-                    key={i} 
-                    className="h-8 w-8 rounded-full ring-2 ring-white" 
-                    style={{backgroundColor: brand.lightPink}} 
-                  />
-                  ))}
-                </div>
-                <span>3.2k+ members · 92% would recommend</span>
-              </div>
+            ))}
           </div>
         </Container>
       </section>
 
-      {/* Feature Cards Section - Light Pink Background */}
-      <section className="w-full py-16 sm:py-24" style={{backgroundColor: brand.lightPink + "40"}}>
+      {/* Topics Section */}
+      <section className="py-16 px-4">
         <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <Card className="rounded-2xl shadow-sm bg-white">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{backgroundColor: brand.lightPink + "33"}}>
-                    <Sparkles className="h-5 w-5" style={{color: brand.lightPink}} />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 font-sans">Daily Tips</h3>
+          <h2 className="text-center text-3xl sm:text-4xl font-extrabold mb-6" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
+            Pick your corner
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {topics.map((topic, index) => (
+              <div
+                key={index}
+                className="bg-white border rounded-2xl p-5 shadow-md hover:-translate-y-0.5 transition-all"
+                style={{
+                  borderColor: '#ffeaf4',
+                  boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
+                }}
+              >
+                <h3 className="text-base font-extrabold mb-1" style={{fontWeight: 800}}>
+                  {topic.title}
+                </h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  {topic.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {topic.tags.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="border rounded-full px-3 py-1 text-xs bg-white"
+                      style={{borderColor: '#f3e3ee'}}
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
-                <p className="text-sm text-gray-600 font-sans">Tiny routines, recipe bites & science nuggets — read in 60s.</p>
-              </CardContent>
-            </Card>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
 
-            <Card className="rounded-2xl shadow-sm bg-white">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{backgroundColor: brand.energy + "33"}}>
-                    <Users className="h-5 w-5" style={{color: brand.energy}} />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 font-sans">Circle Groups</h3>
+      {/* Feed Section */}
+      <section className="py-16 px-4">
+        <Container>
+          <h2 className="text-center text-3xl sm:text-4xl font-extrabold mb-6" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
+            Fresh from the feed
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {feedPosts.map((post, index) => (
+              <div
+                key={index}
+                className="bg-white border rounded-2xl p-5 shadow-md"
+                style={{
+                  borderColor: '#ffeaf4',
+                  boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
+                }}
+              >
+                <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
+                  <span>{post.author} {post.time}</span>
+                  <span>{post.replies}</span>
                 </div>
-                <p className="text-sm text-gray-600 font-sans">Topic circles for Energy, Focus, Skin & Cycle.</p>
-                </CardContent>
-              </Card>
-
-            <Card className="rounded-2xl shadow-sm bg-white">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{backgroundColor: brand.calm + "33"}}>
-                    <HeartHandshake className="h-5 w-5" style={{color: brand.calm}} />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 font-sans">Expert AMAs</h3>
+                <div className="font-bold text-base mt-2" style={{fontWeight: 700}}>
+                  {post.title}
                 </div>
-                <p className="text-sm text-gray-600 font-sans">Live Q&As with nutrition & hormone health pros.</p>
-                </CardContent>
-              </Card>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
 
-            <Card className="rounded-2xl shadow-sm bg-white">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{backgroundColor: brand.glow + "33"}}>
-                    <ShieldCheck className="h-5 w-5" style={{color: brand.glow}} />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 font-sans">Product Testers</h3>
-                  </div>
-                <p className="text-sm text-gray-600 font-sans">Try new flavors first & share feedback.</p>
-              </CardContent>
-            </Card>
+      {/* Ambassadors Section */}
+      <section className="py-16 px-4">
+        <Container>
+          <h2 className="text-center text-3xl sm:text-4xl font-extrabold mb-6" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
+            Ambassadors
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {ambassadors.map((amb, index) => (
+              <div
+                key={index}
+                className="bg-white border rounded-2xl p-5 shadow-md"
+                style={{
+                  borderColor: '#ffeaf4',
+                  boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
+                }}
+              >
+                <h4 className="font-extrabold mb-1" style={{fontWeight: 800}}>
+                  {amb.name}
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {amb.description}
+                </p>
+              </div>
+            ))}
           </div>
         </Container>
       </section>
