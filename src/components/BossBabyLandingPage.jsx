@@ -21,43 +21,43 @@ const drinks = [
   {
     name: "Power",
     description:
-      "Hormone-balancing blend with adaptogenic herbs. For the days when you need your body to cooperate with your ambitions.",
+      "For the days when your body needs to catch up with your ambition. Helps balance hormones, boost mood, and improve your energy so your body can keep up with your goals.",
   },
   {
-    name: "Energy",
+    name: "WaKe Up!",
     description:
-      "Mental clarity and sustained focus without the crash. Because your brain deserves premium fuel.",
+      "When you’ve got 10 tabs open and 2 hours of focus left. A clean boost powered by natural caffeine and brain-loving nutrients for steady energy, sharp focus, and no burnout.",
   },
   {
     name: "Glow",
     description:
-      "Skin-loving antioxidants and collagen support. Radiance that starts from the inside out.",
+      "Glow, confidence, and shine from within. Antioxidants and collagen boosters light you up from the inside out, giving your skin, hair, and day a front-row seat to that unmistakable Bossbaby glow.",
   },
   {
-    name: "Calm",
+    name: "lazy juice",
     description:
-      "Nervous system support for when you need to actually breathe. Calm without the drowsy.",
+      "For days where you just want to turn off the world. A calming blend that eases stress and supports relaxation so you can breathe, reset, and feel like yourself again.",
   },
 ];
 
 const testimonials = [
   {
-    name: "Sarah",
+    name: "Valentina",
     quote:
       "I want nutrition that feels like a reward, not a chore. And Bossbaby just gets it.",
-    role: "Sarah, 27, Design Freelancer",
+    role: "Valentina, 27, Design Freelancer",
   },
   {
     name: "Jun",
     quote:
-      "I would 100% recommend it, because very niche products that support women’s inner peace and outer energy are rare",
+      "I would 100% recommend it, because niche products that support women’s inner peace and outer energy are very rare.",
     role: "Jun, 26, Marketing Analyst",
   },
   {
-    name: "Jess",
+    name: "Charlie",
     quote:
       "I'm a busy working girl, I've never been consistent with supplements, but this one feels like self-care, not homework.",
-    role: "Jess, 26, Entrepreneur",
+    role: "Charlie, 26, Entrepreneur",
   },
   {
     name: "Cassandra",
@@ -271,13 +271,13 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             className="text-4xl sm:text-5xl md:text-6xl font-light mb-4"
             style={{ fontSize: "48px" }}
           >
-            Coming soon! World&apos;s first AI-powered smoothie machine
+            World&apos;s first AI-powered smoothie machine
           </h3>
           <p
-            className="text-4xl sm:text-5xl md:text-6xl font-light"
-            style={{ fontSize: "48px" }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold"
+            style={{ fontSize: "24px" }}
           >
-            Stay tuned!
+            Coming soon! Stay tuned!
           </p>
         </Container>
       </section>
@@ -292,7 +292,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             className="text-3xl sm:text-4xl font-bold mb-4"
             style={{ fontSize: "37px", color: brand.communityText }}
           >
-            100% would recommend Bossbaby to their friends and family
+            100% would recommend Bossbaby.
           </h4>
           <p
             className="text-xl sm:text-2xl mb-8"
