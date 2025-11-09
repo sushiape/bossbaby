@@ -24,7 +24,7 @@ const affiliations = [
   "Rentenbank",
   "TechQuartier",
   "German Federal Ministry of Agriculture, Food and Regional Identity",
-  "Technical University of Munich (TUM)"
+  "Technical University of Munich (TUM)",
   "TUM Venture Labs",
   "UnternehmerTUM",
   "KfW Stiftung",
