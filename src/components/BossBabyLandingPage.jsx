@@ -271,13 +271,13 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4"
             style={{ fontSize: "24px" }}
           >
-            World&apos;s first AI-powered smoothie machine
+            Coming soon! Stay tuned!
           </h3>
           <p
             className="text-4xl sm:text-5xl md:text-6xl font-light"
             style={{ fontSize: "48px" }}
           >
-            Coming soon! Stay tuned!
+            World&apos;s first AI-powered smoothie machine
           </p>
         </Container>
       </section>
