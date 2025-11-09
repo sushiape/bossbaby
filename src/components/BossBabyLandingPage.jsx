@@ -190,65 +190,67 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         {/* ===== ENDE: WAITLIST-FORMULAR ===== */}
       </section>
 
-      {/* Affiliations Bar */}
-<section className="py-10 px-4 overflow-hidden bg-white">
-  <Container>
+     {/* Affiliations Bar */}
+<section className="py-10 bg-white overflow-hidden w-full">
+  {/* Centered header text stays in a contained width */}
+  <div className="max-w-4xl mx-auto px-4">
     <p className="text-gray-600 text-center mb-8 text-lg font-medium">
       We build inside a strong innovation network.
     </p>
+  </div>
 
-    <div className="relative w-full overflow-hidden group">
-      <div
-        className="flex gap-6 whitespace-nowrap animate-scroll group-hover:[animation-play-state:paused]"
-        style={{
-          animation: "scroll 40s linear infinite",
-        }}
-      >
-        {[
-          "German Federal Ministry of Agriculture, Food and Regional Identity",
-          "Growth Alliance Accelerator",
-          "Rentenbank",
-          "TechQuartier",
-          "Technical University of Munich (TUM)",
-          "UnternehmerTUM",
-          "TUM Venture Labs",
-          "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
-          "KfW Stiftung",
-          "Social Business Women e.V.",
-          "CoCo - Female Founders",
-        ].map((affiliation, i) => (
-          <span
-            key={i}
-            className="px-6 py-3 rounded-full border text-sm font-medium bg-white text-gray-800 shadow-sm"
-          >
-            {affiliation}
-          </span>
-        ))}
+  {/* Full-width scrolling section */}
+  <div className="relative w-full overflow-hidden group">
+    <div
+      className="flex gap-6 whitespace-nowrap animate-scroll group-hover:[animation-play-state:paused]"
+      style={{
+        animation: "scroll 40s linear infinite",
+      }}
+    >
+      {[
+        "German Federal Ministry of Agriculture, Food and Regional Identity",
+        "Growth Alliance Accelerator",
+        "Rentenbank",
+        "TechQuartier",
+        "Technical University of Munich (TUM)",
+        "UnternehmerTUM",
+        "TUM Venture Labs",
+        "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
+        "KfW Stiftung",
+        "Social Business Women e.V.",
+        "CoCo - Female Founders",
+      ].map((affiliation, i) => (
+        <span
+          key={i}
+          className="px-6 py-3 rounded-full border text-sm font-medium bg-white text-gray-800 shadow-sm"
+        >
+          {affiliation}
+        </span>
+      ))}
 
-        {/* Duplicate list for seamless loop */}
-        {[
-          "German Federal Ministry of Agriculture, Food and Regional Identity",
-          "Growth Alliance Accelerator",
-          "Rentenbank",
-          "TechQuartier",
-          "Technical University of Munich (TUM)",
-          "UnternehmerTUM",
-          "TUM Venture Labs",
-          "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
-          "KfW Stiftung",
-          "Social Business Women e.V.",
-          "CoCo - Female Founders",
-        ].map((affiliation, i) => (
-          <span
-            key={`dup-${i}`}
-            className="px-6 py-3 rounded-full border text-sm font-medium bg-white text-gray-800 shadow-sm"
-          >
-            {affiliation}
-          </span>
-        ))}
-      </div>
+      {/* Duplicate list for seamless loop */}
+      {[
+        "German Federal Ministry of Agriculture, Food and Regional Identity",
+        "Growth Alliance Accelerator",
+        "Rentenbank",
+        "TechQuartier",
+        "Technical University of Munich (TUM)",
+        "UnternehmerTUM",
+        "TUM Venture Labs",
+        "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
+        "KfW Stiftung",
+        "Social Business Women e.V.",
+        "CoCo - Female Founders",
+      ].map((affiliation, i) => (
+        <span
+          key={`dup-${i}`}
+          className="px-6 py-3 rounded-full border text-sm font-medium bg-white text-gray-800 shadow-sm"
+        >
+          {affiliation}
+        </span>
+      ))}
     </div>
-  </Container>
+  </div>
 
   {/* Scroll animation */}
   <style>{`
@@ -264,26 +266,26 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
 <section className="bg-white py-20 px-4 text-center">
   <Container>
     <div className="max-w-5xl mx-auto space-y-10">
-      <h2 className="text-2xl font-semibold text-brand-black mb-6 text-center">
+      <h2 className="text-5xl font-semibold text-brand-black mb-6 text-center">
         We make nutritious drinks for women that taste amazing, fit busy routines,
         and turn wellness into a moment of empowerment and identity.
       </h2>
 
-      <p className="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+      <p className="text-base text-gray-700 leading-relaxed max-w-5xl mx-auto">
         We started Bossbaby because we couldn’t find nutrition supplements that truly reflect
         the way women live and feel. Most supplements are inconvenient, overly masculine, and not
         designed with women's unique health needs in mind. We wanted something that’s convenient, delicious, and functional, created by
         women, for women.
       </p>
 
-      <p className="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+      <p className="text-base text-gray-700 leading-relaxed max-w-5xl mx-auto">
         Our formulas are developed together with nutrition scientists and experts
         to align with women's physiological and emotional needs. Each shot — Power, WaKe Up! (Energy),
         Glow, and Lazy Juice (Calm) — corresponds to a specific mood, transforming
         supplements into an enjoyable, empowering daily ritual.
       </p>
 
-      <p className="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+      <p className="text-base text-gray-700 leading-relaxed max-w-5xl mx-auto">
         Our mission is simple: to empower women with delicious nutrient drinks that taste amazing,
         fit busy routines, and turn wellness into a daily moment of strength, science, and self-expression.
       </p>
