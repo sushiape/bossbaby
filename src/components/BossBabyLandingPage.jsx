@@ -272,14 +272,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       <p className="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
         We started Bossbaby because we couldn’t find nutrition supplements that truly reflect
         the way women live and feel. Most supplements are inconvenient, overly masculine, and not
-        designed with women's unique health needs in mind. We wanted something real, created by
-        women, for women, that’s both functional and empowering.
+        designed with women's unique health needs in mind. We wanted something that’s convenient, delicious, and functional, created by
+        women, for women.
       </p>
 
       <p className="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
-        Our formulas are developed together with nutrition experts and based on scientific research
+        Our formulas are developed together with nutrition scientists and experts
         to align with women's physiological and emotional needs. Each shot — Power, WaKe Up! (Energy),
-        Glow, and Lazy Juice (Calm) — corresponds to a specific physical–emotional state, transforming
+        Glow, and Lazy Juice (Calm) — corresponds to a specific mood, transforming
         supplements into an enjoyable, empowering daily ritual.
       </p>
 
