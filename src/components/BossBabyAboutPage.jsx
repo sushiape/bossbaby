@@ -20,13 +20,14 @@ const Wrap = ({ children, className = "" }) => (
 );
 
 const affiliations = [
+  "German Federal Ministry of Agriculture, Food and Regional Identity",
   "Growth Alliance Accelerator",
   "Rentenbank",
   "TechQuartier",
-  "German Federal Ministry of Agriculture, Food and Regional Identity",
   "Technical University of Munich (TUM)",
-  "TUM Venture Labs",
   "UnternehmerTUM",
+  "TUM Venture Labs",
+  "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
   "KfW Stiftung",
   "Social Business Women e.V.",
   "CoCo - Female Founders"
