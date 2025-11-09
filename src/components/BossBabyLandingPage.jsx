@@ -4,7 +4,7 @@ import Footer from "./Footer";
 
 const brand = {
   pink: "#FF89CC",
-  bg: "#FAF5F6",
+  bg: "#FFD2E9",
   white: "#fff",
   text: "#000",
   communityBg: "#EAEDDC",
