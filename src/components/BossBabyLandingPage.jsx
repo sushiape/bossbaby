@@ -220,6 +220,80 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
   </Container>
 </section>
 
+      {/* Affiliations Section */}
+<section
+  className="py-10 px-4 overflow-hidden"
+  style={{ backgroundColor: "#FFE6F1" }}
+>
+  <Container>
+    <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+      Affiliations
+    </h3>
+    <p className="text-gray-600 text-center mb-8">
+      We build inside a strong innovation network.
+    </p>
+
+    <div className="relative w-full overflow-hidden group">
+      <div
+        className="flex gap-6 whitespace-nowrap animate-scroll group-hover:[animation-play-state:paused]"
+        style={{
+          animation: "scroll 40s linear infinite",
+        }}
+      >
+        {[
+          "German Federal Ministry of Agriculture, Food and Regional Identity",
+          "Growth Alliance Accelerator",
+          "Rentenbank",
+          "TechQuartier",
+          "Technical University of Munich (TUM)",
+          "UnternehmerTUM",
+          "TUM Venture Labs",
+          "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
+          "KfW Stiftung",
+          "Social Business Women e.V.",
+          "CoCo - Female Founders",
+        ].map((affiliation, i) => (
+          <span
+            key={i}
+            className="px-6 py-3 rounded-full border text-sm font-medium bg-white text-gray-800 shadow-sm"
+          >
+            {affiliation}
+          </span>
+        ))}
+        {/* Duplicate list for seamless loop */}
+        {[
+          "German Federal Ministry of Agriculture, Food and Regional Identity",
+          "Growth Alliance Accelerator",
+          "Rentenbank",
+          "TechQuartier",
+          "Technical University of Munich (TUM)",
+          "UnternehmerTUM",
+          "TUM Venture Labs",
+          "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
+          "KfW Stiftung",
+          "Social Business Women e.V.",
+          "CoCo - Female Founders",
+        ].map((affiliation, i) => (
+          <span
+            key={`dup-${i}`}
+            className="px-6 py-3 rounded-full border text-sm font-medium bg-white text-gray-800 shadow-sm"
+          >
+            {affiliation}
+          </span>
+        ))}
+      </div>
+    </div>
+  </Container>
+
+  {/* Scroll animation */}
+  <style>{`
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  `}</style>
+</section>
+      
       {/* Drinks Section */}
       <section
         className="py-20 px-4 text-center"
