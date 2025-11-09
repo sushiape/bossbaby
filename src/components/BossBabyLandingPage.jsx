@@ -44,26 +44,26 @@ const testimonials = [
   {
     name: "Sarah",
     quote:
-      "Finally, a wellness brand that doesn't make me feel like I'm failing at life. These shots just... get it.",
-    role: "Sarah, 29, Marketing Director",
+      "I want nutrition that feels like a reward, not a chore. And Bossbaby just gets it.",
+    role: "Sarah, 27, Design Freelancer",
   },
   {
-    name: "Maya",
+    name: "Jun",
     quote:
-      "The POWER shot is my secret weapon for those hormonal weeks when I usually want to hide under a blanket",
-    role: "Maya, 34, Entrepreneur",
+      "I would 100% recommend it, because very niche products that support women’s inner peace and outer energy are rare",
+    role: "Jun, 26, Marketing Analyst",
   },
   {
     name: "Jess",
     quote:
-      "I've never been consistent with supplements, but this one feels like self-care, not homework.",
-    role: "Jess, 26, Designer",
+      "I'm a busy working girl, I've never been consistent with supplements, but this one feels like self-care, not homework.",
+    role: "Jess, 26, Entrepreneur",
   },
   {
-    name: "Julie",
+    name: "Cassandra",
     quote:
-      "The energy shot is my go-to boost before training, it helps me push through tough sessions and recover with strength.",
-    role: "Julie, 27, Fitness Coach",
+      "Best friends should get beautiful together ;p",
+    role: "Cassandra, 27, Aerospace Engineer",
   },
 ];
 
@@ -200,17 +200,17 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               identity.
               <br />
               <br />
-              We started Bossbaby because we couldn&apos;t find wellness
-              products that truly reflect the way women live and feel. Most
-              supplements are generic, masculine-default, or overly aesthetic
-              without real function. We wanted something real, created by women,
-              for women, that&apos;s both functional and emotionally resonant.
+              We started Bossbaby because we couldn&apos;t find nutrition supplements
+              that truly reflect the way women live and feel. Most
+              supplements are inconvenient, overly masculine, and not designed with
+              women's unique health needs in mind. We wanted something real, created by women,
+              for women, that&apos;s both functional and empowering.
               <br />
               <br />
               Our formulas are developed together with nutrition experts and
               based on scientific research to align with women&apos;s
-              physiological and emotional needs. Each shot, Power, Energy, Glow,
-              and Calm, corresponds to a specific physical-emotional state,
+              physiological and emotional needs. Each shot, Power, WaKe Up! (Energy), Glow,
+              and lazy juice (Calm), corresponds to a specific physical-emotional state,
               transforming supplements into an enjoyable, empowering daily
               ritual.
               <br />
@@ -271,7 +271,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             className="text-4xl sm:text-5xl md:text-6xl font-light mb-4"
             style={{ fontSize: "48px" }}
           >
-            World&apos;s first AI-powered smoothie machine
+            Coming soon! World&apos;s first AI-powered smoothie machine
           </h3>
           <p
             className="text-4xl sm:text-5xl md:text-6xl font-light"
@@ -292,7 +292,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             className="text-3xl sm:text-4xl font-bold mb-4"
             style={{ fontSize: "37px", color: brand.communityText }}
           >
-            Real women, real feelings
+            100% would recommend Bossbaby to their friends and family
           </h4>
           <p
             className="text-xl sm:text-2xl mb-8"
