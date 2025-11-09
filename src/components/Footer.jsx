@@ -13,30 +13,26 @@ export default function Footer() {
             href="https://www.instagram.com/bossbabiezz/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="hover:opacity-70 transition-opacity inline-block"
             aria-label="Follow us on Instagram"
           >
             <img 
               src="bossbaby/public/inslogo.png" 
               alt="Instagram" 
-              width="64" 
-              height="64"
-              style={{width: '64px', height: '64px'}}
+              style={{width: '48px', height: '48px', display: 'block'}}
             />
           </a>
           <a 
             href="https://www.linkedin.com/company/bossbb/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="hover:opacity-70 transition-opacity inline-block"
             aria-label="Follow us on LinkedIn"
           >
             <img 
               src="bossbaby/public/linklogo.png" 
               alt="LinkedIn" 
-              width="64" 
-              height="64"
-              style={{width: '64px', height: '64px'}}
+              style={{width: '48px', height: '48px', display: 'block'}}
             />
           </a>
         </div>
