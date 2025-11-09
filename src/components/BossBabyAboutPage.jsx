@@ -24,9 +24,12 @@ const affiliations = [
   "Rentenbank",
   "TechQuartier",
   "German Federal Ministry of Agriculture, Food and Regional Identity",
+  "Technical University of Munich (TUM)"
   "TUM Venture Labs",
   "UnternehmerTUM",
-  "Technical University of Munich (TUM)"
+  "KfW Stiftung",
+  "Social Business Women e.V.",
+  "CoCo - Female Founders"
 ];
 
 const values = [
