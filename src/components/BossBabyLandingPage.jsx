@@ -56,14 +56,14 @@ const testimonials = [
   {
     name: "Charlie",
     quote:
-      "I'm a busy working girl, I've never been consistent with supplements, but this one feels like self-care, not homework.",
-    role: "Charlie, 26, Entrepreneur",
+      "I'm a busy working girl, so I've never been consistent with supplements, but this one feels like self-care, not homework.",
+    role: "Charlie, 32, Entrepreneur",
   },
   {
     name: "Cassandra",
     quote:
       "Best friends should get beautiful together ;p",
-    role: "Cassandra, 27, Aerospace Engineer",
+    role: "Cassandra, 29, Aerospace Engineer",
   },
 ];
 
@@ -266,7 +266,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
 <section className="bg-white py-20 px-4 text-center">
   <Container>
     <div className="max-w-5xl mx-auto space-y-10">
-      <h2 className="text-3xl font-semibold text-brand-black mb-6 text-center">
+      <h2 className="text-2xl font-semibold text-brand-black mb-6 text-center">
         We make nutritious drinks for women that taste amazing, fit busy routines,
         and turn wellness into a moment of empowerment and identity.
       </h2>
