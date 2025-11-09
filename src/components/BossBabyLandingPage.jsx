@@ -78,7 +78,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
     const formData = new FormData(form);
 
     try {
-      const response = await fetch("https://formspree.io/f/mblqroob", {
+      const response = await fetch("https://formspree.io/f/xgvrwpyr", {
         method: "POST",
         headers: {
           Accept: "application/json",
