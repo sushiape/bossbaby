@@ -268,14 +268,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       <section className="py-20 px-4 text-center bg-white">
         <Container>
           <h3
-            className="text-4xl sm:text-5xl md:text-6xl font-light mb-4"
-            style={{ fontSize: "48px" }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4"
+            style={{ fontSize: "24px" }}
           >
             World&apos;s first AI-powered smoothie machine
           </h3>
           <p
-            className="text-4xl sm:text-5xl md:text-6xl font-bold"
-            style={{ fontSize: "24px" }}
+            className="text-4xl sm:text-5xl md:text-6xl font-light"
+            style={{ fontSize: "48px" }}
           >
             Coming soon! Stay tuned!
           </p>
