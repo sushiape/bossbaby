@@ -17,7 +17,7 @@ export default function Footer() {
             aria-label="Follow us on Instagram"
           >
             <img 
-              src="bossbaby/public/inslogo.png" 
+              src="public/inslogo.png" 
               alt="Instagram" 
               style={{width: '48px', height: '48px', display: 'block'}}
             />
@@ -30,7 +30,7 @@ export default function Footer() {
             aria-label="Follow us on LinkedIn"
           >
             <img 
-              src="bossbaby/public/linklogo.png" 
+              src="public/linklogo.png" 
               alt="LinkedIn" 
               style={{width: '48px', height: '48px', display: 'block'}}
             />
