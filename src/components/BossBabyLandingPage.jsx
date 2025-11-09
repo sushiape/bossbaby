@@ -266,7 +266,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
 <section className="bg-white py-20 px-4 text-center">
   <Container>
     <div className="max-w-5xl mx-auto space-y-10">
-      <h2 className="text-5xl font-semibold text-brand-black mb-6 text-center">
+      <h2 className="text-3xl font-semibold text-brand-black mb-6 text-center">
         We make nutritious drinks for women that taste amazing, fit busy routines,
         and turn wellness into a moment of empowerment and identity.
       </h2>
