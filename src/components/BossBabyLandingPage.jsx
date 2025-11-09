@@ -226,7 +226,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       {/* Drinks Section */}
       <section
         className="py-20 px-4 text-center"
-        style={{ backgroundColor: "brand.pink" }}
+        style={{ backgroundColor: "brand.pink2" }}
       >
         <Container>
           <h2
