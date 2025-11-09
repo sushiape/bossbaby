@@ -100,7 +100,7 @@ const ambassadors = [
   },
   {
     name: "Annabelline Hamburg",
-    description: "Hosts skin science "Ask an Expert" sessions with dermatology friends."
+    description: "Hosts skin science 'Ask an Expert' sessions with dermatology friends."
   }
 ];
 
