@@ -18,89 +18,89 @@ const Container = ({ children, className = "" }) => (
 
 const features = [
   {
-    title: "Daily Tips",
-    description: "Tiny routines, recipe bites and science nuggets read in 60s."
+    title: "Mini Glow-Ups",
+    description: "Tiny routines, mini wellness bites and science nuggets read in 60s."
   },
   {
-    title: "Circle Groups",
-    description: "Topic circles for Energy, Focus, Skin and Cycle."
+    title: "Bossbaby Squad",
+    description: "Small unique groups for energy, focus, and beauty. Let's hype each other up!"
   },
   {
-    title: "Expert AMAs",
-    description: "Live Q&As with nutrition and hormone health professionals."
+    title: "Ask an Expert",
+    description: "Q&As with nutrition scientists and wellness nerds who speak your language."
   },
   {
-    title: "Product Testers",
-    description: "Try new flavors first and share feedback."
+    title: "Flavour Lab",
+    description: "Create with us: Taste, test, and co-create the next Bossbaby blends before anyone else. "
   }
 ];
 
 const topics = [
   {
     title: "Hormone Harmony",
-    description: "Cycle sync tips, energy balancing, and expert AMAs.",
-    tags: ["luteal", "PMS", "supplements"]
+    description: "Cycle-sync your life - from mood to meals. With energy-balancing tips and expert hot takes.",
+    tags: ["cycle syncing", "PMS", "supplements"]
   },
   {
-    title: "Deep Work",
-    description: "Body double sessions and weekly focus sprints.",
-    tags: ["cowork", "accountability", "systems"]
+    title: "Deep Work, Babe",
+    description: "Focus sprints and accountability threads to get things done together.",
+    tags: ["focus", "cowork", "systems"]
   },
   {
-    title: "Skin and Glow",
-    description: "Ingredient breakdowns and before afters.",
+    title: "Glow Theory",
+    description: "Your go-to space for skincare myths, ingredient deep dives, and real before-and-afters.",
     tags: ["SPF", "collagen", "hydration"]
   },
   {
     title: "Calm Club",
-    description: "Nervous system resets, breathwork, and sleep swaps.",
+    description: "Nervous system resets, breathwork, and sleep tips.",
     tags: ["sleep", "journaling", "magnesium"]
   },
   {
-    title: "Food and Fuel",
-    description: "Quick recipes and what I eat in a day threads.",
+    title: "Fuel and Feel Good",
+    description: "Quick, mood-lifting meals and snack inspo for busy days that need real energy",
     tags: ["protein", "macro friendly", "budget"]
   },
   {
     title: "Wins Wall",
     description: "Hype each other up, tiny to epic.",
-    tags: ["PRs", "presentations", "habits"]
+    tags: ["power", "habits", "hype"]
   }
 ];
 
 const feedPosts = [
   {
-    author: "@nadiac",
+    author: "@paralleluniverse",
     time: "2h ago",
     replies: 24,
-    title: "What is one small habit that calmed your afternoons?"
+    title: "Female founders: Whats your goto professional pep talk before a big pitch?"
   },
   {
-    author: "@samj",
+    author: "@hannahbanana",
     time: "1d ago",
     replies: 8,
     title: "I swapped coffee for WaKe Up! and my 2pm crash vanished"
   },
   {
-    author: "@miri",
+    author: "@mimi",
     time: "3d ago",
     replies: 19,
-    title: "Share your favorite protein forward 10 min lunch"
+    title: "What is one small habit that calmed your afternoons?"
   }
 ];
 
 const ambassadors = [
   {
-    name: "Maya Berlin",
-    description: "Runs Calm Club walks and weekly breathwork."
+    name: "Mara Munich",
+    description: "Runs biweekly Calm Club walks with Matcha Meetup."
   },
   {
-    name: "Zee Munich",
-    description: "Kicks off Deep Work sprints every Tuesday."
+    name: "Zee Berlin",
+    description: "Co-working with other female founders every Tuesday with Deep Work sprints ."
   },
   {
-    name: "Anika Hamburg",
-    description: "Hosts skin science AMAs with dermatology friends."
+    name: "Annabelline Hamburg",
+    description: "Hosts skin science "Ask an Expert" sessions with dermatology friends."
   }
 ];
 
