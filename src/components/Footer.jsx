@@ -17,7 +17,7 @@ export default function Footer() {
             aria-label="Follow us on Instagram"
           >
             <img 
-              src="public/inslogo.png" 
+              src="bossbaby/public/inslogo.png" 
               alt="Instagram" 
               width="64" 
               height="64"
@@ -32,7 +32,7 @@ export default function Footer() {
             aria-label="Follow us on LinkedIn"
           >
             <img 
-              src="public/linklogo.png" 
+              src="bossbaby/public/linklogo.png" 
               alt="LinkedIn" 
               width="64" 
               height="64"
