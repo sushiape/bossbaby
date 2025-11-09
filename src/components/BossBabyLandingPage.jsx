@@ -250,7 +250,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               >
                 <h3
                   className="text-2xl font-bold mb-4"
-                  style={{ color: black }}
+                  style={{ color: brand.text }}
                 >
                   {drink.name}
                 </h3>
