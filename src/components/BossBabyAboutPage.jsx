@@ -20,17 +20,18 @@ const Wrap = ({ children, className = "" }) => (
 );
 
 const affiliations = [
-  "German Federal Ministry of Agriculture, Food and Regional Identity",
   "Growth Alliance Accelerator",
+  "German Federal Ministry of Agriculture, Food and Regional Identity",
   "Rentenbank",
   "TechQuartier",
   "Technical University of Munich (TUM)",
   "UnternehmerTUM",
   "TUM Venture Labs",
-  "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
   "KfW Stiftung",
   "Social Business Women e.V.",
+   "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
   "CoCo - Female Founders"
+ 
 ];
 
 const values = [
@@ -72,7 +73,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
             Nutrition that fits real life, backed by science, designed for women.
           </h2>
           <p className="text-base text-gray-600 max-w-[760px] mx-auto leading-relaxed" style={{fontSize: '1.05rem', lineHeight: 1.8}}>
-            Born in Munich at the Technical University of Munich (TUM), shaped at Stanford and Palo Alto. We are a team of engineers and nutrition scientists passionate about making daily nutrition easier and more enjoyable.
+            Born in Munich, shaped at Stanford and Palo Alto. We are a team of engineers and nutrition scientists passionate about making daily nutrition easier and more enjoyable.
           </p>
         </Wrap>
       </section>
