@@ -96,7 +96,7 @@ const ambassadors = [
   },
   {
     name: "Zee Berlin",
-    description: "Co-working with other female founders every Tuesday with Deep Work sprints ."
+    description: "Co-working with other female founders every Tuesday with Deep Work sprints."
   },
   {
     name: "Annabelline Hamburg",
