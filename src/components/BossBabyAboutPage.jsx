@@ -154,40 +154,43 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
             <p className="text-gray-300 mb-5">
               Get notes on new batches, ingredient deep dives, and early drops.
             </p>
-            <form onSubmit={handleSubmit} className="flex gap-3 justify-center flex-wrap mt-5">
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                className="px-4 py-4 rounded-2xl border border-gray-700 bg-white text-black text-base min-w-[260px] max-w-[80vw]"
-                style={{fontSize: '15px'}}
-              />
-              <button
-                type="submit"
-                className="px-5 py-4 rounded-2xl border-none bg-white text-black font-extrabold text-base transition-all"
-                style={{
-                  fontWeight: 800, 
-                  fontSize: '15px',
-                  backgroundColor: 'white',
-                  color: '#111'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = brand.pink;
-                  e.target.style.color = 'white';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'white';
-                  e.target.style.color = '#111';
-                }}
-              >
-                Join
-              </button>
-            </form>
+           <form
+  action="https://formspree.io/f/xgvrwpyr"
+  method="POST"
+  className="flex gap-3 justify-center flex-wrap mt-5"
+>
+  <input
+    type="email"
+    name="email"
+    placeholder="enter your email"
+    required
+    autoComplete="email"
+    className="px-4 py-4 rounded-2xl border border-gray-700 bg-white text-black text-base min-w-[260px] max-w-[80vw]"
+    style={{fontSize: '15px'}}
+  />
+
+  <button
+    type="submit"
+    className="px-5 py-4 rounded-2xl border-none bg-white text-black font-extrabold text-base transition-all"
+    style={{
+      fontWeight: 800, 
+      fontSize: '15px',
+      backgroundColor: 'white',
+      color: '#111'
+    }}
+    onMouseEnter={(e) => {
+      e.target.style.backgroundColor = brand.pink;
+      e.target.style.color = 'white';
+    }}
+    onMouseLeave={(e) => {
+      e.target.style.backgroundColor = 'white';
+      e.target.style.color = '#111';
+    }}
+  >
+    Join
+  </button>
+</form>
+            
             {message && (
               <span role="status" aria-live="polite" className="block mt-2 text-sm text-white">
                 {message}
