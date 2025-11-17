@@ -239,22 +239,6 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
               </button>
             </div>
 
-            <div className="flex items-start gap-2 max-w-md mt-1 text-left">
-              <input
-                type="checkbox"
-                id="gdpr-consent"
-                name="gdpr_consent"
-                value="consented"
-                required
-                className="mt-1 w-4 h-4 rounded"
-              />
-              <label htmlFor="gdpr-consent" className="text-xs text-white">
-                I consent to my email address being stored and used{" "}
-                <span className="font-semibold">only</span> to notify me when
-                Bossbaby launches. I understand I can unsubscribe at any time.
-              </label>
-            </div>
-
             {status === "success" && (
               <p className="text-sm text-green-100 mt-1">
                 You&apos;re on the waitlist ✨ We&apos;ll email you when Bossbaby
