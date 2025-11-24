@@ -25,6 +25,7 @@ const affiliations = [
   "Rentenbank",
   "TechQuartier",
   "Technical University of Munich (TUM)",
+  "Ludwig Maximilian University of Munich (LMU)"
   "UnternehmerTUM",
   "TUM Venture Labs",
   "KfW Stiftung",
