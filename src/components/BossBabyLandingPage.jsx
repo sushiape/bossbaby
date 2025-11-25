@@ -185,15 +185,16 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
     <div
       className="flex gap-6 whitespace-nowrap animate-scroll group-hover:[animation-play-state:paused]"
       style={{
-        animation: "scroll 40s linear infinite",
+        animation: "scroll 20s linear infinite",
       }}
     >
       {[
-        "German Federal Ministry of Agriculture, Food and Regional Identity",
-        "Growth Alliance Accelerator",
+      "Growth Alliance Accelerator",    
+      "German Federal Ministry of Agriculture, Food and Regional Identity",
         "Rentenbank",
         "TechQuartier",
         "Technical University of Munich (TUM)",
+       "Ludwig Maximilian University of Munich (LMU)",
         "UnternehmerTUM",
         "TUM Venture Labs",
         "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
@@ -211,11 +212,12 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
 
       {/* Duplicate list for seamless loop */}
       {[
-        "German Federal Ministry of Agriculture, Food and Regional Identity",
-        "Growth Alliance Accelerator",
+      "Growth Alliance Accelerator",  
+      "German Federal Ministry of Agriculture, Food and Regional Identity",
         "Rentenbank",
         "TechQuartier",
         "Technical University of Munich (TUM)",
+        "Ludwig Maximilian University of Munich (LMU)",
         "UnternehmerTUM",
         "TUM Venture Labs",
         "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
