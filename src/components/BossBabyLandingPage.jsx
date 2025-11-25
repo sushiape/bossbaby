@@ -185,7 +185,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
     <div
       className="flex gap-6 whitespace-nowrap animate-scroll group-hover:[animation-play-state:paused]"
       style={{
-        animation: "scroll 20s linear infinite",
+        animation: "scroll 25s linear infinite",
       }}
     >
       {[
