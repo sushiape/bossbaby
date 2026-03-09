@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="bg-white py-8 px-4" style={{fontSize: '15px', fontWeight: 300}}>
       <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
         <p className="text-center sm:text-left">
-          © 2025 with 🩷 by bossbaby
+          © 2026 with 🩷 by bossbaby
         </p>
         <div className="flex items-center gap-3 mx-auto sm:mx-0">
           <span style={{fontSize: '15px', fontWeight: 300}}>Follow us on</span>
