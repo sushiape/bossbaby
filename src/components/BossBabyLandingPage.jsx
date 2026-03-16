@@ -331,7 +331,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             className="text-4xl sm:text-5xl md:text-6xl font-light"
             style={{ fontSize: "48px" }}
           >
-            AI-powered personalized nutrition machine based on mood
+            AI-powered mood-based personalized nutrition machine
           </p>
         </Container>
       </section>
