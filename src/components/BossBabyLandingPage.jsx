@@ -346,7 +346,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             className="text-3xl sm:text-4xl font-bold mb-4"
             style={{ fontSize: "37px", color: brand.communityText }}
           >
-            100% would recommend Bossbaby.
+            Why we love Bossbaby.
           </h4>
           <p
             className="text-xl sm:text-2xl mb-8"
