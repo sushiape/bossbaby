@@ -3,11 +3,11 @@ import React from "react";
 export default function Footer() {
   return (
     <footer className="bg-white py-8 px-4" style={{fontSize: '15px', fontWeight: 300}}>
-      <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
         <p className="text-center sm:text-left">
           © 2026 with 🩷 by bossbaby
         </p>
-        <div className="flex items-center gap-3 mx-auto sm:mx-0">
+        <div className="flex items-center gap-2 sm:gap-3 mx-auto sm:mx-0">
           <span style={{fontSize: '15px', fontWeight: 300}}>Follow us on</span>
           <a 
             href="https://www.instagram.com/bossbabiezz/" 
@@ -19,7 +19,7 @@ export default function Footer() {
             <img 
               src="/inslogo.png" 
               alt="Instagram" 
-              style={{width: '48px', height: '48px', display: 'block'}}
+              style={{width: '42px', height: '42px', display: 'block'}}
             />
           </a>
           <a 
@@ -32,7 +32,7 @@ export default function Footer() {
             <img 
               src="/linklogo.png" 
               alt="LinkedIn" 
-              style={{width: '48px', height: '48px', display: 'block'}}
+              style={{width: '42px', height: '42px', display: 'block'}}
             />
           </a>
         </div>

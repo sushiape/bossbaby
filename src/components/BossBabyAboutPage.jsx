@@ -89,7 +89,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {/* Hero Section */}
-      <section className="py-20 px-4 text-center">
+      <section className="py-16 sm:py-20 px-4 text-center">
         <Wrap>
           <h1
             className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-5"
@@ -120,7 +120,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
       </section>
 
       {/* Affiliations Section */}
-      <section className="py-12 px-4">
+      <section className="py-10 sm:py-12 px-4">
         <Container>
           <Wrap>
             <div
@@ -170,7 +170,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
       </section>
 
       {/* Values Section */}
-      <section className="py-12 px-4">
+      <section className="py-10 sm:py-12 px-4">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {values.map((value, index) => (
@@ -201,7 +201,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 px-4">
+      <section className="py-10 sm:py-12 px-4">
         <Container>
           <div
             className="max-w-[840px] mx-auto text-center bg-black text-white rounded-3xl p-10 shadow-md"
@@ -217,7 +217,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
             {/* CUSTOM FORMSPREE FORM WITH CUSTOM SUCCESS MESSAGE */}
             <form
               onSubmit={handleSubmit}
-              className="flex gap-3 justify-center flex-wrap mt-5"
+              className="flex flex-col sm:flex-row gap-3 justify-center mt-5"
             >
               <input
                 type="email"
@@ -225,14 +225,14 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                 placeholder="enter your email"
                 required
                 autoComplete="email"
-                className="px-4 py-4 rounded-2xl border border-gray-700 bg-white text-black text-base min-w-[260px] max-w-[80vw]"
+                className="w-full sm:w-auto px-4 py-4 rounded-2xl border border-gray-700 bg-white text-black text-base"
                 style={{ fontSize: "15px" }}
               />
 
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="px-5 py-4 rounded-2xl border-none bg-white text-black font-extrabold text-base transition-all"
+                className="w-full sm:w-auto px-5 py-4 rounded-2xl border-none bg-white text-black font-extrabold text-base transition-all"
                 style={{
                   fontWeight: 800,
                   fontSize: "15px",
