@@ -90,7 +90,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {/* Hero Section */}
-      <section className="relative text-center py-16 sm:py-24 px-4">
+      <section className="relative text-center py-24 px-4">
         <Container>
           <h1
             className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 max-w-[900px] mx-auto"
@@ -98,7 +98,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
           >
             Nutrition drinks made for her, backed with science.
           </h1>
-          <p className="text-base sm:text-lg text-gray-600 max-w-[780px] mx-auto mt-4">
+          <p className="text-lg text-gray-600 max-w-[780px] mx-auto mt-4">
             Bossbaby shots are designed to empower women through nutrition and
             science.
           </p>
@@ -141,7 +141,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
             {moods.map((mood, index) => (
               <article
                 key={index}
-                className="relative overflow-hidden rounded-2xl bg-white border-0 shadow-lg hover:-translate-y-1 transition-all min-h-[140px] grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] items-stretch sm:items-center"
+                className="relative overflow-hidden rounded-2xl bg-white border-0 shadow-lg hover:-translate-y-1 transition-all min-h-[140px] grid grid-cols-[160px_1fr] items-center"
                 style={{
                   boxShadow: "0 16px 50px rgba(17,17,17,0.08)",
                 }}
@@ -149,7 +149,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
               >
                 {/* Mono Letter */}
                 <div
-                  className="relative h-24 sm:h-full flex items-center justify-center font-black text-6xl sm:text-7xl text-white"
+                  className="relative h-full flex items-center justify-center font-black text-7xl text-white"
                   style={{
                     backgroundColor: mood.bgColor,
                     fontWeight: 900,
@@ -167,7 +167,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
                 </div>
 
                 {/* Content */}
-                <div className="p-4 sm:pr-5">
+                <div className="p-4 pr-5">
                   <h3
                     className="text-xl font-extrabold mb-1"
                     style={{ fontWeight: 800, letterSpacing: "-0.01em" }}
@@ -220,19 +220,19 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
             className="flex flex-col gap-4 items-center max-w-2xl mx-auto mt-4"
             aria-live="polite"
           >
-            <div className="flex flex-col sm:flex-row gap-2 justify-center w-full sm:w-auto">
+            <div className="flex gap-2 justify-center flex-wrap">
               <input
                 type="email"
                 name="email_address"          // important for Formspree mapping
                 placeholder="enter your email"
                 required
-                className="w-full sm:w-auto px-4 py-4 rounded-2xl border border-white bg-white text-base text-black"
-                style={{ fontSize: "15px", minWidth: "0", maxWidth: "380px" }}
+                className="px-4 py-4 rounded-2xl border border-white bg-white text-base min-w-[280px] max-w-[80vw] text-black"
+                style={{ fontSize: "15px" }}
               />
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="w-full sm:w-auto px-4 py-4 rounded-2xl border border-black bg-black text-white font-extrabold text-base hover:opacity-95 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed"
+                className="px-4 py-4 rounded-2xl border border-black bg-black text-white font-extrabold text-base hover:opacity-95 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed"
                 style={{ fontWeight: 800, fontSize: "15px" }}
               >
                 {status === "submitting" ? "SENDING..." : "GO"}
@@ -257,7 +257,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
 
       {/* Sticky Bar */}
       <div className="sticky bottom-0 z-40 bg-black text-white">
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center py-3 px-4 text-center sm:text-left">
+        <div className="flex gap-4 justify-center items-center py-3 px-4">
           <span>
             <strong className="font-extrabold">Early access</strong> drops first
             to the list

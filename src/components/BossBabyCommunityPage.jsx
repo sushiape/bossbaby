@@ -110,7 +110,7 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {/* Hero Section */}
-      <section className="text-center py-16 sm:py-20 px-4">
+      <section className="text-center py-20 px-4">
         <Container>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4" style={{fontWeight: 800, fontSize: 'clamp(32px, 5vw, 56px)'}}>
             Where wellness meets real talk.
@@ -124,7 +124,7 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white border rounded-3xl p-6 sm:p-8 shadow-md flex flex-col items-center text-center hover:-translate-y-1 transition-all"
+                className="bg-white border rounded-3xl p-8 shadow-md flex flex-col items-center text-center hover:-translate-y-1 transition-all"
                 style={{
                   borderColor: '#ffeaf4',
                   boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
@@ -148,7 +148,7 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
           <h2 className="text-center text-3xl sm:text-4xl font-extrabold mb-6" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
             Pick your corner
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             {topics.map((topic, index) => (
               <div
                 key={index}
@@ -187,7 +187,7 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
           <h2 className="text-center text-3xl sm:text-4xl font-extrabold mb-6" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
             Fresh from the feed
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             {feedPosts.map((post, index) => (
               <div
                 key={index}

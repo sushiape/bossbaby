@@ -106,16 +106,16 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
 
       {/* Hero Section */}
       <section
-        className="text-center py-20 sm:py-24 md:py-32 px-4"
+        className="text-center py-32 px-4"
         style={{ backgroundColor: brand.pink }}
       >
         <h1
-          className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] font-extrabold text-white leading-tight mb-5 sm:mb-6"
+          className="text-6xl sm:text-7xl md:text-8xl lg:text-[128px] font-extrabold text-white leading-tight mb-6"
           style={{ fontWeight: 800 }}
         >
           Nutrition drinks <br /> made for her.
         </h1>
-        <p className="text-lg sm:text-2xl text-black mb-8 sm:mb-12">
+        <p className="text-xl sm:text-2xl text-black mb-12">
           Empowering women with every sip.
         </p>
 
@@ -123,7 +123,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         <div className="mt-8">
           <h2
             className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2"
-            style={{ fontSize: "clamp(30px, 8vw, 42px)" }}
+            style={{ fontSize: "42px" }}
           >
             Ready to feel unstoppable?
           </h2>
@@ -135,19 +135,19 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             onSubmit={handleSubmit}
             className="flex flex-col gap-4 items-center max-w-2xl mx-auto"
           >
-            <div className="flex flex-col sm:flex-row gap-3 justify-center w-full sm:w-auto">
+            <div className="flex gap-3 justify-center flex-wrap">
               <input
                 type="email"
                 name="email_address"
                 placeholder="enter your email"
                 required
-                className="w-full sm:w-auto px-4 py-3 rounded-lg border border-white bg-white text-black text-base"
-                style={{ width: "100%", maxWidth: "380px" }}
+                className="px-4 py-3 rounded-lg border border-white bg-white text-black text-base"
+                style={{ width: "300px", maxWidth: "80vw" }}
               />
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="w-full sm:w-auto px-6 py-3 rounded-lg border border-white bg-white font-bold text-base hover:bg-pink-100 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                className="px-6 py-3 rounded-lg border border-white bg-white font-bold text-base hover:bg-pink-100 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                 style={{ color: brand.pink }}
               >
                 {status === "submitting" ? "SENDING..." : "JOIN"}
@@ -322,14 +322,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       <section className="py-20 px-4 text-center bg-white">
         <Container>
           <h3
-            className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4"
-            style={{ fontSize: "clamp(22px, 6vw, 28px)" }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4"
+            style={{ fontSize: "24px" }}
           >
             Coming soon! Stay tuned!
           </h3>
           <p
-            className="text-2xl sm:text-4xl md:text-6xl font-light"
-            style={{ fontSize: "clamp(30px, 9vw, 48px)" }}
+            className="text-4xl sm:text-5xl md:text-6xl font-light"
+            style={{ fontSize: "48px" }}
           >
             AI-powered mood-based personalized nutrition machine
           </p>
