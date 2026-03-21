@@ -11,32 +11,7 @@ export default function Header({ currentPage, setCurrentPage }) {
         >
           Bossbaby
         </div>
-        {currentPage === "landing" && (
-          <div className="sm:hidden">
-            <label htmlFor="mobile-nav" className="sr-only">
-              Navigate pages
-            </label>
-            <select
-              id="mobile-nav"
-              defaultValue=""
-              className="text-sm px-3 py-2 rounded-full border border-gray-300 bg-white text-gray-700"
-              onChange={(e) => {
-                if (e.target.value) setCurrentPage(e.target.value);
-              }}
-            >
-              <option value="" disabled>
-                Menu
-              </option>
-              <option value="products">Products</option>
-              <option value="community">Community</option>
-              <option value="about">About</option>
-            </select>
-          </div>
-        )}
-        <nav
-          className={`items-center gap-2 ${currentPage === "landing" ? "hidden sm:flex" : "flex"}`}
-          style={{fontFamily: 'Poppins, sans-serif'}}
-        >
+        <nav className="flex items-center gap-2" style={{fontFamily: 'Poppins, sans-serif'}}>
           <a 
             href="#" 
             className={`text-sm px-4 py-2 rounded-full transition-all ${
