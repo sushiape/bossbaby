@@ -307,17 +307,12 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </motion.div>
       </section>
 
-      {/* ── 2. Drinks — glassmorphism cards ── */}
-      <section
-        className="py-20 px-4 text-center"
-        style={{
-          background: "linear-gradient(135deg, #ff9dd5 0%, #FF89CC 50%, #ff6ab8 100%)",
-        }}
-      >
+      {/* ── 2. Drinks ── */}
+      <section className="py-20 px-4 text-center bg-white">
         <Container>
           <motion.h2
-            className="font-light mb-4 text-white"
-            style={{ fontSize: "40px" }}
+            className="font-light mb-4"
+            style={{ fontSize: "40px", color: brand.pink }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
@@ -327,7 +322,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </motion.h2>
           <motion.p
             className="text-lg mb-12"
-            style={{ color: "rgba(255,255,255,0.85)" }}
+            style={{ color: "#111" }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
@@ -347,28 +342,23 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               <motion.div
                 key={index}
                 variants={fadeUp}
-                className="relative rounded-2xl p-8"
+                className="relative rounded-2xl p-8 text-left"
                 style={{
-                  background: "rgba(255, 255, 255, 0.2)",
-                  backdropFilter: "blur(20px)",
-                  WebkitBackdropFilter: "blur(20px)",
-                  border: "1px solid rgba(255, 255, 255, 0.35)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.45)",
+                  background: "#FFF5FA",
+                  border: "1px solid #FFD2E9",
+                  boxShadow: "0 4px 16px rgba(255,137,204,0.08)",
                   cursor: "default",
                 }}
                 whileHover={{
-                  y: -8,
-                  boxShadow: "0 16px 48px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.5)",
-                  transition: { duration: 0.25 },
+                  y: -6,
+                  boxShadow: "0 12px 32px rgba(255,137,204,0.18)",
+                  transition: { duration: 0.22 },
                 }}
               >
-                <h3 className="text-2xl font-bold mb-4" style={{ color: "#fff" }}>
+                <h3 className="text-2xl font-bold mb-4" style={{ color: brand.pink }}>
                   {drink.name}
                 </h3>
-                <p
-                  className="text-sm sm:text-base leading-relaxed"
-                  style={{ color: "rgba(255,255,255,0.88)" }}
-                >
+                <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#444" }}>
                   {drink.description}
                 </p>
               </motion.div>
