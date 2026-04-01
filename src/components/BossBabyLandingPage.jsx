@@ -527,10 +527,10 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* ── 6. AI machine teaser ── */}
+      {/* ── 6. AI teaser — near-black, full treatment ── */}
       <section
-        className="py-20 px-4 text-center"
-        style={{ backgroundColor: brand.bg }}
+        className="py-24 px-4 text-center"
+        style={{ backgroundColor: "#0f0f0f" }}
       >
         <Container>
           <motion.div
@@ -540,29 +540,46 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             whileInView="visible"
             viewport={viewportOpts}
           >
-            <motion.p
-              variants={fadeUp}
-              className="text-sm font-semibold uppercase tracking-widest mb-4"
-              style={{ color: brand.pink }}
-            >
-              Coming soon
-            </motion.p>
+            <motion.div variants={fadeUp} className="mb-6">
+              <span
+                className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full"
+                style={{ backgroundColor: "rgba(255,137,204,0.12)", color: brand.pink }}
+              >
+                Coming soon
+              </span>
+            </motion.div>
             <motion.h2
               variants={fadeUp}
               className="font-bold mb-6"
-              style={{ fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1.2 }}
+              style={{
+                fontSize: "clamp(28px, 4vw, 52px)",
+                lineHeight: 1.15,
+                color: "#fff",
+              }}
             >
-              AI-powered mood-based nutrition machine
+              AI-powered mood-based <br />nutrition machine
             </motion.h2>
             <motion.p
               variants={fadeUp}
-              className="text-gray-700 leading-relaxed"
-              style={{ fontSize: "17px" }}
+              className="leading-relaxed mb-8"
+              style={{ fontSize: "17px", color: "rgba(255,255,255,0.55)" }}
             >
               We&apos;re building a smart dispenser that reads your mood in real time
               and delivers a personalized formula on the spot. No tracking, no guesswork —
               just the right nutrients at the right moment, every time.
             </motion.p>
+            <motion.div
+              variants={fadeUp}
+              className="inline-block px-1 py-1 rounded-2xl"
+              style={{ background: "linear-gradient(135deg, #FF89CC, #E91E8C)" }}
+            >
+              <div
+                className="px-6 py-3 rounded-xl text-sm font-bold"
+                style={{ backgroundColor: "#0f0f0f", color: brand.pink }}
+              >
+                Join the waitlist for early access →
+              </div>
+            </motion.div>
           </motion.div>
         </Container>
       </section>
