@@ -410,7 +410,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                   transition: { duration: 0.22 },
                 }}
               >
-                <h3 className="text-2xl font-bold mb-4 text-center" style={{ color: "#FF89CC" }}>
+                <h3 className="text-2xl font-bold mb-4 text-center" style={{ color: "#000000" }}>
                   {drink.name}
                 </h3>
                 <p className="text-xs sm:text-sm leading-relaxed text-center" style={{ color: "#444" }}>
