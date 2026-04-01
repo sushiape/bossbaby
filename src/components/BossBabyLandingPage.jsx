@@ -398,7 +398,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                 variants={fadeUp}
                 className="relative rounded-2xl p-8 text-left"
                 style={{
-                  background: "rgba(255, 255, 255, 0.8)",
+                  background: "rgba(255, 255, 255, 0.9)",
                   backdropFilter: "blur(20px) saturate(180%)",
                   border: "1px solid rgba(255, 255, 255, 0.4)",
                   boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
@@ -410,10 +410,10 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                   transition: { duration: 0.22 },
                 }}
               >
-                <h3 className="text-2xl font-bold mb-4" style={{ color: brand.pink }}>
+                <h3 className="text-2xl font-bold mb-4 text-center" style={{ color: "#FF89CC" }}>
                   {drink.name}
                 </h3>
-                <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#444" }}>
+                <p className="text-xs sm:text-sm leading-relaxed text-center" style={{ color: "#444" }}>
                   {drink.description}
                 </p>
               </motion.div>
@@ -575,7 +575,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         <Container>
           <motion.h2
             className="font-bold mb-3"
-            style={{ fontSize: "37px", color: brand.communityText }}
+            style={{ fontSize: "37px", color: "black" }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
@@ -585,7 +585,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </motion.h2>
           <motion.p
             className="mb-12"
-            style={{ fontSize: "20px", color: "black", opacity: 0.7 }}
+            style={{ fontSize: "20px", color: "black" }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
