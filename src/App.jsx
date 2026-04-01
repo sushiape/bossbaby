@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import BossBabyLandingPage from './components/BossBabyLandingPage';
 import BossBabyProductsPage from './components/BossBabyProductsPage';
 import BossBabyCommunityPage from './components/BossBabyCommunityPage';
 import BossBabyAboutPage from './components/BossBabyAboutPage';
+import PageLoader from './components/PageLoader';
 
 function App() {
+  const [loaderDone, setLoaderDone] = useState(false);
   const [currentPage, setCurrentPage] = useState('landing');
 
   const renderPage = () => {
@@ -23,6 +26,11 @@ function App() {
 
   return (
     <div className="App">
+      <AnimatePresence mode="wait">
+        {!loaderDone && (
+          <PageLoader key="loader" onComplete={() => setLoaderDone(true)} />
+        )}
+      </AnimatePresence>
       {renderPage()}
     </div>
   );

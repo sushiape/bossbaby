@@ -20,18 +20,54 @@ const Wrap = ({ children, className = "" }) => (
 );
 
 const affiliations = [
-  "Growth Alliance Accelerator",
-  "German Federal Ministry of Agriculture, Food and Regional Identity",
-  "Rentenbank",
-  "TechQuartier",
-  "Technical University of Munich (TUM)",
-  "Ludwig Maximilian University of Munich (LMU)",
-  "UnternehmerTUM",
-  "TUM Venture Labs",
-  "KfW Stiftung",
-  "Social Business Women e.V.",
-  "TUM Venture Lab - Food, Agro, and Biotech (FAB)",
-  "CoCo - Female Founders"
+  {
+    name: "Growth Alliance Accelerator",
+    logo: "https://framerusercontent.com/images/NSMdvir5eKfM69KzEdpQZYBBFNY.svg",
+  },
+  {
+    name: "Federal Ministry of Agriculture",
+    logo: "https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=8",
+  },
+  {
+    name: "Rentenbank",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rentenbank_logo.svg",
+  },
+  {
+    name: "TechQuartier",
+    logo: "https://framerusercontent.com/images/ofOJUgFa83WGUnL2bf4V8anqOeQ.svg",
+  },
+  {
+    name: "TUM",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Logo_of_the_Technical_University_of_Munich.svg",
+  },
+  {
+    name: "LMU Munich",
+    logo: "https://cms-cdn.lmu.de/assets/img/Logo_LMU.svg",
+  },
+  {
+    name: "UnternehmerTUM",
+    logo: "https://ut-um.files.svdcdn.com/production/media/logos/logo-unternehmertum.svg",
+  },
+  {
+    name: "TUM Venture Labs",
+    logo: "https://ut-um.files.svdcdn.com/production/media/images/venture-labs/TUM-UTUM-Logos.svg",
+  },
+  {
+    name: "KfW Stiftung",
+    logo: "https://kfw-stiftung.de/fileadmin/logo/Logo_KfW_Stiftung_rgb.svg",
+  },
+  {
+    name: "Social Business Women e.V.",
+    logo: "https://www.social-business-women.com/wp-content/uploads/2026/01/BerufsWege-fuer-Frauen-und-Social-Business-Women-eV_Logo_klein-1.png",
+  },
+  {
+    name: "TUM Venture Lab FAB",
+    logo: "https://www.tum-venture-labs.de/media/images/lab-logos/tum-venture-labs-food-agro-biotech.svg",
+  },
+  {
+    name: "CoCo – Female Founders",
+    logo: "https://coco-frauen-gruenden.de/wp-content/uploads/2025/02/Coco_logo_dunkel.svg",
+  },
 ];
 
 const values = [
@@ -143,24 +179,34 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                 {affiliations.map((aff, index) => (
                   <span
                     key={index}
-                    className="bg-white border rounded-full px-4 py-2 text-sm transition-all hover:text-white hover:border-pink-500"
+                    className="inline-flex items-center gap-2 bg-white border rounded-full px-4 py-2 text-sm transition-all cursor-default"
                     style={{
                       borderColor: brand.border,
                       fontSize: "0.85rem",
                       backgroundColor: "white",
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = brand.pink;
-                      e.target.style.borderColor = brand.pink;
-                      e.target.style.color = "white";
+                      e.currentTarget.style.backgroundColor = brand.pink;
+                      e.currentTarget.style.borderColor = brand.pink;
+                      e.currentTarget.style.color = "white";
+                      const img = e.currentTarget.querySelector("img");
+                      if (img) img.style.filter = "brightness(0) invert(1)";
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = "white";
-                      e.target.style.borderColor = brand.border;
-                      e.target.style.color = "inherit";
+                      e.currentTarget.style.backgroundColor = "white";
+                      e.currentTarget.style.borderColor = brand.border;
+                      e.currentTarget.style.color = "inherit";
+                      const img = e.currentTarget.querySelector("img");
+                      if (img) img.style.filter = "";
                     }}
                   >
-                    {aff}
+                    <img
+                      src={aff.logo}
+                      alt={aff.name}
+                      style={{ height: "18px", width: "auto", maxWidth: "68px", objectFit: "contain" }}
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
+                    {aff.name}
                   </span>
                 ))}
               </div>
