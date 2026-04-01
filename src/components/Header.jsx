@@ -29,20 +29,6 @@ export default function Header({ currentPage, setCurrentPage }) {
           <a 
             href="#" 
             className={`text-sm px-4 py-2 rounded-full transition-all ${
-              currentPage === 'community' 
-                ? 'bg-black text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-            onClick={(e) => {
-              e.preventDefault();
-              setCurrentPage('community');
-            }}
-          >
-            Community
-          </a>
-          <a 
-            href="#" 
-            className={`text-sm px-4 py-2 rounded-full transition-all ${
               currentPage === 'about' 
                 ? 'bg-black text-white' 
                 : 'text-gray-700 hover:bg-gray-100'
@@ -53,6 +39,20 @@ export default function Header({ currentPage, setCurrentPage }) {
             }}
           >
             About
+          </a>
+          <a 
+            href="#" 
+            className={`text-sm px-4 py-2 rounded-full transition-all ${
+              currentPage === 'community' 
+                ? 'bg-black text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPage('community');
+            }}
+          >
+            Community
           </a>
         </nav>
       </div>

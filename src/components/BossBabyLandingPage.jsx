@@ -585,7 +585,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </motion.h2>
           <motion.p
             className="mb-12"
-            style={{ fontSize: "20px", color: brand.communityText, opacity: 0.7 }}
+            style={{ fontSize: "20px", color: "black", opacity: 0.7 }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
