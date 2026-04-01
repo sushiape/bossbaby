@@ -307,12 +307,57 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </motion.div>
       </section>
 
-      {/* ── 2. Drinks ── */}
-      <section className="py-20 px-4 text-center bg-white">
+      {/* ── 2. Affiliations bar ── */}
+      <section className="py-10 bg-white overflow-hidden w-full">
+        <div className="max-w-4xl mx-auto px-4">
+          <p className="text-gray-600 text-center mb-8 text-lg font-medium">
+            We build inside a strong innovation network.
+          </p>
+        </div>
+        <div className="relative w-full overflow-hidden group">
+          <div
+            className="flex gap-4 whitespace-nowrap group-hover:[animation-play-state:paused]"
+            style={{ animation: "scroll 30s linear infinite" }}
+          >
+            {[...affiliations, ...affiliations].map((affiliation, i) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border text-sm font-medium bg-white text-gray-800 shadow-sm"
+                style={{ flexShrink: 0 }}
+              >
+                <img
+                  src={affiliation.logo}
+                  alt={affiliation.name}
+                  style={{ height: "20px", width: "auto", maxWidth: "72px", objectFit: "contain" }}
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
+                />
+                {affiliation.name}
+              </span>
+            ))}
+          </div>
+        </div>
+        <style>{`
+          @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          @keyframes scroll-right {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+          }
+        `}</style>
+      </section>
+
+      {/* ── 3. Drinks ── */}
+      <section className="py-20 px-4 text-center" style={{ backgroundColor: brand.bg }}>
         <Container>
           <motion.h2
-            className="font-light mb-4"
-            style={{ fontSize: "40px", color: brand.pink }}
+            className="font-bold mb-4"
+            style={{ fontSize: "40px", color: "#000" }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
@@ -344,14 +389,15 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                 variants={fadeUp}
                 className="relative rounded-2xl p-8 text-left"
                 style={{
-                  background: "#FFF5FA",
-                  border: "1px solid #FFD2E9",
-                  boxShadow: "0 4px 16px rgba(255,137,204,0.08)",
+                  background: "rgba(255, 255, 255, 0.8)",
+                  backdropFilter: "blur(20px) saturate(180%)",
+                  border: "1px solid rgba(255, 255, 255, 0.4)",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                   cursor: "default",
                 }}
                 whileHover={{
                   y: -6,
-                  boxShadow: "0 12px 32px rgba(255,137,204,0.18)",
+                  boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15)",
                   transition: { duration: 0.22 },
                 }}
               >
@@ -512,52 +558,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* ── 7. Affiliations bar ── */}
-      <section className="py-10 bg-white overflow-hidden w-full">
-        <div className="max-w-4xl mx-auto px-4">
-          <p className="text-gray-600 text-center mb-8 text-lg font-medium">
-            We build inside a strong innovation network.
-          </p>
-        </div>
-        <div className="relative w-full overflow-hidden group">
-          <div
-            className="flex gap-4 whitespace-nowrap group-hover:[animation-play-state:paused]"
-            style={{ animation: "scroll 30s linear infinite" }}
-          >
-            {[...affiliations, ...affiliations].map((affiliation, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border text-sm font-medium bg-white text-gray-800 shadow-sm"
-                style={{ flexShrink: 0 }}
-              >
-                <img
-                  src={affiliation.logo}
-                  alt={affiliation.name}
-                  style={{ height: "20px", width: "auto", maxWidth: "72px", objectFit: "contain" }}
-                  onError={(e) => { e.currentTarget.style.display = "none"; }}
-                />
-                {affiliation.name}
-              </span>
-            ))}
-          </div>
-        </div>
-        <style>{`
-          @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          @keyframes scroll-right {
-            0% { transform: translateX(-50%); }
-            100% { transform: translateX(0); }
-          }
-        `}</style>
-      </section>
-
-      {/* ── 8. Testimonials marquee ── */}
+      {/* ── 7. Testimonials marquee ── */}
       <section
         className="py-20 overflow-hidden"
         style={{ backgroundColor: brand.communityBg }}
