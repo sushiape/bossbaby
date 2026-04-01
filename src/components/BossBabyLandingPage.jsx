@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Sparkles, Zap, Heart, FlaskConical, Users, Microscope } from "lucide-react";
 import Header from "./Header";
 import Footer from "./Footer";
 
@@ -8,8 +9,6 @@ const brand = {
   bg: "#FFD2E9",
   white: "#fff",
   text: "#000",
-  communityBg: "#EAEDDC",
-  communityText: "#002B26",
 };
 
 const Container = ({ children, className = "" }) => (
@@ -35,21 +34,29 @@ const viewportOpts = { once: true, margin: "-80px" };
 const drinks = [
   {
     name: "Power",
+    accent: "#E91E8C",
+    cardBg: "#FFF0F7",
     description:
       "Your ambition doesn't run on empty. Built for the days your goals are big and your energy feels small — hormone-balancing, mood-lifting, made to match your drive.",
   },
   {
     name: "WaKe Up!",
+    accent: "#FF5C35",
+    cardBg: "#FFF4F0",
     description:
       "10 tabs open, 2 hours of focus left. Natural caffeine meets brain-loving adaptogens for clarity that holds through the whole meeting — not just the first sip.",
   },
   {
     name: "Glow",
+    accent: "#C28A00",
+    cardBg: "#FFFBF0",
     description:
       "Skin that remembers to show up. Antioxidants and collagen boosters work quietly while you move loudly — because looking like yourself, at your best, shouldn't need an extra hour.",
   },
   {
     name: "lazy juice",
+    accent: "#7C3AED",
+    cardBg: "#F5F0FF",
     description:
       "Not every day needs to be productive. Calming botanicals and stress-ease nutrients for when you just need to exhale, reset, and feel like yourself again. No apologies.",
   },
@@ -58,29 +65,43 @@ const drinks = [
 const howItWorks = [
   {
     step: "01",
+    Icon: Sparkles,
     title: "Pick your mood",
     description:
       "Feeling scattered? Depleted? Want to glow? Each formula is built around a specific state you want to move toward — choose the one that fits your day.",
   },
   {
     step: "02",
+    Icon: Zap,
     title: "Take your shot",
     description:
       "Delicious, convenient, no prep. Each formula is designed to be the one supplement you actually look forward to — not the one you forget in a drawer.",
   },
   {
     step: "03",
+    Icon: Heart,
     title: "Feel the difference",
     description:
       "Science-backed ingredients formulated with nutrition experts, designed to work with your body's natural rhythms — not against them.",
   },
 ];
 
-const stats = [
-  { value: "4", label: "mood-based formulas" },
-  { value: "100%", label: "science-backed" },
-  { value: "Women", label: "founded & built" },
-  { value: "Munich", label: "born and brewing" },
+const differentiators = [
+  {
+    Icon: Sparkles,
+    title: "Mood-matched",
+    description: "Each formula targets a specific emotional and physical state — not a generic 'women's health' blend.",
+  },
+  {
+    Icon: Microscope,
+    title: "Science-first",
+    description: "Developed with certified nutrition experts to align with women's physiology, not just marketing trends.",
+  },
+  {
+    Icon: Users,
+    title: "Made by women",
+    description: "Built around how women actually live — the mood shifts, the busy schedules, the need to feel good.",
+  },
 ];
 
 const testimonials = [
@@ -176,8 +197,8 @@ function TestimonialCard({ testimonial }) {
         padding: "1.5rem",
         background: "#ffffff",
         borderRadius: "1rem",
-        boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
-        border: "1px solid #ffeaf4",
+        boxShadow: "0 2px 16px rgba(255,137,204,0.1)",
+        border: "1px solid #ffd6ee",
       }}
     >
       <p
@@ -242,7 +263,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
     >
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-      {/* ── 1. Hero ── */}
+      {/* ── 1. Hero — pink ── */}
       <section
         className="text-center py-32 px-4"
         style={{ backgroundColor: brand.pink }}
@@ -310,7 +331,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </motion.div>
       </section>
 
-      {/* ── 2. Drinks ── */}
+      {/* ── 2. Drinks — white, per-product accent colours ── */}
       <section className="py-20 px-4 text-center bg-white">
         <Container>
           <motion.h2
@@ -347,18 +368,22 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                 variants={fadeUp}
                 className="relative rounded-2xl p-8 text-left"
                 style={{
-                  background: "#FFF5FA",
-                  border: "1px solid #FFD2E9",
-                  boxShadow: "0 4px 16px rgba(255,137,204,0.08)",
+                  background: drink.cardBg,
+                  border: `1.5px solid ${drink.accent}22`,
+                  boxShadow: `0 4px 16px ${drink.accent}12`,
                   cursor: "default",
                 }}
                 whileHover={{
                   y: -6,
-                  boxShadow: "0 12px 32px rgba(255,137,204,0.18)",
+                  boxShadow: `0 12px 32px ${drink.accent}28`,
                   transition: { duration: 0.22 },
                 }}
               >
-                <h3 className="text-2xl font-bold mb-4" style={{ color: brand.pink }}>
+                <div
+                  className="w-2 h-8 rounded-full mb-5"
+                  style={{ backgroundColor: drink.accent }}
+                />
+                <h3 className="text-2xl font-bold mb-4" style={{ color: drink.accent }}>
                   {drink.name}
                 </h3>
                 <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#444" }}>
@@ -370,8 +395,8 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* ── 3. How it works ── */}
-      <section className="py-20 px-4 bg-white">
+      {/* ── 3. How it works — light pink, separated from Drinks ── */}
+      <section className="py-20 px-4" style={{ backgroundColor: "#FFF0F8" }}>
         <Container>
           <motion.div
             variants={stagger}
@@ -397,8 +422,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               {howItWorks.map((item, i) => (
                 <motion.div key={i} variants={fadeUp} className="text-center">
                   <div
-                    className="text-5xl font-extrabold mb-4"
-                    style={{ color: brand.pink, opacity: 0.35 }}
+                    className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5"
+                    style={{ backgroundColor: "#FFD6EE" }}
+                  >
+                    <item.Icon size={26} color={brand.pink} strokeWidth={2} />
+                  </div>
+                  <div
+                    className="text-xs font-bold uppercase tracking-widest mb-2"
+                    style={{ color: brand.pink, opacity: 0.6 }}
                   >
                     {item.step}
                   </div>
@@ -415,9 +446,9 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* ── 4. Stats bar ── */}
+      {/* ── 4. Differentiators — dark strip ── */}
       <motion.section
-        className="py-14 px-4"
+        className="py-16 px-4"
         style={{ backgroundColor: "#111" }}
         variants={stagger}
         initial="hidden"
@@ -425,25 +456,28 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         viewport={viewportOpts}
       >
         <Container>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {stats.map((stat, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto text-center">
+            {differentiators.map((d, i) => (
               <motion.div key={i} variants={fadeUp}>
                 <div
-                  className="text-4xl font-extrabold mb-1"
-                  style={{ color: brand.pink }}
+                  className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4"
+                  style={{ backgroundColor: "rgba(255,137,204,0.12)" }}
                 >
-                  {stat.value}
+                  <d.Icon size={22} color={brand.pink} strokeWidth={2} />
                 </div>
-                <div className="text-sm text-gray-400 uppercase tracking-widest">
-                  {stat.label}
-                </div>
+                <h3 className="text-lg font-bold mb-2" style={{ color: "#fff" }}>
+                  {d.title}
+                </h3>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  {d.description}
+                </p>
               </motion.div>
             ))}
           </div>
         </Container>
       </motion.section>
 
-      {/* ── 5. About ── */}
+      {/* ── 5. About — white ── */}
       <section className="bg-white py-20 px-4 text-center">
         <Container>
           <motion.div
@@ -455,7 +489,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           >
             <motion.h2
               variants={fadeUp}
-              className="text-2xl font-bold mb-6"
+              className="font-bold mb-6"
               style={{ fontSize: "32px", lineHeight: 1.3 }}
             >
               Built because the supplement aisle wasn&apos;t built for us.
@@ -475,10 +509,10 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* ── 6. AI machine teaser ── */}
+      {/* ── 6. AI teaser — near-black, full treatment ── */}
       <section
-        className="py-20 px-4 text-center"
-        style={{ backgroundColor: brand.bg }}
+        className="py-24 px-4 text-center"
+        style={{ backgroundColor: "#0f0f0f" }}
       >
         <Container>
           <motion.div
@@ -488,34 +522,51 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             whileInView="visible"
             viewport={viewportOpts}
           >
-            <motion.p
-              variants={fadeUp}
-              className="text-sm font-semibold uppercase tracking-widest mb-4"
-              style={{ color: brand.pink }}
-            >
-              Coming soon
-            </motion.p>
+            <motion.div variants={fadeUp} className="mb-6">
+              <span
+                className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full"
+                style={{ backgroundColor: "rgba(255,137,204,0.12)", color: brand.pink }}
+              >
+                Coming soon
+              </span>
+            </motion.div>
             <motion.h2
               variants={fadeUp}
               className="font-bold mb-6"
-              style={{ fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1.2 }}
+              style={{
+                fontSize: "clamp(28px, 4vw, 52px)",
+                lineHeight: 1.15,
+                color: "#fff",
+              }}
             >
-              AI-powered mood-based nutrition machine
+              AI-powered mood-based <br />nutrition machine
             </motion.h2>
             <motion.p
               variants={fadeUp}
-              className="text-gray-700 leading-relaxed"
-              style={{ fontSize: "17px" }}
+              className="leading-relaxed mb-8"
+              style={{ fontSize: "17px", color: "rgba(255,255,255,0.55)" }}
             >
               We&apos;re building a smart dispenser that reads your mood in real time
               and delivers a personalized formula on the spot. No tracking, no guesswork —
               just the right nutrients at the right moment, every time.
             </motion.p>
+            <motion.div
+              variants={fadeUp}
+              className="inline-block px-1 py-1 rounded-2xl"
+              style={{ background: "linear-gradient(135deg, #FF89CC, #E91E8C)" }}
+            >
+              <div
+                className="px-6 py-3 rounded-xl text-sm font-bold"
+                style={{ backgroundColor: "#0f0f0f", color: brand.pink }}
+              >
+                Join the waitlist for early access →
+              </div>
+            </motion.div>
           </motion.div>
         </Container>
       </section>
 
-      {/* ── 7. Affiliations bar ── */}
+      {/* ── 7. Affiliations — white ── */}
       <section className="py-10 bg-white overflow-hidden w-full">
         <div className="max-w-4xl mx-auto px-4">
           <p className="text-gray-600 text-center mb-8 text-lg font-medium">
@@ -564,15 +615,12 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         `}</style>
       </section>
 
-      {/* ── 8. Testimonials marquee ── */}
-      <section
-        className="py-20 overflow-hidden"
-        style={{ backgroundColor: brand.communityBg }}
-      >
+      {/* ── 8. Testimonials — light pink ── */}
+      <section className="py-20 overflow-hidden" style={{ backgroundColor: "#FFF0F8" }}>
         <Container>
           <motion.h2
             className="font-bold mb-3"
-            style={{ fontSize: "37px", color: brand.communityText }}
+            style={{ fontSize: "37px", color: "#111" }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
@@ -582,7 +630,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </motion.h2>
           <motion.p
             className="mb-12"
-            style={{ fontSize: "20px", color: brand.communityText, opacity: 0.7 }}
+            style={{ fontSize: "20px", color: "#555" }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
