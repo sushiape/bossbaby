@@ -209,6 +209,9 @@ function TestimonialCard({ testimonial }) {
 // ── Main component ──────────────────────────────────────────────────────────
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
   const [status, setStatus] = useState("idle");
+  const [affiliationsPaused, setAffiliationsPaused] = useState(false);
+  const [row1Paused, setRow1Paused] = useState(false);
+  const [row2Paused, setRow2Paused] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -519,10 +522,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             We build inside a strong innovation network.
           </p>
         </div>
-        <div className="relative w-full overflow-hidden group">
+        <div
+          className="relative w-full overflow-hidden"
+          onMouseEnter={() => setAffiliationsPaused(true)}
+          onMouseLeave={() => setAffiliationsPaused(false)}
+        >
           <div
-            className="flex gap-4 whitespace-nowrap group-hover:[animation-play-state:paused]"
-            style={{ animation: "scroll 30s linear infinite" }}
+            className="flex gap-4 whitespace-nowrap"
+            style={{ animation: "scroll 30s linear infinite", animationPlayState: affiliationsPaused ? "paused" : "running" }}
           >
             {[...affiliations, ...affiliations].map((affiliation, i) => (
               <span
@@ -585,11 +592,15 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </motion.p>
         </Container>
 
-        {/* Row 1 — scrolls left */}
-        <div className="relative w-full overflow-hidden group mb-5">
+        {/* Row 1 — scrolls left, pauses independently */}
+        <div
+          className="relative w-full overflow-hidden mb-5"
+          onMouseEnter={() => setRow1Paused(true)}
+          onMouseLeave={() => setRow1Paused(false)}
+        >
           <div
-            className="flex gap-5 whitespace-nowrap group-hover:[animation-play-state:paused]"
-            style={{ animation: "scroll-left 28s linear infinite" }}
+            className="flex gap-5 whitespace-nowrap"
+            style={{ animation: "scroll-left 28s linear infinite", animationPlayState: row1Paused ? "paused" : "running" }}
           >
             {[...row1, ...row1].map((t, i) => (
               <TestimonialCard key={i} testimonial={t} />
@@ -597,11 +608,15 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </div>
         </div>
 
-        {/* Row 2 — scrolls right */}
-        <div className="relative w-full overflow-hidden group">
+        {/* Row 2 — scrolls right, pauses independently */}
+        <div
+          className="relative w-full overflow-hidden"
+          onMouseEnter={() => setRow2Paused(true)}
+          onMouseLeave={() => setRow2Paused(false)}
+        >
           <div
-            className="flex gap-5 whitespace-nowrap group-hover:[animation-play-state:paused]"
-            style={{ animation: "scroll-right 28s linear infinite" }}
+            className="flex gap-5 whitespace-nowrap"
+            style={{ animation: "scroll-right 28s linear infinite", animationPlayState: row2Paused ? "paused" : "running" }}
           >
             {[...row2, ...row2].map((t, i) => (
               <TestimonialCard key={i} testimonial={t} />
