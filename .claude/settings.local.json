@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(command -v nvm)",
+      "Bash(command -v brew)",
+      "Bash(brew --version)",
+      "Bash(brew list:*)",
+      "Read(//usr/local/bin/**)",
+      "Bash(brew install:*)",
+      "Bash(npm -v)",
+      "Bash(npm install:*)",
+      "WebFetch(domain:www.orbem.ai)",
+      "Bash(npm run:*)",
+      "WebSearch",
+      "WebFetch(domain:growthalliance.de)",
+      "WebFetch(domain:www.rentenbank.de)",
+      "WebFetch(domain:techquartier.com)",
+      "Bash(curl -sI -L \"https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=8\")",
+      "Bash(curl -sI \"https://coco-frauen-gruenden.de/wp-content/uploads/2023/04/Coco_logo_weiss.svg\")",
+      "Bash(curl -s \"https://coco-frauen-gruenden.de/\")",
+      "Bash(curl -sI \"https://coco-frauen-gruenden.de/wp-content/uploads/2025/02/Coco_logo_dunkel.svg\")",
+      "Bash(curl -s \"https://www.social-business-women.com/\")",
+      "Bash(curl -sI \"https://www.social-business-women.com/wp-content/uploads/2026/01/BerufsWege-fuer-Frauen-und-Social-Business-Women-eV_Logo_klein-1.png\")",
+      "Bash(curl -s \"https://www.tum-venture-labs.de/labs/food-agro-biotech/\")",
+      "Bash(curl -s \"https://www.unternehmertum.de/en/about/tum-venture-labs\")",
+      "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://framerusercontent.com/images/NSMdvir5eKfM69KzEdpQZYBBFNY.svg\\\\n\" \"https://framerusercontent.com/images/NSMdvir5eKfM69KzEdpQZYBBFNY.svg\")",
+      "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg\\\\n\" \"https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=8\")",
+      "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://www.rentenbank.de logo\\\\n\" \"https://www.rentenbank.de/export/sites/rentenbank/.galleries/presse/rentenbank-schriftzug.png_299365721.png\")",
+      "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://framerusercontent.com/images/ofOJUgFa83WGUnL2bf4V8anqOeQ.svg\\\\n\" \"https://framerusercontent.com/images/ofOJUgFa83WGUnL2bf4V8anqOeQ.svg\")",
+      "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://www.tum.de blue logo\\\\n\" \"https://www.tum.de/typo3conf/ext/in2template/Resources/Public/Images/Backend/tum-logo-blue.svg\")"
+    ]
+  }
+}
