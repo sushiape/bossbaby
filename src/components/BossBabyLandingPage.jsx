@@ -210,6 +210,15 @@ function TestimonialCard({ testimonial }) {
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
   const [status, setStatus] = useState("idle");
 
+  // Scroll to hero section after animations complete
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 1200); // Wait for animations to complete (1.2 seconds)
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("submitting");
