@@ -70,22 +70,22 @@ const topics = [
 
 const feedPosts = [
   {
-    author: "@paralleluniverse",
-    time: "2h ago",
-    replies: 24,
-    title: "Female founders: Whats your goto professional pep talk before a big pitch?"
+    author: "@glowgetter",
+    time: "4h ago",
+    replies: 31,
+    title: "Three weeks on Glow formula and my coworker asked what new skincare I started 👀"
   },
   {
     author: "@hannahbanana",
     time: "1d ago",
     replies: 8,
-    title: "I swapped coffee for WaKe Up! and my 2pm crash vanished"
+    title: "I swapped coffee for WaKe Up! and my 2pm crash just... stopped happening"
   },
   {
     author: "@mimi",
     time: "3d ago",
     replies: 19,
-    title: "What is one small habit that calmed your afternoons?"
+    title: "What is one small habit that actually calmed your afternoons? Asking for real answers only"
   }
 ];
 
@@ -142,44 +142,6 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* Topics Section */}
-      <section className="py-16 px-4">
-        <Container>
-          <h2 className="text-center text-3xl sm:text-4xl font-extrabold mb-6" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
-            Pick your corner
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            {topics.map((topic, index) => (
-              <div
-                key={index}
-                className="bg-white border rounded-2xl p-5 shadow-md hover:-translate-y-0.5 transition-all"
-                style={{
-                  borderColor: '#ffeaf4',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
-                }}
-              >
-                <h3 className="text-base font-extrabold mb-1" style={{fontWeight: 800}}>
-                  {topic.title}
-                </h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  {topic.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {topic.tags.map((tag, i) => (
-                    <span
-                      key={i}
-                      className="border rounded-full px-3 py-1 text-xs bg-white"
-                      style={{borderColor: '#f3e3ee'}}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
 
       {/* Feed Section */}
       <section className="py-16 px-4">
