@@ -36,17 +36,17 @@ const drinks = [
   {
     name: "Power",
     description:
-      "Your ambition doesn't run on empty. Built for the days your goals are big and your energy feels small — hormone-balancing, mood-lifting, made to match your drive.",
+      "Your ambition doesn't run on empty. Built for the days your goals are big and your energy feels small - hormone-balancing, mood-lifting, made to match your drive.",
   },
   {
     name: "WaKe Up!",
     description:
-      "10 tabs open, 2 hours of focus left. Natural caffeine meets brain-loving adaptogens for clarity that holds through the whole meeting — not just the first sip.",
+      "10 tabs open, 2 hours of focus left. Natural caffeine meets brain-loving adaptogens for clarity that holds through the whole meeting - not just the first sip.",
   },
   {
     name: "Glow",
     description:
-      "Skin that remembers to show up. Antioxidants and collagen boosters work quietly while you move loudly — because looking like yourself, at your best, shouldn't need an extra hour.",
+      "Skin that remembers to show up. Antioxidants and collagen boosters work quietly while you move loudly - because looking like yourself, at your best, shouldn't need an extra hour.",
   },
   {
     name: "lazy juice",
@@ -60,19 +60,19 @@ const howItWorks = [
     step: "01",
     title: "Pick your mood",
     description:
-      "Feeling scattered? Depleted? Want to glow? Each formula is built around a specific state you want to move toward — choose the one that fits your day.",
+      "Feeling scattered? Depleted? Want to glow? Each formula is built around a specific state you want to move toward - choose the one that fits your day.",
   },
   {
     step: "02",
     title: "Take your shot",
     description:
-      "Delicious, convenient, no prep. Each formula is designed to be the one supplement you actually look forward to — not the one you forget in a drawer.",
+      "Delicious, convenient, no prep. Each formula is designed to be the one supplement you actually look forward to - not the one you forget in a drawer.",
   },
   {
     step: "03",
     title: "Feel the difference",
     description:
-      "Science-backed ingredients formulated with nutrition experts, designed to work with your body's natural rhythms — not against them.",
+      "Science-backed ingredients formulated with nutrition experts, designed to work with your body's natural rhythms - not against them.",
   },
 ];
 
@@ -111,13 +111,13 @@ const testimonials = [
   {
     name: "Mia",
     quote:
-      "I want to feel emotionally empowered and satisfied — not just 'supplemented.' Something you take because it feels good, not out of obligation.",
+      "I want to feel emotionally empowered and satisfied - not just 'supplemented.' Something you take because it feels good, not out of obligation.",
     role: "Mia, 28, Marketing Analyst",
   },
   {
     name: "Sofia",
     quote:
-      "I want something I actually look forward to every day. Not like 'taking' a supplement — more like a little ritual that gives me energy, nutrition, and a bit of magic.",
+      "I want something I actually look forward to every day. Not like 'taking' a supplement - more like a little ritual that gives me energy, nutrition, and a bit of magic.",
     role: "Sofia, 29, Startup Founder",
   },
   {
@@ -129,7 +129,7 @@ const testimonials = [
   {
     name: "Iris",
     quote:
-      "The key is it must taste good. Like a healthier version of milk tea — something you'd actually look forward to, not force yourself to take.",
+      "The key is it must taste good. Like a healthier version of milk tea - something you'd actually look forward to, not force yourself to take.",
     role: "Iris, 26, UX Designer",
   },
   {
@@ -147,19 +147,19 @@ const testimonials = [
   {
     name: "Lin",
     quote:
-      "I want something that saves time, is genuinely healthy, and makes me feel refreshed — not like I just had a sugary drink.",
+      "I want something that saves time, is genuinely healthy, and makes me feel refreshed - not like I just had a sugary drink.",
     role: "Lin, 31, Freelance Interpreter",
   },
   {
     name: "Nina",
     quote:
-      "It should feel like a little treat — but one that also gives you a real sense of healthiness. That's the balance I've been looking for.",
+      "It should feel like a little treat - but one that also gives you a real sense of healthiness. That's the balance I've been looking for.",
     role: "Nina, 28, Office Manager",
   },
   {
     name: "Maya",
     quote:
-      "I'd use it as my daily treat for finishing work — a healthier substitute for the energy boost I usually get from Coke when my creative time starts.",
+      "I'd use it as my daily treat for finishing work - a healthier substitute for the energy boost I usually get from Coke when my creative time starts.",
     role: "Maya, 23, Artist",
   },
   {
@@ -260,7 +260,7 @@ function TestimonialCard({ testimonial }) {
           whiteSpace: "normal",
         }}
       >
-        — {testimonial.role}
+        - {testimonial.role}
       </span>
     </div>
   );
@@ -445,7 +445,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             whileInView="visible"
             viewport={viewportOpts}
           >
-            From drive to calm, from glow to focus — there&apos;s one for today.
+            From drive to calm, from glow to focus - there&apos;s one for today.
           </motion.p>
 
           <motion.div
@@ -580,7 +580,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               className="text-base text-gray-700 leading-relaxed"
               style={{ fontSize: "17px" }}
             >
-              Most supplements ignore the way women actually live — the mood shifts,
+              Most supplements ignore the way women actually live - the mood shifts,
               the demanding schedules, the need for something that feels like self-care,
               not medicine. We built Bossbaby to fix that. Four science-backed formulas,
               each tied to a mood and developed with nutrition experts, designed to be
@@ -590,7 +590,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* ── 6. AI teaser — near-black, full treatment ── */}
+      {/* ── 6. AI teaser - near-black, full treatment ── */}
       <section
         className="py-24 px-4 text-center"
         style={{ backgroundColor: "#0f0f0f" }}
@@ -628,7 +628,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               style={{ fontSize: "17px", color: "rgba(255,255,255,0.55)" }}
             >
               We&apos;re building a smart dispenser that reads your mood in real time
-              and delivers a personalized formula on the spot. No tracking, no guesswork —
+              and delivers a personalized formula on the spot. No tracking, no guesswork -
               just the right nutrients at the right moment, every time.
             </motion.p>
             <motion.div
@@ -676,7 +676,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </motion.p>
         </Container>
 
-        {/* Row 1 — scrolls left */}
+        {/* Row 1 - scrolls left */}
         <div
           className="relative w-full overflow-hidden mb-5"
           onMouseEnter={() => setRow1Paused(true)}
@@ -684,7 +684,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         >
           <div
             className="flex gap-5 whitespace-nowrap"
-            style={{ animation: "scroll-left 28s linear infinite", animationPlayState: row1Paused ? "paused" : "running" }}
+            style={{ animation: "scroll-left 50s linear infinite", animationPlayState: row1Paused ? "paused" : "running" }}
           >
             {[...row1, ...row1].map((t, i) => (
               <TestimonialCard key={i} testimonial={t} />
@@ -692,7 +692,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </div>
         </div>
 
-        {/* Row 2 — scrolls right */}
+        {/* Row 2 - scrolls right */}
         <div
           className="relative w-full overflow-hidden"
           onMouseEnter={() => setRow2Paused(true)}
@@ -700,7 +700,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         >
           <div
             className="flex gap-5 whitespace-nowrap"
-            style={{ animation: "scroll-right 28s linear infinite", animationPlayState: row2Paused ? "paused" : "running" }}
+            style={{ animation: "scroll-right 50s linear infinite", animationPlayState: row2Paused ? "paused" : "running" }}
           >
             {[...row2, ...row2].map((t, i) => (
               <TestimonialCard key={i} testimonial={t} />
