@@ -108,6 +108,66 @@ const testimonials = [
       "My friends and I group-chatted about this before it even launched. Some things are just better shared.",
     role: "Cassandra, 29, Aerospace Engineer",
   },
+  {
+    name: "Mia",
+    quote:
+      "I want to feel emotionally empowered and satisfied — not just 'supplemented.' Something you take because it feels good, not out of obligation.",
+    role: "Mia, 28, Marketing Analyst",
+  },
+  {
+    name: "Sofia",
+    quote:
+      "I want something I actually look forward to every day. Not like 'taking' a supplement — more like a little ritual that gives me energy, nutrition, and a bit of magic.",
+    role: "Sofia, 29, Startup Founder",
+  },
+  {
+    name: "Yuki",
+    quote:
+      "If it makes my skin better and I enjoy drinking it, I'd want to share it with everyone. Wouldn't it be great if we could all feel better together?",
+    role: "Yuki, 25, Biology Student",
+  },
+  {
+    name: "Iris",
+    quote:
+      "The key is it must taste good. Like a healthier version of milk tea — something you'd actually look forward to, not force yourself to take.",
+    role: "Iris, 26, UX Designer",
+  },
+  {
+    name: "Layla",
+    quote:
+      "A product that tastes sweet, makes you feel fit, and gives you beautiful skin and hair? I'd drink that all day long.",
+    role: "Layla, 24, Creative",
+  },
+  {
+    name: "Mei",
+    quote:
+      "If it's something good, it should be shared with everyone. Simple as that.",
+    role: "Mei, 27, Graphic Designer",
+  },
+  {
+    name: "Lin",
+    quote:
+      "I want something that saves time, is genuinely healthy, and makes me feel refreshed — not like I just had a sugary drink.",
+    role: "Lin, 31, Freelance Interpreter",
+  },
+  {
+    name: "Nina",
+    quote:
+      "It should feel like a little treat — but one that also gives you a real sense of healthiness. That's the balance I've been looking for.",
+    role: "Nina, 28, Office Manager",
+  },
+  {
+    name: "Maya",
+    quote:
+      "I'd use it as my daily treat for finishing work — a healthier substitute for the energy boost I usually get from Coke when my creative time starts.",
+    role: "Maya, 23, Artist",
+  },
+  {
+    name: "Kira",
+    quote:
+      "Design and effects are usually targeted at men. Women's needs are less considered. Something built for us that actually works? That's worth recommending.",
+    role: "Kira, 27, Product Designer",
+  },
 ];
 
 // Duplicate for seamless marquee loop
