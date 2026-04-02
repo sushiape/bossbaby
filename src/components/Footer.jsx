@@ -1,6 +1,13 @@
 import React from "react";
 
 export default function Footer({ setCurrentPage }) {
+  const legalLinks = [
+    { label: 'Impressum', page: 'impressum', href: '/impressum' },
+    { label: 'Datenschutz', page: 'privacy', href: '/privacy' },
+    { label: 'AGB', page: 'terms', href: '/terms' },
+    { label: 'Barrierefreiheit', page: 'accessibility', href: '/accessibility' },
+  ];
+
   return (
     <footer className="bg-white py-8 px-4" style={{fontSize: '15px', fontWeight: 300}}>
       <div className="max-w-7xl mx-auto flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-between sm:items-center">
@@ -35,20 +42,19 @@ export default function Footer({ setCurrentPage }) {
         </div>
         {setCurrentPage && (
           <div className="order-2 flex flex-col items-center gap-1 text-center sm:order-2 sm:flex-1 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-4 sm:gap-y-2">
-            {[
-              { label: 'Impressum', page: 'impressum' },
-              { label: 'Datenschutz', page: 'privacy' },
-              { label: 'AGB', page: 'terms' },
-              { label: 'Barrierefreiheit', page: 'accessibility' },
-            ].map(({ label, page }) => (
-              <button
+            {legalLinks.map(({ label, page, href }) => (
+              <a
                 key={page}
-                onClick={() => setCurrentPage(page)}
+                href={href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentPage(page);
+                }}
                 className="text-gray-600 hover:text-gray-800 transition-colors underline"
                 style={{fontSize: '13px', fontWeight: 300}}
               >
                 {label}
-              </button>
+              </a>
             ))}
           </div>
         )}

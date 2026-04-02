@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BossBabyLandingPage from './components/BossBabyLandingPage';
 import BossBabyProductsPage from './components/BossBabyProductsPage';
 import BossBabyCommunityPage from './components/BossBabyCommunityPage';
@@ -10,9 +11,51 @@ import BossBabyTermsPage from './components/BossBabyTermsPage';
 import BossBabyAccessibilityPage from './components/BossBabyAccessibilityPage';
 import PageLoader from './components/PageLoader';
 
+const pageToPath = {
+  landing: '/',
+  products: '/products',
+  community: '/community',
+  about: '/about',
+  impressum: '/impressum',
+  privacy: '/privacy',
+  terms: '/terms',
+  accessibility: '/accessibility',
+};
+
+const pathToPage = {
+  '/': 'landing',
+  '/products': 'products',
+  '/community': 'community',
+  '/about': 'about',
+  '/impressum': 'impressum',
+  '/privacy': 'privacy',
+  '/terms': 'terms',
+  '/accessibility': 'accessibility',
+};
+
+const normalizePath = (pathname) => {
+  if (pathname.length > 1 && pathname.endsWith('/')) {
+    return pathname.slice(0, -1);
+  }
+  return pathname;
+};
+
 function App() {
   const [loaderDone, setLoaderDone] = useState(false);
-  const [currentPage, setCurrentPage] = useState('landing');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const normalizedPath = normalizePath(location.pathname);
+  const currentPage = pathToPage[normalizedPath];
+
+  const setCurrentPage = (page) => {
+    const targetPath = pageToPath[page] || '/';
+    navigate(targetPath);
+  };
+
+  if (!currentPage) {
+    return <Navigate to="/" replace />;
+  }
 
   const renderPage = () => {
     switch (currentPage) {
