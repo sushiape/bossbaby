@@ -4,6 +4,7 @@ import BossBabyLandingPage from './components/BossBabyLandingPage';
 import BossBabyProductsPage from './components/BossBabyProductsPage';
 import BossBabyCommunityPage from './components/BossBabyCommunityPage';
 import BossBabyAboutPage from './components/BossBabyAboutPage';
+import BossBabyImpressumPage from './components/BossBabyImpressumPage';
 import PageLoader from './components/PageLoader';
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
         return <BossBabyCommunityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'about':
         return <BossBabyAboutPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'impressum':
+        return <BossBabyImpressumPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'landing':
       default:
         return <BossBabyLandingPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;

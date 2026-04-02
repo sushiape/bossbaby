@@ -709,7 +709,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </div>
       </section>
 
-      <Footer />
+      <Footer setCurrentPage={setCurrentPage} />
     </div>
   );
 }

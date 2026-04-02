@@ -272,7 +272,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
         </div>
       </div>
 
-      <Footer />
+      <Footer setCurrentPage={setCurrentPage} />
     </div>
   );
 }

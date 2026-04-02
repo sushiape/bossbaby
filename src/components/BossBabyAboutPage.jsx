@@ -314,7 +314,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      <Footer />
+      <Footer setCurrentPage={setCurrentPage} />
     </div>
   );
 }

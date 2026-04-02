@@ -200,7 +200,7 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      <Footer />
+      <Footer setCurrentPage={setCurrentPage} />
     </div>
   );
 }
