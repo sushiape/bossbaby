@@ -8,8 +8,8 @@ const brand = {
   bg: "#FFD2E9",
   white: "#fff",
   text: "#000",
-  communityBg: "#EAEDDC",
-  communityText: "#002B26",
+  communityBg: "#FFD2E9",
+  communityText: "#000",
 };
 
 const Container = ({ children, className = "" }) => (
@@ -209,6 +209,8 @@ function TestimonialCard({ testimonial }) {
 // ── Main component ──────────────────────────────────────────────────────────
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
   const [status, setStatus] = useState("idle");
+  const [row1Paused, setRow1Paused] = useState(false);
+  const [row2Paused, setRow2Paused] = useState(false);
 
   // Scroll to hero section after animations complete
   React.useEffect(() => {
@@ -250,6 +252,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
 
       {/* ── 1. Hero ── */}
       <section
+        id="waitlist"
         className="text-center py-32 px-4"
         style={{ backgroundColor: brand.pink }}
       >
@@ -573,12 +576,13 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               className="inline-block px-1 py-1 rounded-2xl"
               style={{ background: "linear-gradient(135deg, #FF89CC, #E91E8C)" }}
             >
-              <div
-                className="px-6 py-3 rounded-xl text-sm font-bold"
+              <a
+                href="#waitlist"
+                className="block px-6 py-3 rounded-xl text-sm font-bold"
                 style={{ backgroundColor: "#0f0f0f", color: brand.pink }}
               >
                 Join the waitlist for early access →
-              </div>
+              </a>
             </motion.div>
           </motion.div>
         </Container>
@@ -613,10 +617,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
 
         {/* Row 1 — scrolls left */}
-        <div className="relative w-full overflow-hidden group mb-5">
+        <div
+          className="relative w-full overflow-hidden mb-5"
+          onMouseEnter={() => setRow1Paused(true)}
+          onMouseLeave={() => setRow1Paused(false)}
+        >
           <div
-            className="flex gap-5 whitespace-nowrap group-hover:[animation-play-state:paused]"
-            style={{ animation: "scroll-left 28s linear infinite" }}
+            className="flex gap-5 whitespace-nowrap"
+            style={{ animation: "scroll-left 28s linear infinite", animationPlayState: row1Paused ? "paused" : "running" }}
           >
             {[...row1, ...row1].map((t, i) => (
               <TestimonialCard key={i} testimonial={t} />
@@ -625,10 +633,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </div>
 
         {/* Row 2 — scrolls right */}
-        <div className="relative w-full overflow-hidden group">
+        <div
+          className="relative w-full overflow-hidden"
+          onMouseEnter={() => setRow2Paused(true)}
+          onMouseLeave={() => setRow2Paused(false)}
+        >
           <div
-            className="flex gap-5 whitespace-nowrap group-hover:[animation-play-state:paused]"
-            style={{ animation: "scroll-right 28s linear infinite" }}
+            className="flex gap-5 whitespace-nowrap"
+            style={{ animation: "scroll-right 28s linear infinite", animationPlayState: row2Paused ? "paused" : "running" }}
           >
             {[...row2, ...row2].map((t, i) => (
               <TestimonialCard key={i} testimonial={t} />

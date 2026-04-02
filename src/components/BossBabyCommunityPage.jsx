@@ -191,7 +191,7 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
             {feedPosts.map((post, index) => (
               <div
                 key={index}
-                className="bg-white border rounded-2xl p-5 shadow-md"
+                className="bg-white border rounded-2xl p-5 shadow-md hover:-translate-y-1 transition-all"
                 style={{
                   borderColor: '#ffeaf4',
                   boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
@@ -220,7 +220,7 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
             {ambassadors.map((amb, index) => (
               <div
                 key={index}
-                className="bg-white border rounded-2xl p-5 shadow-md"
+                className="bg-white border rounded-2xl p-5 shadow-md hover:-translate-y-1 transition-all"
                 style={{
                   borderColor: '#ffeaf4',
                   boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
