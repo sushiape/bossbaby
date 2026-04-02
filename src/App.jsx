@@ -5,6 +5,9 @@ import BossBabyProductsPage from './components/BossBabyProductsPage';
 import BossBabyCommunityPage from './components/BossBabyCommunityPage';
 import BossBabyAboutPage from './components/BossBabyAboutPage';
 import BossBabyImpressumPage from './components/BossBabyImpressumPage';
+import BossBabyPrivacyPage from './components/BossBabyPrivacyPage';
+import BossBabyTermsPage from './components/BossBabyTermsPage';
+import BossBabyAccessibilityPage from './components/BossBabyAccessibilityPage';
 import PageLoader from './components/PageLoader';
 
 function App() {
@@ -21,6 +24,12 @@ function App() {
         return <BossBabyAboutPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'impressum':
         return <BossBabyImpressumPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'privacy':
+        return <BossBabyPrivacyPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'terms':
+        return <BossBabyTermsPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'accessibility':
+        return <BossBabyAccessibilityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'landing':
       default:
         return <BossBabyLandingPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;

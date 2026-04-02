@@ -9,13 +9,23 @@ export default function Footer({ setCurrentPage }) {
             © 2026 with 🩷 by bossbaby
           </p>
           {setCurrentPage && (
-            <button
-              onClick={() => setCurrentPage('impressum')}
-              className="text-gray-400 hover:text-gray-600 transition-colors underline"
-              style={{fontSize: '13px', fontWeight: 300}}
-            >
-              Impressum
-            </button>
+            <div className="flex flex-wrap gap-3">
+              {[
+                { label: 'Impressum', page: 'impressum' },
+                { label: 'Datenschutz', page: 'privacy' },
+                { label: 'AGB', page: 'terms' },
+                { label: 'Barrierefreiheit', page: 'accessibility' },
+              ].map(({ label, page }) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors underline"
+                  style={{fontSize: '13px', fontWeight: 300}}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           )}
         </div>
         <div className="flex items-center gap-3 mx-auto sm:mx-0">

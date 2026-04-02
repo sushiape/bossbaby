@@ -27,7 +27,25 @@
       "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg\\\\n\" \"https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=8\")",
       "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://www.rentenbank.de logo\\\\n\" \"https://www.rentenbank.de/export/sites/rentenbank/.galleries/presse/rentenbank-schriftzug.png_299365721.png\")",
       "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://framerusercontent.com/images/ofOJUgFa83WGUnL2bf4V8anqOeQ.svg\\\\n\" \"https://framerusercontent.com/images/ofOJUgFa83WGUnL2bf4V8anqOeQ.svg\")",
-      "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://www.tum.de blue logo\\\\n\" \"https://www.tum.de/typo3conf/ext/in2template/Resources/Public/Images/Backend/tum-logo-blue.svg\")"
+      "Bash(curl -sL -o /dev/null -w \"200check %{http_code} https://www.tum.de blue logo\\\\n\" \"https://www.tum.de/typo3conf/ext/in2template/Resources/Public/Images/Backend/tum-logo-blue.svg\")",
+      "WebFetch(domain:goodgirlsnacks.com)",
+      "WebFetch(domain:www.bmwk.de)",
+      "WebFetch(domain:european-union.europa.eu)",
+      "WebFetch(domain:www.ptj.de)",
+      "WebFetch(domain:www.exist.de)",
+      "WebFetch(domain:www.bundeswirtschaftsministerium.de)",
+      "WebFetch(domain:europa.eu)",
+      "WebFetch(domain:www.dlr.de)",
+      "WebFetch(domain:www.magdeburg.de)",
+      "Bash(curl -sL \"https://european-union.europa.eu/themes/contrib/oe_theme/dist/eu/images/logo/condensed-version/positive/logo-eu--en.svg\" -o /Users/oleg/bossbaby-1/public/logos/eu.svg)",
+      "Bash(curl -sL \"https://www.ptj.de/lw_resource/layoutfiles/assets/img/ptj-header-logo.svg\" -o /Users/oleg/bossbaby-1/public/logos/ptj.svg)",
+      "Bash(curl -sL \"https://exist.de/wp-content/uploads/2025/09/exist_logo.svg\" -o /Users/oleg/bossbaby-1/public/logos/exist.svg)",
+      "Bash(curl -sL \"https://www.bmwk.de/SiteGlobals/BMWI/StyleBundles/Bilder/logo.svg?__blob=normal\" -o /tmp/bmwk_test1.svg)",
+      "Read(//tmp/**)",
+      "Bash(curl -sL \"https://www.bmwk.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=1\" -o /tmp/bmwk_test2.svg)",
+      "Bash(curl -sL \"https://www.bundeswirtschaftsministerium.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal\" -o /tmp/bmwk_test3.svg)",
+      "Bash(curl -sL -A \"Mozilla/5.0\" \"https://www.bmwk.de\")",
+      "Bash(python3 -c \" import sys, re html = sys.stdin.read\\(\\) m = re.search\\(r'<span class=\\\\\"header-logo[^\\\\\"]*\\\\\">\\\\s*\\(<svg.*?</svg>\\)', html, re.DOTALL\\) if m: print\\(m.group\\(1\\)\\) \" wc -c /Users/oleg/bossbaby-1/public/logos/bmwk.svg)"
     ]
   }
 }
