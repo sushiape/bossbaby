@@ -22,7 +22,7 @@ export default function BossBabyTermsPage({ currentPage, setCurrentPage }) {
 
             <div>
               <h2 className="font-bold mb-2 text-lg">2. Anbieter</h2>
-              <p>Gabrielle Fu<br />Bossbaby<br />c/o TUM Venture Lab Food, Agro &amp; Biotech<br />Alte Akademie 8<br />85354 Freising<br />Deutschland</p>
+              <p>Gabrielle Fu<br />Bossbaby<br />c/o TUM Venture Lab Food, Agro &amp; BioTech<br />Alte Akademie 8<br />85354 Freising<br />Deutschland</p>
               <p className="mt-2">E-Mail: <a href="mailto:bossbabiezzy@gmail.com" className="underline hover:opacity-70" style={{ color: "#FF89CC" }}>bossbabiezzy@gmail.com</a></p>
             </div>
 
