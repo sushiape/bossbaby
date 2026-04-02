@@ -8,8 +8,8 @@ const brand = {
   bg: "#FFD2E9",
   white: "#fff",
   text: "#000",
-  communityBg: "#FFD2E9",
-  communityText: "#000",
+  communityBg: "#EAEDDC",
+  communityText: "#002B26",
 };
 
 const Container = ({ children, className = "" }) => (
@@ -36,17 +36,17 @@ const drinks = [
   {
     name: "Power",
     description:
-      "Your ambition doesn't run on empty. Built for the days your goals are big and your energy feels small - hormone-balancing, mood-lifting, made to match your drive.",
+      "Your ambition doesn't run on empty. Built for the days your goals are big and your energy feels small — hormone-balancing, mood-lifting, made to match your drive.",
   },
   {
     name: "WaKe Up!",
     description:
-      "10 tabs open, 2 hours of focus left. Natural caffeine meets brain-loving adaptogens for clarity that holds through the whole meeting - not just the first sip.",
+      "10 tabs open, 2 hours of focus left. Natural caffeine meets brain-loving adaptogens for clarity that holds through the whole meeting — not just the first sip.",
   },
   {
     name: "Glow",
     description:
-      "Skin that remembers to show up. Antioxidants and collagen boosters work quietly while you move loudly - because looking like yourself, at your best, shouldn't need an extra hour.",
+      "Skin that remembers to show up. Antioxidants and collagen boosters work quietly while you move loudly — because looking like yourself, at your best, shouldn't need an extra hour.",
   },
   {
     name: "lazy juice",
@@ -60,19 +60,19 @@ const howItWorks = [
     step: "01",
     title: "Pick your mood",
     description:
-      "Feeling scattered? Depleted? Want to glow? Each formula is built around a specific state you want to move toward - choose the one that fits your day.",
+      "Feeling scattered? Depleted? Want to glow? Each formula is built around a specific state you want to move toward — choose the one that fits your day.",
   },
   {
     step: "02",
     title: "Take your shot",
     description:
-      "Delicious, convenient, no prep. Each formula is designed to be the one supplement you actually look forward to - not the one you forget in a drawer.",
+      "Delicious, convenient, no prep. Each formula is designed to be the one supplement you actually look forward to — not the one you forget in a drawer.",
   },
   {
     step: "03",
     title: "Feel the difference",
     description:
-      "Science-backed ingredients formulated with nutrition experts, designed to work with your body's natural rhythms - not against them.",
+      "Science-backed ingredients formulated with nutrition experts, designed to work with your body's natural rhythms — not against them.",
   },
 ];
 
@@ -107,66 +107,6 @@ const testimonials = [
     quote:
       "My friends and I group-chatted about this before it even launched. Some things are just better shared.",
     role: "Cassandra, 29, Aerospace Engineer",
-  },
-  {
-    name: "Mia",
-    quote:
-      "I want to feel emotionally empowered and satisfied - not just 'supplemented.' Something you take because it feels good, not out of obligation.",
-    role: "Mia, 28, Marketing Analyst",
-  },
-  {
-    name: "Sofia",
-    quote:
-      "I want something I actually look forward to every day. Not like 'taking' a supplement - more like a little ritual that gives me energy, nutrition, and a bit of magic.",
-    role: "Sofia, 29, Startup Founder",
-  },
-  {
-    name: "Yuki",
-    quote:
-      "If it makes my skin better and I enjoy drinking it, I'd want to share it with everyone. Wouldn't it be great if we could all feel better together?",
-    role: "Yuki, 25, Biology Student",
-  },
-  {
-    name: "Iris",
-    quote:
-      "The key is it must taste good. Like a healthier version of milk tea - something you'd actually look forward to, not force yourself to take.",
-    role: "Iris, 26, UX Designer",
-  },
-  {
-    name: "Layla",
-    quote:
-      "A product that tastes sweet, makes you feel fit, and gives you beautiful skin and hair? I'd drink that all day long.",
-    role: "Layla, 24, Creative",
-  },
-  {
-    name: "Mei",
-    quote:
-      "If it's something good, it should be shared with everyone. Simple as that.",
-    role: "Mei, 27, Graphic Designer",
-  },
-  {
-    name: "Lin",
-    quote:
-      "I want something that saves time, is genuinely healthy, and makes me feel refreshed - not like I just had a sugary drink.",
-    role: "Lin, 31, Freelance Interpreter",
-  },
-  {
-    name: "Nina",
-    quote:
-      "It should feel like a little treat - but one that also gives you a real sense of healthiness. That's the balance I've been looking for.",
-    role: "Nina, 28, Office Manager",
-  },
-  {
-    name: "Maya",
-    quote:
-      "I'd use it as my daily treat for finishing work - a healthier substitute for the energy boost I usually get from Coke when my creative time starts.",
-    role: "Maya, 23, Artist",
-  },
-  {
-    name: "Kira",
-    quote:
-      "Design and effects are usually targeted at men. Women's needs are less considered. Something built for us that actually works? That's worth recommending.",
-    role: "Kira, 27, Product Designer",
   },
 ];
 
@@ -260,7 +200,7 @@ function TestimonialCard({ testimonial }) {
           whiteSpace: "normal",
         }}
       >
-        - {testimonial.role}
+        — {testimonial.role}
       </span>
     </div>
   );
@@ -269,8 +209,6 @@ function TestimonialCard({ testimonial }) {
 // ── Main component ──────────────────────────────────────────────────────────
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
   const [status, setStatus] = useState("idle");
-  const [row1Paused, setRow1Paused] = useState(false);
-  const [row2Paused, setRow2Paused] = useState(false);
 
   // Scroll to hero section after animations complete
   React.useEffect(() => {
@@ -312,7 +250,6 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
 
       {/* ── 1. Hero ── */}
       <section
-        id="waitlist"
         className="text-center py-32 px-4"
         style={{ backgroundColor: brand.pink }}
       >
@@ -445,7 +382,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             whileInView="visible"
             viewport={viewportOpts}
           >
-            From drive to calm, from glow to focus - there&apos;s one for today.
+            From drive to calm, from glow to focus — there&apos;s one for today.
           </motion.p>
 
           <motion.div
@@ -461,7 +398,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                 variants={fadeUp}
                 className="relative rounded-2xl p-8 text-left"
                 style={{
-                  background: "rgba(255, 255, 255, 0.9)",
+                  background: "rgba(255, 255, 255, 0.8)",
                   backdropFilter: "blur(20px) saturate(180%)",
                   border: "1px solid rgba(255, 255, 255, 0.4)",
                   boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
@@ -473,10 +410,10 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                   transition: { duration: 0.22 },
                 }}
               >
-                <h3 className="text-2xl font-bold mb-4 text-center" style={{ color: "#000000" }}>
+                <h3 className="text-2xl font-bold mb-4" style={{ color: brand.pink }}>
                   {drink.name}
                 </h3>
-                <p className="text-xs sm:text-sm leading-relaxed text-center" style={{ color: "#444" }}>
+                <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#444" }}>
                   {drink.description}
                 </p>
               </motion.div>
@@ -580,7 +517,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               className="text-base text-gray-700 leading-relaxed"
               style={{ fontSize: "17px" }}
             >
-              Most supplements ignore the way women actually live - the mood shifts,
+              Most supplements ignore the way women actually live — the mood shifts,
               the demanding schedules, the need for something that feels like self-care,
               not medicine. We built Bossbaby to fix that. Four science-backed formulas,
               each tied to a mood and developed with nutrition experts, designed to be
@@ -590,10 +527,10 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* ── 6. AI teaser - near-black, full treatment ── */}
+      {/* ── 6. AI machine teaser ── */}
       <section
-        className="py-24 px-4 text-center"
-        style={{ backgroundColor: "#0f0f0f" }}
+        className="py-20 px-4 text-center"
+        style={{ backgroundColor: brand.bg }}
       >
         <Container>
           <motion.div
@@ -614,36 +551,19 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             <motion.h2
               variants={fadeUp}
               className="font-bold mb-6"
-              style={{
-                fontSize: "clamp(28px, 4vw, 52px)",
-                lineHeight: 1.15,
-                color: "#fff",
-              }}
+              style={{ fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1.2 }}
             >
-              AI-powered mood-based <br />nutrition machine
+              AI-powered mood-based nutrition machine
             </motion.h2>
             <motion.p
               variants={fadeUp}
-              className="leading-relaxed mb-8"
-              style={{ fontSize: "17px", color: "rgba(255,255,255,0.55)" }}
+              className="text-gray-700 leading-relaxed"
+              style={{ fontSize: "17px" }}
             >
               We&apos;re building a smart dispenser that reads your mood in real time
-              and delivers a personalized formula on the spot. No tracking, no guesswork -
+              and delivers a personalized formula on the spot. No tracking, no guesswork —
               just the right nutrients at the right moment, every time.
             </motion.p>
-            <motion.div
-              variants={fadeUp}
-              className="inline-block px-1 py-1 rounded-2xl"
-              style={{ background: "linear-gradient(135deg, #FF89CC, #E91E8C)" }}
-            >
-              <a
-                href="#waitlist"
-                className="block px-6 py-3 rounded-xl text-sm font-bold"
-                style={{ backgroundColor: "#0f0f0f", color: brand.pink }}
-              >
-                Join the waitlist for early access →
-              </a>
-            </motion.div>
           </motion.div>
         </Container>
       </section>
@@ -656,7 +576,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         <Container>
           <motion.h2
             className="font-bold mb-3"
-            style={{ fontSize: "37px", color: "black" }}
+            style={{ fontSize: "37px", color: brand.communityText }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
@@ -676,15 +596,11 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </motion.p>
         </Container>
 
-        {/* Row 1 - scrolls left */}
-        <div
-          className="relative w-full overflow-hidden mb-5"
-          onMouseEnter={() => setRow1Paused(true)}
-          onMouseLeave={() => setRow1Paused(false)}
-        >
+        {/* Row 1 — scrolls left */}
+        <div className="relative w-full overflow-hidden group mb-5">
           <div
-            className="flex gap-5 whitespace-nowrap"
-            style={{ animation: "scroll-left 50s linear infinite", animationPlayState: row1Paused ? "paused" : "running" }}
+            className="flex gap-5 whitespace-nowrap group-hover:[animation-play-state:paused]"
+            style={{ animation: "scroll-left 28s linear infinite" }}
           >
             {[...row1, ...row1].map((t, i) => (
               <TestimonialCard key={i} testimonial={t} />
@@ -692,15 +608,11 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </div>
         </div>
 
-        {/* Row 2 - scrolls right */}
-        <div
-          className="relative w-full overflow-hidden"
-          onMouseEnter={() => setRow2Paused(true)}
-          onMouseLeave={() => setRow2Paused(false)}
-        >
+        {/* Row 2 — scrolls right */}
+        <div className="relative w-full overflow-hidden group">
           <div
-            className="flex gap-5 whitespace-nowrap"
-            style={{ animation: "scroll-right 50s linear infinite", animationPlayState: row2Paused ? "paused" : "running" }}
+            className="flex gap-5 whitespace-nowrap group-hover:[animation-play-state:paused]"
+            style={{ animation: "scroll-right 28s linear infinite" }}
           >
             {[...row2, ...row2].map((t, i) => (
               <TestimonialCard key={i} testimonial={t} />

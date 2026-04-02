@@ -122,7 +122,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
       </section>
 
       {/* Intro Section */}
-      <section id="moods" className="py-16">
+      <section id="moods" className="py-16 bg-white">
         <Container>
           <div className="text-center mb-10">
             <h2
@@ -141,9 +141,10 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
             {moods.map((mood, index) => (
               <article
                 key={index}
-                className="relative overflow-hidden rounded-2xl bg-white border-0 shadow-lg hover:-translate-y-1 transition-all min-h-[140px] grid grid-cols-[160px_1fr] items-center"
+                className="relative overflow-hidden rounded-2xl border-0 shadow-lg hover:-translate-y-1 transition-all min-h-[140px] grid grid-cols-[160px_1fr] items-center"
                 style={{
-                  boxShadow: "0 16px 50px rgba(17,17,17,0.08)",
+                  backgroundColor: brand.pink2,
+                  boxShadow: "0 16px 50px rgba(181,58,121,0.12)",
                 }}
                 tabIndex={0}
               >
@@ -170,18 +171,18 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
                 <div className="p-4 pr-5">
                   <h3
                     className="text-xl font-extrabold mb-1"
-                    style={{ fontWeight: 800, letterSpacing: "-0.01em" }}
+                    style={{ fontWeight: 800, letterSpacing: "-0.01em", color: "#7A174B" }}
                   >
                     {mood.name}
                   </h3>
-                  <p className="text-sm text-gray-700 mb-3 leading-relaxed">
+                  <p className="text-sm mb-3 leading-relaxed" style={{ color: "#4F1D3A" }}>
                     {mood.description}
                   </p>
                   <div className="flex gap-2 flex-wrap">
                     <a
                       href="#waitlist"
-                      className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 font-bold text-sm bg-white"
-                      style={{ fontWeight: 700 }}
+                      className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 font-bold text-sm bg-white"
+                      style={{ fontWeight: 700, borderColor: "#F8B7D8", color: "#7A174B" }}
                     >
                       <ChevronRight className="w-4 h-4" />
                       Join waitlist
