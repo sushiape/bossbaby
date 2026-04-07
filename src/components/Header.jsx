@@ -3,13 +3,13 @@ import React from "react";
 export default function Header({ currentPage, setCurrentPage }) {
   const links = [
     { label: 'Products', page: 'products', href: '/products' },
-    { label: 'Community', page: 'community', href: '/community' },
     { label: 'About', page: 'about', href: '/about' },
+    { label: 'Community', page: 'community', href: '/community' },
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
+    <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-gray-200">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-1.5">
         <a
           href="/"
           className="text-xl font-bold cursor-pointer" 

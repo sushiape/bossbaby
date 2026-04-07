@@ -5,9 +5,10 @@ import Footer from "./Footer";
 
 const brand = {
   pink: "#FF89CC",
-  bg: "#FFD2E9",
+  bg: "#FFD6E9",
   white: "#fff",
-  text: "#000",
+  text: "rgba(0, 0, 0, 0.8)",
+  title: "rgba(0, 0, 0, 0.9)",
   communityBg: "#EAEDDC",
   communityText: "#002B26",
 };
@@ -34,24 +35,24 @@ const viewportOpts = { once: true, margin: "-80px" };
 // ── Data ────────────────────────────────────────────────────────────────────
 const drinks = [
   {
-    name: "Power",
+    name: "Power up, Babe.",
     description:
-      "Your ambition doesn't run on empty. Built for the days your goals are big and your energy feels small — hormone-balancing, mood-lifting, made to match your drive.",
+      "For when your energy is not matching your ambition. Balances hormones, boosts your mood, and gives you the kind of energy that actually lasts.",
   },
   {
-    name: "WaKe Up!",
+    name: "Lock in, Babe.",
     description:
-      "10 tabs open, 2 hours of focus left. Natural caffeine meets brain-loving adaptogens for clarity that holds through the whole meeting — not just the first sip.",
+      "10 tabs open. Zero focus. Clean energy + brain-loving nutrients to help you lock in, stay sharp, and get it done.",
   },
   {
-    name: "Glow",
+    name: "Glow up, Babe.",
     description:
-      "Skin that remembers to show up. Antioxidants and collagen boosters work quietly while you move loudly — because looking like yourself, at your best, shouldn't need an extra hour.",
+      "That effortless glow? This is it. Antioxidants + collagen support to level up your skin, hair, and overall radiance.",
   },
   {
-    name: "lazy juice",
+    name: "Just chill, Babe.",
     description:
-      "Not every day needs to be productive. Calming botanicals and stress-ease nutrients for when you just need to exhale, reset, and feel like yourself again. No apologies.",
+      "When everything feels like a bit too much. A calming blend to help you slow down, reset, and feel like yourself again.",
   },
 ];
 
@@ -60,19 +61,19 @@ const howItWorks = [
     step: "01",
     title: "Pick your mood",
     description:
-      "Feeling scattered? Depleted? Want to glow? Each formula is built around a specific state you want to move toward — choose the one that fits your day.",
+      "Feeling all over the place? Low energy? Want that glow-up feeling? Each formula is designed for a specific vibe you want to step into. Just choose what you need today.",
   },
   {
     step: "02",
     title: "Take your shot",
     description:
-      "Delicious, convenient, no prep. Each formula is designed to be the one supplement you actually look forward to — not the one you forget in a drawer.",
+      "Tastes good. Takes 5 seconds. No prep, no stress. Finally a supplement you'll actually remember (and want) to take. No more dusty bottles in your drawer.",
   },
   {
     step: "03",
     title: "Feel the difference",
     description:
-      "Science-backed ingredients formulated with nutrition experts, designed to work with your body's natural rhythms — not against them.",
+      "Backed by science, not trends. Created with nutrition experts and designed to work with your body, not against it. Because feeling good should not feel complicated.",
   },
 ];
 
@@ -83,7 +84,7 @@ const stats = [
   { value: "Munich", label: "born and brewing" },
 ];
 
-const testimonials = [
+const testimonialsRow1 = [
   {
     name: "Valentina",
     quote:
@@ -110,9 +111,36 @@ const testimonials = [
   },
 ];
 
-// Duplicate for seamless marquee loop
-const row1 = [...testimonials, ...testimonials];
-const row2 = [...testimonials, ...testimonials];
+const testimonialsRow2 = [
+  {
+    name: "Alex",
+    quote:
+      "This is just the health and vitality I need. I would definitely recommend it to my friends.",
+    role: "Alex, 19, PR",
+  },
+  {
+    name: "Mila",
+    quote:
+      "It feels easy, which is exactly why I keep reaching for it. Wellness should fit into real life.",
+    role: "Mila, 25, Brand Coordinator",
+  },
+  {
+    name: "Nora",
+    quote:
+      "I like that each one matches how I want to feel. It takes the overthinking out of my routine.",
+    role: "Nora, 31, Product Manager",
+  },
+  {
+    name: "Sophie",
+    quote:
+      "The whole thing feels thoughtful, from the mood-based formulas to the taste. It actually feels made for us.",
+    role: "Sophie, 28, Art Director",
+  },
+];
+
+// Duplicate each row once for the seamless marquee loop
+const row1 = [...testimonialsRow1, ...testimonialsRow1];
+const row2 = [...testimonialsRow2, ...testimonialsRow2];
 
 const affiliations = [
   {
@@ -170,14 +198,19 @@ function TestimonialCard({ testimonial }) {
   return (
     <div
       style={{
-        display: "inline-block",
+        display: "block",
         flexShrink: 0,
         width: "300px",
         padding: "1.5rem",
-        background: "#ffffff",
+        background:
+          "linear-gradient(155deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.58) 45%, rgba(255,255,255,0.66) 100%)",
+        backdropFilter: "blur(26px) saturate(145%)",
         borderRadius: "1rem",
-        boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
-        border: "1px solid #ffeaf4",
+        overflow: "hidden",
+        isolation: "isolate",
+        boxShadow:
+          "0 2px 8px rgba(133, 89, 109, 0.04), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -10px 18px rgba(255,255,255,0.16)",
+        border: "1px solid rgba(255, 255, 255, 0.65)",
       }}
     >
       <p
@@ -200,7 +233,7 @@ function TestimonialCard({ testimonial }) {
           whiteSpace: "normal",
         }}
       >
-        — {testimonial.role}
+        {testimonial.role}
       </span>
     </div>
   );
@@ -251,11 +284,11 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       {/* ── 1. Hero ── */}
       <section
         className="text-center py-32 px-4"
-        style={{ backgroundColor: brand.pink }}
+        style={{ backgroundColor: "#FF64BE" }}
       >
         <motion.h1
-          className="text-6xl sm:text-7xl md:text-8xl lg:text-[128px] font-extrabold text-white leading-tight mb-6"
-          style={{ fontWeight: 800 }}
+          className="text-6xl sm:text-7xl md:text-8xl lg:text-[128px] font-extrabold leading-tight mb-6"
+          style={{ fontWeight: 800, color: brand.white }}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
@@ -264,7 +297,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </motion.h1>
 
         <motion.p
-          className="text-xl sm:text-2xl text-black mb-16"
+          className="text-xl sm:text-2xl text-black/80 mb-16"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.25, ease: "easeOut" }}
@@ -277,7 +310,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.45, ease: "easeOut" }}
         >
-          <p className="text-lg text-white mb-4 font-medium">
+          <p className="text-base text-white mb-4 font-medium">
             Be first to know when we launch.
           </p>
           <form
@@ -290,14 +323,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                 name="email_address"
                 placeholder="enter your email"
                 required
-                className="px-4 py-3 rounded-lg border border-white bg-white text-black text-base"
+                className="px-4 py-3 rounded-lg border border-white bg-white text-black/80 text-base"
                 style={{ width: "300px", maxWidth: "80vw" }}
               />
               <button
                 type="submit"
                 disabled={status === "submitting"}
                 className="px-6 py-3 rounded-lg border border-white bg-white font-bold text-base hover:bg-pink-100 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
-                style={{ color: brand.pink }}
+                style={{ color: "#FF64BE" }}
               >
                 {status === "submitting" ? "SENDING..." : "JOIN WAITLIST"}
               </button>
@@ -319,8 +352,8 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       {/* ── 2. Affiliations bar ── */}
       <section className="py-10 bg-white overflow-hidden w-full">
         <div className="max-w-4xl mx-auto px-4">
-          <p className="text-gray-600 text-center mb-8 text-lg font-medium">
-            We build inside a strong innovation network.
+          <p className="text-center mb-8 text-base font-medium" style={{ color: "#333336" }}>
+            Supported by people who believe in what we&apos;re building.
           </p>
         </div>
         <div className="relative w-full overflow-hidden group">
@@ -362,31 +395,31 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       </section>
 
       {/* ── 3. Drinks ── */}
-      <section className="py-20 px-4 text-center" style={{ backgroundColor: brand.bg }}>
+      <section className="py-20 px-4 text-center" style={{ backgroundColor: "#FFD6E9" }}>
         <Container>
           <motion.h2
             className="font-bold mb-4"
-            style={{ fontSize: "40px", color: "#000" }}
+            style={{ fontSize: "36px", color: brand.title }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={viewportOpts}
           >
-            Four formulas. Every mood covered.
+            One for every mood. Grab it. Go.
           </motion.h2>
           <motion.p
-            className="text-lg mb-12"
-            style={{ color: "#111" }}
+            className="mb-12"
+            style={{ color: "#111", fontSize: "17px" }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={viewportOpts}
           >
-            From drive to calm, from glow to focus — there&apos;s one for today.
+            Four science-backed formulas to match your energy from calm to confident, focus to glow.
           </motion.p>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto"
             variants={stagger}
             initial="hidden"
             whileInView="visible"
@@ -396,24 +429,27 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               <motion.div
                 key={index}
                 variants={fadeUp}
-                className="relative rounded-2xl p-8 text-left"
+                className="relative rounded-2xl p-8 text-center"
                 style={{
-                  background: "rgba(255, 255, 255, 0.8)",
-                  backdropFilter: "blur(20px) saturate(180%)",
-                  border: "1px solid rgba(255, 255, 255, 0.4)",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                  background:
+                    "linear-gradient(155deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.58) 45%, rgba(255,255,255,0.66) 100%)",
+                  backdropFilter: "blur(26px) saturate(145%)",
+                  border: "1px solid rgba(255, 255, 255, 0.65)",
+                  boxShadow:
+                    "0 10px 30px rgba(133, 89, 109, 0.14), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -14px 26px rgba(255,255,255,0.18)",
                   cursor: "default",
                 }}
                 whileHover={{
                   y: -6,
-                  boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15)",
+                  boxShadow:
+                    "0 14px 36px rgba(133, 89, 109, 0.2), inset 0 1px 0 rgba(255,255,255,0.78), inset 0 -14px 26px rgba(255,255,255,0.2)",
                   transition: { duration: 0.22 },
                 }}
               >
-                <h3 className="text-2xl font-bold mb-4" style={{ color: brand.pink }}>
+                <h3 className="text-xl font-bold mb-4" style={{ color: brand.title }}>
                   {drink.name}
                 </h3>
-                <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#444" }}>
+                <p className="leading-relaxed" style={{ color: "#333336", fontSize: "16px" }}>
                   {drink.description}
                 </p>
               </motion.div>
@@ -434,13 +470,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             <motion.h2
               variants={fadeUp}
               className="text-center font-bold mb-2"
-              style={{ fontSize: "36px" }}
+              style={{ fontSize: "36px", color: brand.title }}
             >
               How it works
             </motion.h2>
             <motion.p
               variants={fadeUp}
-              className="text-center text-gray-500 mb-14 text-lg"
+              className="text-center text-[#6e6e73] mb-14"
+              style={{ fontSize: "17px" }}
             >
               Wellness that fits around your life, not the other way around.
             </motion.p>
@@ -450,14 +487,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                 <motion.div key={i} variants={fadeUp} className="text-center">
                   <div
                     className="text-5xl font-extrabold mb-4"
-                    style={{ color: brand.pink, opacity: 0.35 }}
+                    style={{ color: "#FF6DAA", opacity: 0.35 }}
                   >
                     {item.step}
                   </div>
-                  <h3 className="text-xl font-bold mb-3" style={{ color: "#111" }}>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: brand.title }}>
                     {item.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed text-sm">
+                  <p className="text-[#6e6e73] leading-relaxed" style={{ fontSize: "16px" }}>
                     {item.description}
                   </p>
                 </motion.div>
@@ -496,10 +533,10 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       </motion.section>
 
       {/* ── 5. About ── */}
-      <section className="bg-white py-20 px-4 text-center">
+      <section className="bg-white pt-20 pb-10 px-4 text-center">
         <Container>
           <motion.div
-            className="max-w-3xl mx-auto"
+            className="max-w-5xl mx-auto"
             variants={stagger}
             initial="hidden"
             whileInView="visible"
@@ -508,20 +545,20 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             <motion.h2
               variants={fadeUp}
               className="text-2xl font-bold mb-6"
-              style={{ fontSize: "32px", lineHeight: 1.3 }}
+              style={{ fontSize: "36px", lineHeight: 1.3, color: brand.title }}
             >
-              Built because the supplement aisle wasn&apos;t built for us.
+              Built because the supplement aisle wasn&apos;t made for us.
             </motion.h2>
             <motion.p
               variants={fadeUp}
-              className="text-base text-gray-700 leading-relaxed"
+              className="text-base text-[#333336] leading-relaxed"
               style={{ fontSize: "17px" }}
             >
-              Most supplements ignore the way women actually live — the mood shifts,
-              the demanding schedules, the need for something that feels like self-care,
-              not medicine. We built Bossbaby to fix that. Four science-backed formulas,
-              each tied to a mood and developed with nutrition experts, designed to be
-              the wellness ritual you actually keep.
+              Most supplements ignore how women actually live: the mood shifts, the
+              packed schedules, the need for something that feels like self-care, not
+              medicine. So we built Bossbaby. Four formulas, each designed for a mood,
+              created with nutrition experts, and made to be a ritual you actually stick
+              to.
             </motion.p>
           </motion.div>
         </Container>
@@ -529,12 +566,17 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
 
       {/* ── 6. AI machine teaser ── */}
       <section
-        className="py-20 px-4 text-center"
-        style={{ backgroundColor: brand.bg }}
+        className="pt-10 pb-20 px-4 text-center"
+        style={{ backgroundColor: "#fff" }}
       >
         <Container>
           <motion.div
-            className="max-w-3xl mx-auto"
+            className="max-w-3xl mx-auto rounded-3xl border px-8 py-10 sm:px-10"
+            style={{
+              backgroundColor: "#1A1A1A",
+              borderColor: "rgba(255, 255, 255, 0.14)",
+              boxShadow: "0 18px 40px rgba(0, 0, 0, 0.35)",
+            }}
             variants={stagger}
             initial="hidden"
             whileInView="visible"
@@ -551,18 +593,18 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             <motion.h2
               variants={fadeUp}
               className="font-bold mb-6"
-              style={{ fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1.2 }}
+              style={{ fontSize: "36px", lineHeight: 1.2, color: "#fff" }}
             >
               AI-powered mood-based nutrition machine
             </motion.h2>
             <motion.p
               variants={fadeUp}
-              className="text-gray-700 leading-relaxed"
-              style={{ fontSize: "17px" }}
+              className="leading-relaxed"
+              style={{ fontSize: "17px", color: "#9CA3AF" }}
             >
               We&apos;re building a smart dispenser that reads your mood in real time
-              and delivers a personalized formula on the spot. No tracking, no guesswork —
-              just the right nutrients at the right moment, every time.
+              and gives you the right formula on the spot. Just the nutrients you need,
+              exactly when you need them.
             </motion.p>
           </motion.div>
         </Container>
@@ -571,12 +613,12 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       {/* ── 7. Testimonials marquee ── */}
       <section
         className="py-20 overflow-hidden"
-        style={{ backgroundColor: brand.communityBg }}
+        style={{ backgroundColor: "#FFD6E9" }}
       >
         <Container>
           <motion.h2
             className="font-bold mb-3"
-            style={{ fontSize: "37px", color: brand.communityText }}
+            style={{ fontSize: "36px", color: brand.title }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
@@ -586,7 +628,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </motion.h2>
           <motion.p
             className="mb-12"
-            style={{ fontSize: "20px", color: "black" }}
+            style={{ fontSize: "17px", color: "rgba(0, 0, 0, 0.8)" }}
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
@@ -599,7 +641,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         {/* Row 1 — scrolls left */}
         <div className="relative w-full overflow-hidden group mb-5">
           <div
-            className="flex gap-5 whitespace-nowrap group-hover:[animation-play-state:paused]"
+            className="flex gap-6 whitespace-nowrap group-hover:[animation-play-state:paused]"
             style={{ animation: "scroll-left 28s linear infinite" }}
           >
             {[...row1, ...row1].map((t, i) => (
@@ -611,7 +653,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         {/* Row 2 — scrolls right */}
         <div className="relative w-full overflow-hidden group">
           <div
-            className="flex gap-5 whitespace-nowrap group-hover:[animation-play-state:paused]"
+            className="flex gap-6 whitespace-nowrap group-hover:[animation-play-state:paused]"
             style={{ animation: "scroll-right 28s linear infinite" }}
           >
             {[...row2, ...row2].map((t, i) => (
