@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BossBabyLandingPage from './components/BossBabyLandingPage';
@@ -47,6 +47,10 @@ function App() {
 
   const normalizedPath = normalizePath(location.pathname);
   const currentPage = pathToPage[normalizedPath];
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [normalizedPath]);
 
   const setCurrentPage = (page) => {
     const targetPath = pageToPath[page] || '/';

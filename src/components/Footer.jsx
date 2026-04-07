@@ -61,12 +61,12 @@ export default function Footer({ setCurrentPage }) {
             </a>
           </div>
 
-          <p className="order-2 text-center sm:order-1 sm:text-left" style={{ color: '#6e6e73', fontSize: '12px' }}>
+          <p className="order-3 text-center sm:order-1 sm:text-left" style={{ color: '#6e6e73', fontSize: '12px' }}>
             © 2026 with 🩷 by bossbaby
           </p>
 
           {setCurrentPage && (
-            <div className="order-3 flex flex-col items-center gap-1 text-center sm:order-2 sm:flex-1 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-4 sm:gap-y-2">
+            <div className="order-2 flex flex-col items-center gap-1 text-center sm:order-2 sm:flex-1 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-4 sm:gap-y-2">
               {legalLinks.map(({ label, page, href }) => (
                 <a
                   key={page}
