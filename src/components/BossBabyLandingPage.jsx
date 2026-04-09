@@ -203,14 +203,14 @@ function TestimonialCard({ testimonial }) {
         width: "300px",
         padding: "1.5rem",
         background:
-          "linear-gradient(155deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.58) 45%, rgba(255,255,255,0.66) 100%)",
+          "linear-gradient(155deg, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.74) 45%, rgba(255,255,255,0.8) 100%)",
         backdropFilter: "blur(26px) saturate(145%)",
         borderRadius: "1rem",
         overflow: "hidden",
         isolation: "isolate",
         boxShadow:
-          "0 2px 8px rgba(133, 89, 109, 0.04), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -10px 18px rgba(255,255,255,0.16)",
-        border: "1px solid rgba(255, 255, 255, 0.65)",
+          "0 2px 8px rgba(133, 89, 109, 0.03), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -10px 18px rgba(255,255,255,0.22)",
+        border: "1px solid rgba(255, 255, 255, 0.78)",
       }}
     >
       <p
@@ -432,17 +432,17 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                 className="relative rounded-2xl p-8 text-center"
                 style={{
                   background:
-                    "linear-gradient(155deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.58) 45%, rgba(255,255,255,0.66) 100%)",
+                    "linear-gradient(155deg, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.74) 45%, rgba(255,255,255,0.8) 100%)",
                   backdropFilter: "blur(26px) saturate(145%)",
-                  border: "1px solid rgba(255, 255, 255, 0.65)",
+                  border: "1px solid rgba(255, 255, 255, 0.78)",
                   boxShadow:
-                    "0 10px 30px rgba(133, 89, 109, 0.14), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -14px 26px rgba(255,255,255,0.18)",
+                    "0 10px 30px rgba(133, 89, 109, 0.1), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -14px 26px rgba(255,255,255,0.22)",
                   cursor: "default",
                 }}
                 whileHover={{
                   y: -6,
                   boxShadow:
-                    "0 14px 36px rgba(133, 89, 109, 0.2), inset 0 1px 0 rgba(255,255,255,0.78), inset 0 -14px 26px rgba(255,255,255,0.2)",
+                    "0 14px 36px rgba(133, 89, 109, 0.16), inset 0 1px 0 rgba(255,255,255,0.88), inset 0 -14px 26px rgba(255,255,255,0.24)",
                   transition: { duration: 0.22 },
                 }}
               >
