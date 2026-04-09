@@ -171,7 +171,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
                 <div className="p-4 pr-5">
                   <h3
                     className="text-xl font-extrabold mb-1"
-                    style={{ fontWeight: 800, letterSpacing: "-0.01em", color: "#7A174B" }}
+                    style={{ fontWeight: 800, letterSpacing: "-0.01em", color: "#000" }}
                   >
                     {mood.name}
                   </h3>

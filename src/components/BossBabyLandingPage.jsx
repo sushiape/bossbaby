@@ -600,7 +600,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             <motion.p
               variants={fadeUp}
               className="leading-relaxed"
-              style={{ fontSize: "17px", color: "#9CA3AF" }}
+              style={{ fontSize: "17px", color: "#D1D5DB" }}
             >
               We&apos;re building a smart dispenser that reads your mood in real time
               and gives you the right formula on the spot. Just the nutrients you need,
