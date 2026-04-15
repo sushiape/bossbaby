@@ -122,7 +122,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
               className="font-bold mb-8"
               style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", lineHeight: 1.2, color: brand.ink }}
             >
-              Honestly? We just got tired of the supplement aisle.
+              We just wanted something tasty and healthy.
             </motion.h2>
 
             <motion.div variants={stagger} className="space-y-6">
@@ -132,7 +132,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                 style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
               >
                 We are a team of women engineers and scientists who are passionate about making
-                women&apos;s health a little bit more enjoyable. That&apos;s genuinely it.
+                women&apos;s health a little bit more enjoyable.
               </motion.p>
               <motion.p
                 variants={fadeUp}
@@ -140,7 +140,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                 style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
               >
                 We kept looking for nutrition supplements that actually made sense for the way
-                we live. Something that fits in a bag, tastes good, and does not feel like a
+                we live. Something that fits in a purse, tastes good, and does not feel like a
                 chore. We could not find it. So we made it ourselves.
               </motion.p>
               <motion.p
@@ -148,7 +148,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                 className="leading-relaxed"
                 style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
               >
-                We worked with nutrition experts to build four formulas around the moods we
+                We work with nutrition experts and built four formulas around the moods we
                 actually experience: Power when your energy is flat, Energy when you need to
                 lock in, Glow when you want to feel radiant, Calm when everything is just a
                 bit too much. Each one is grounded in research and designed to be something
@@ -198,8 +198,8 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
             >
               Wellness should not feel like homework. We really believe that. So everything we
               build is designed to be simple, tasty, and actually fit into a real day. We work
-              with nutrition scientists to make sure the science is solid, and we obsess over
-              the taste so you do not have to force yourself to take it.
+              with nutrition scientists and food technologists to make sure the science is solid, and we obsess over
+              the taste so that it's enjoyable.
             </motion.p>
             <motion.p
               variants={fadeUp}
