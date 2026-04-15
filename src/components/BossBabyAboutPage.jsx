@@ -46,35 +46,6 @@ const affiliations = [
   { name: "CoCo – Female Founders", logo: "https://coco-frauen-gruenden.de/wp-content/uploads/2025/02/Coco_logo_dunkel.svg" },
 ];
 
-const principles = [
-  {
-    number: "01",
-    title: "Made by women, for women",
-    body: "We built this from the inside out — as women who were tired of products that didn't reflect how we actually live, feel, and move through the world.",
-  },
-  {
-    number: "02",
-    title: "Science, not trends",
-    body: "Every formula is developed with nutrition experts and grounded in research. We don't chase what's buzzing — we build what works.",
-  },
-  {
-    number: "03",
-    title: "Wellness should feel good",
-    body: "If you're forcing yourself to take it, it won't stick. We designed Bossbaby to be something you genuinely look forward to — a ritual, not a chore.",
-  },
-  {
-    number: "04",
-    title: "Mood is data",
-    body: "Your energy, focus, skin, and calm aren't random — they're signals. We take that seriously and built formulas that respond to how you actually feel day to day.",
-  },
-];
-
-const stats = [
-  { value: "4", label: "mood-based formulas" },
-  { value: "100%", label: "science-backed" },
-  { value: "Munich", label: "born & brewing" },
-  { value: "Women", label: "founded & led" },
-];
 
 export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
   const [status, setStatus] = useState("idle");
@@ -101,10 +72,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {/* ── Hero ── */}
-      <section
-        className="py-28 px-4 text-center"
-        style={{ backgroundColor: "#FF64BE" }}
-      >
+      <section className="py-28 px-4 text-center" style={{ backgroundColor: brand.bg }}>
         <motion.div
           className="max-w-3xl mx-auto"
           variants={stagger}
@@ -118,16 +86,16 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
               fontSize: "clamp(2.6rem, 7vw, 5rem)",
               lineHeight: 1.1,
               letterSpacing: "-0.025em",
-              color: "#fff",
+              color: brand.ink,
             }}
           >
-            We make nutrition drinks for women.
+            Our why is simple.
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            style={{ fontSize: "1.2rem", color: "rgba(255,255,255,0.85)", lineHeight: 1.7 }}
+            style={{ fontSize: "1.2rem", color: "#444", lineHeight: 1.7 }}
           >
-            That taste amazing, fit busy routines, and turn wellness into a moment of empowerment and identity.
+            Nutrition that fits real life. Backed by science. Made by women, for women.
           </motion.p>
         </motion.div>
       </section>
@@ -154,7 +122,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
               className="font-bold mb-8"
               style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", lineHeight: 1.2, color: brand.ink }}
             >
-              We started Bossbaby because the supplement aisle wasn&apos;t built for us.
+              Honestly? We just got tired of the supplement aisle.
             </motion.h2>
 
             <motion.div variants={stagger} className="space-y-6">
@@ -163,116 +131,44 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                 className="leading-relaxed"
                 style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
               >
-                We started Bossbaby because we couldn&apos;t find nutrition supplements that truly
-                reflect the way women live and feel. Most supplements are inconvenient, overly
-                masculine, and not designed with women&apos;s unique health needs in mind. We wanted
-                something real — created by women, for women — that&apos;s both functional and empowering.
+                We are a team of women engineers and scientists who are passionate about making
+                women&apos;s health a little bit more enjoyable. That&apos;s genuinely it.
               </motion.p>
               <motion.p
                 variants={fadeUp}
                 className="leading-relaxed"
                 style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
               >
-                Our formulas are developed together with nutrition experts and based on scientific
-                research to align with women&apos;s physiological and emotional needs. Each shot —
-                Power, Energy, Glow, and Calm — corresponds to a specific physical and emotional
-                state, transforming supplements into an enjoyable, empowering daily ritual.
+                We kept looking for nutrition supplements that actually made sense for the way
+                we live. Something that fits in a bag, tastes good, and does not feel like a
+                chore. We could not find it. So we made it ourselves.
               </motion.p>
               <motion.p
                 variants={fadeUp}
                 className="leading-relaxed"
                 style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
               >
-                Our mission is simple: to empower women with delicious nutrient drinks that taste
-                amazing, fit busy routines, and turn wellness into a daily moment of strength,
-                science, and self-expression.
+                We worked with nutrition experts to build four formulas around the moods we
+                actually experience: Power when your energy is flat, Energy when you need to
+                lock in, Glow when you want to feel radiant, Calm when everything is just a
+                bit too much. Each one is grounded in research and designed to be something
+                you look forward to taking, not something you feel guilty skipping.
+              </motion.p>
+              <motion.p
+                variants={fadeUp}
+                className="leading-relaxed"
+                style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
+              >
+                We want women to have nutrition that feels like it was made for them. Because
+                for a long time, it really was not.
               </motion.p>
             </motion.div>
           </motion.div>
         </Container>
       </section>
 
-      {/* ── Stats bar ── */}
-      <motion.section
-        className="py-14 px-4"
-        style={{ backgroundColor: "#111" }}
-        variants={stagger}
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewport}
-      >
-        <Container>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {stats.map((s, i) => (
-              <motion.div key={i} variants={fadeUp}>
-                <div className="text-4xl font-extrabold mb-1" style={{ color: brand.pink }}>
-                  {s.value}
-                </div>
-                <div className="text-sm text-gray-400 uppercase tracking-widest">{s.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </Container>
-      </motion.section>
-
-      {/* ── What we believe ── */}
+      {/* ── The approach ── */}
       <section className="py-20 px-4" style={{ backgroundColor: brand.bg }}>
-        <Container>
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport}
-          >
-            <motion.p
-              variants={fadeUp}
-              className="text-xs font-bold uppercase tracking-widest mb-3 text-center"
-              style={{ color: brand.pink }}
-            >
-              What we believe
-            </motion.p>
-            <motion.h2
-              variants={fadeUp}
-              className="font-bold text-center mb-14"
-              style={{ fontSize: "clamp(1.7rem, 4vw, 2.4rem)", color: brand.ink }}
-            >
-              Four principles. Non-negotiable.
-            </motion.h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-[900px] mx-auto">
-              {principles.map((p, i) => (
-                <motion.div
-                  key={i}
-                  variants={fadeUp}
-                  className="rounded-2xl p-8"
-                  style={{
-                    background: "linear-gradient(155deg, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.78) 100%)",
-                    backdropFilter: "blur(20px)",
-                    border: "1px solid rgba(255,255,255,0.8)",
-                    boxShadow: "0 8px 24px rgba(133,89,109,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
-                  }}
-                >
-                  <span
-                    className="block text-5xl font-extrabold mb-4"
-                    style={{ color: brand.pink, opacity: 0.3, lineHeight: 1 }}
-                  >
-                    {p.number}
-                  </span>
-                  <h3 className="font-bold mb-3 text-lg" style={{ color: brand.ink }}>
-                    {p.title}
-                  </h3>
-                  <p style={{ color: "#4b5563", lineHeight: 1.7, fontSize: "0.97rem" }}>
-                    {p.body}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </Container>
-      </section>
-
-      {/* ── Science meets self-care ── */}
-      <section className="py-20 px-4" style={{ backgroundColor: "#fff" }}>
         <Container>
           <motion.div
             className="max-w-[760px] mx-auto"
@@ -293,26 +189,26 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
               className="font-bold mb-8"
               style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", lineHeight: 1.2, color: brand.ink }}
             >
-              Science that fits in your bag.
+              Science that actually fits in your bag.
             </motion.h2>
             <motion.p
               variants={fadeUp}
               className="leading-relaxed mb-6"
               style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
             >
-              We don&apos;t believe wellness should be complicated, expensive, or require a
-              nutrition degree to understand. We work closely with nutrition scientists to
-              translate complex research into formulas that are easy to use and impossible
-              to forget — because they actually taste good.
+              Wellness should not feel like homework. We really believe that. So everything we
+              build is designed to be simple, tasty, and actually fit into a real day. We work
+              with nutrition scientists to make sure the science is solid, and we obsess over
+              the taste so you do not have to force yourself to take it.
             </motion.p>
             <motion.p
               variants={fadeUp}
               className="leading-relaxed"
               style={{ fontSize: "1.05rem", color: "#333336", lineHeight: 1.85 }}
             >
-              Based in Munich and embedded in one of Europe&apos;s strongest innovation
-              ecosystems — TUM, UnternehmerTUM, and beyond — we combine academic rigor
-              with a real understanding of what modern women need day to day.
+              We are based in Munich and surrounded by a network of researchers, scientists,
+              and fellow founders who push us to keep getting it right. We are grateful for
+              that. And we are just getting started.
             </motion.p>
           </motion.div>
         </Container>
@@ -455,7 +351,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
             )}
             {status === "error" && (
               <p className="mt-4 text-sm text-red-400">
-                Something went wrong — please try again.
+                Something went wrong. Please try again.
               </p>
             )}
           </motion.div>
