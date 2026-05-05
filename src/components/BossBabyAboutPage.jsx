@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Header from "./Header";
 import Footer from "./Footer";
+import ourStoryImage from "../assets/our-story.jpg";
 
 const brand = {
   pink: "#FF89CC",
@@ -163,6 +164,17 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                 for a long time, it really was not.
               </motion.p>
             </motion.div>
+                <motion.div
+                  variants={fadeUp}
+                  className="mt-10 overflow-hidden rounded-[30px]"
+                  style={{ borderRadius: 30 }}
+                >
+                  <img
+                    src={ourStoryImage}
+                    alt="Our story at Bossbaby"
+                    className="w-full h-full object-cover min-h-[320px]"
+                  />
+                </motion.div>
           </motion.div>
         </Container>
       </section>
