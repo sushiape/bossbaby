@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BossBabyLandingPage from './components/BossBabyLandingPage';
 import BossBabyProductsPage from './components/BossBabyProductsPage';
-import BossBabyCommunityPage from './components/BossBabyCommunityPage';
+// import BossBabyCommunityPage from './components/BossBabyCommunityPage'; // hidden for now
 import BossBabyAboutPage from './components/BossBabyAboutPage';
 import BossBabyImpressumPage from './components/BossBabyImpressumPage';
 import BossBabyPrivacyPage from './components/BossBabyPrivacyPage';
@@ -65,8 +65,8 @@ function App() {
     switch (currentPage) {
       case 'products':
         return <BossBabyProductsPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
-      case 'community':
-        return <BossBabyCommunityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      // case 'community': // hidden for now
+      //   return <BossBabyCommunityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'about':
         return <BossBabyAboutPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'impressum':

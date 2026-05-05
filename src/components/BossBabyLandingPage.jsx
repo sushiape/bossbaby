@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -239,9 +239,49 @@ function TestimonialCard({ testimonial }) {
   );
 }
 
+// ── Countdown timer ─────────────────────────────────────────────────────────
+function useCountdown(targetDate) {
+  const calculate = () => {
+    const diff = new Date(targetDate) - new Date();
+    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    return {
+      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((diff / (1000 * 60)) % 60),
+      seconds: Math.floor((diff / 1000) % 60),
+    };
+  };
+  const [timeLeft, setTimeLeft] = useState(calculate);
+  useEffect(() => {
+    const id = setInterval(() => setTimeLeft(calculate()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return timeLeft;
+}
+
+function CountdownUnit({ value, label }) {
+  return (
+    <div className="flex flex-col items-center">
+      <span
+        className="font-extrabold tabular-nums"
+        style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", color: "#fff", lineHeight: 1 }}
+      >
+        {String(value).padStart(2, "0")}
+      </span>
+      <span
+        className="uppercase tracking-widest mt-1"
+        style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.5)", fontWeight: 600 }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
+
 // ── Main component ──────────────────────────────────────────────────────────
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
   const [status, setStatus] = useState("idle");
+  const countdown = useCountdown("2026-10-01T00:00:00");
 
   // Scroll to hero section after animations complete
   React.useEffect(() => {
@@ -347,6 +387,65 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             )}
           </form>
         </motion.div>
+      </section>
+
+      {/* ── 1b. Launch date ── */}
+      <section
+        className="py-16 px-4 text-center"
+        style={{ backgroundColor: "#111" }}
+      >
+        <Container>
+          <motion.div
+            className="max-w-3xl mx-auto"
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOpts}
+          >
+            <motion.div variants={fadeUp} className="mb-5">
+              <span
+                className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full"
+                style={{ backgroundColor: "rgba(255,137,204,0.13)", color: brand.pink }}
+              >
+                Mark your calendar
+              </span>
+            </motion.div>
+
+            <motion.p
+              variants={fadeUp}
+              className="font-extrabold mb-2"
+              style={{ fontSize: "clamp(2.2rem, 7vw, 4.5rem)", color: "#fff", lineHeight: 1.1, letterSpacing: "-0.02em" }}
+            >
+              October 1, 2026
+            </motion.p>
+            <motion.p
+              variants={fadeUp}
+              className="mb-10"
+              style={{ fontSize: "1.05rem", color: "rgba(255,255,255,0.5)" }}
+            >
+              That&apos;s when Bossbaby goes live. Don&apos;t miss it.
+            </motion.p>
+
+            {/* Countdown */}
+            <motion.div
+              variants={fadeUp}
+              className="inline-flex items-center gap-6 sm:gap-10 px-8 py-6 rounded-2xl"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                backdropFilter: "blur(12px)",
+              }}
+            >
+              <CountdownUnit value={countdown.days} label="days" />
+              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: "2rem", fontWeight: 200, lineHeight: 1 }}>:</span>
+              <CountdownUnit value={countdown.hours} label="hours" />
+              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: "2rem", fontWeight: 200, lineHeight: 1 }}>:</span>
+              <CountdownUnit value={countdown.minutes} label="min" />
+              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: "2rem", fontWeight: 200, lineHeight: 1 }}>:</span>
+              <CountdownUnit value={countdown.seconds} label="sec" />
+            </motion.div>
+          </motion.div>
+        </Container>
       </section>
 
       {/* ── 2. Affiliations bar ── */}
@@ -610,58 +709,60 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
-      {/* ── 7. Testimonials marquee ── */}
-      <section
-        className="py-20 overflow-hidden"
-        style={{ backgroundColor: "#FFD6E9" }}
-      >
-        <Container>
-          <motion.h2
-            className="font-bold mb-3"
-            style={{ fontSize: "36px", color: brand.title }}
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOpts}
-          >
-            Why we love Bossbaby.
-          </motion.h2>
-          <motion.p
-            className="mb-12"
-            style={{ fontSize: "17px", color: "rgba(0, 0, 0, 0.8)" }}
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOpts}
-          >
-            Because we&apos;re all just trying to feel like ourselves, but better.
-          </motion.p>
-        </Container>
+      {/* ── 7. Testimonials marquee — hidden for now, re-enable when ready ── */}
+      {false && (
+        <section
+          className="py-20 overflow-hidden"
+          style={{ backgroundColor: "#FFD6E9" }}
+        >
+          <Container>
+            <motion.h2
+              className="font-bold mb-3"
+              style={{ fontSize: "36px", color: brand.title }}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOpts}
+            >
+              Why we love Bossbaby.
+            </motion.h2>
+            <motion.p
+              className="mb-12"
+              style={{ fontSize: "17px", color: "rgba(0, 0, 0, 0.8)" }}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOpts}
+            >
+              Because we&apos;re all just trying to feel like ourselves, but better.
+            </motion.p>
+          </Container>
 
-        {/* Row 1 — scrolls left */}
-        <div className="relative w-full overflow-hidden group mb-5">
-          <div
-            className="flex gap-6 whitespace-nowrap group-hover:[animation-play-state:paused]"
-            style={{ animation: "scroll-left 28s linear infinite" }}
-          >
-            {[...row1, ...row1].map((t, i) => (
-              <TestimonialCard key={i} testimonial={t} />
-            ))}
+          {/* Row 1 — scrolls left */}
+          <div className="relative w-full overflow-hidden group mb-5">
+            <div
+              className="flex gap-6 whitespace-nowrap group-hover:[animation-play-state:paused]"
+              style={{ animation: "scroll-left 28s linear infinite" }}
+            >
+              {[...row1, ...row1].map((t, i) => (
+                <TestimonialCard key={i} testimonial={t} />
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Row 2 — scrolls right */}
-        <div className="relative w-full overflow-hidden group">
-          <div
-            className="flex gap-6 whitespace-nowrap group-hover:[animation-play-state:paused]"
-            style={{ animation: "scroll-right 28s linear infinite" }}
-          >
-            {[...row2, ...row2].map((t, i) => (
-              <TestimonialCard key={i} testimonial={t} />
-            ))}
+          {/* Row 2 — scrolls right */}
+          <div className="relative w-full overflow-hidden group">
+            <div
+              className="flex gap-6 whitespace-nowrap group-hover:[animation-play-state:paused]"
+              style={{ animation: "scroll-right 28s linear infinite" }}
+            >
+              {[...row2, ...row2].map((t, i) => (
+                <TestimonialCard key={i} testimonial={t} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer setCurrentPage={setCurrentPage} />
     </div>

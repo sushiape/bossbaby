@@ -19,9 +19,8 @@ export default function BossBabyImpressumPage({ currentPage, setCurrentPage }) {
               <h2 className="font-bold mb-1 text-lg">Angaben gemäß § 5 TMG</h2>
               <p>Gabrielle Fu</p>
               <p>Bossbaby</p>
-              <p>c/o TUM Venture Lab Food, Agro &amp; BioTech</p>
-              <p>Alte Akademie 8</p>
-              <p>85354 Freising</p>
+              <p>Connollystraße 3</p>
+              <p>80809 München</p>
               <p>Deutschland</p>
             </div>
 
