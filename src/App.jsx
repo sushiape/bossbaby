@@ -9,11 +9,13 @@ import BossBabyImpressumPage from './components/BossBabyImpressumPage';
 import BossBabyPrivacyPage from './components/BossBabyPrivacyPage';
 import BossBabyTermsPage from './components/BossBabyTermsPage';
 import BossBabyAccessibilityPage from './components/BossBabyAccessibilityPage';
+import BossBabyHowItWorksPage from './components/BossBabyHowItWorksPage';
 import PageLoader from './components/PageLoader';
 
 const pageToPath = {
   landing: '/',
   products: '/products',
+  howitworks: '/how-it-works',
   community: '/community',
   about: '/about',
   impressum: '/impressum',
@@ -25,6 +27,7 @@ const pageToPath = {
 const pathToPage = {
   '/': 'landing',
   '/products': 'products',
+  '/how-it-works': 'howitworks',
   '/community': 'community',
   '/about': 'about',
   '/impressum': 'impressum',
@@ -65,6 +68,8 @@ function App() {
     switch (currentPage) {
       case 'products':
         return <BossBabyProductsPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'howitworks':
+        return <BossBabyHowItWorksPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       // case 'community': // hidden for now
       //   return <BossBabyCommunityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'about':

@@ -48,7 +48,12 @@
       "Bash(python3 -c \" import sys, re html = sys.stdin.read\\(\\) m = re.search\\(r'<span class=\\\\\"header-logo[^\\\\\"]*\\\\\">\\\\s*\\(<svg.*?</svg>\\)', html, re.DOTALL\\) if m: print\\(m.group\\(1\\)\\) \" wc -c /Users/oleg/bossbaby-1/public/logos/bmwk.svg)",
       "Bash(awk '{print $1}')",
       "Bash(xargs '-I{}' sh -c 'count=$\\(git show {}:src/components/BossBabyLandingPage.jsx 2>/dev/null | grep -c \"supplement\\\\|About\\\\|story\"\\); echo \"{}: $count\"')",
-      "WebFetch(domain:yfood.com)"
+      "WebFetch(domain:yfood.com)",
+      "WebFetch(domain:dreep.ai)",
+      "Bash(convert --version)",
+      "Bash(python3 -c \"from PIL import Image; print\\('pillow ok'\\)\")",
+      "Bash(node -e \"require\\('sharp'\\); console.log\\('sharp ok'\\)\")",
+      "Bash(python3 *)"
     ]
   }
 }

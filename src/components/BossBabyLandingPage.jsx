@@ -5,7 +5,7 @@ import Footer from "./Footer";
 
 const brand = {
   pink: "#FF89CC",
-  bg: "#FFD6E9",
+  bg: "#FF89CC",
   white: "#fff",
   text: "rgba(0, 0, 0, 0.8)",
   title: "rgba(0, 0, 0, 0.9)",
@@ -324,7 +324,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       {/* ── 1. Hero ── */}
       <section
         className="text-center py-32 px-4"
-        style={{ backgroundColor: "#FF64BE" }}
+        style={{ backgroundColor: "#FF89CC" }}
       >
         <motion.h1
           className="text-6xl sm:text-7xl md:text-8xl lg:text-[128px] font-extrabold leading-tight mb-6"

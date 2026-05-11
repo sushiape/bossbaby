@@ -182,7 +182,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
                     <a
                       href="#waitlist"
                       className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 font-bold text-sm bg-white"
-                      style={{ fontWeight: 700, borderColor: "#F8B7D8", color: "#7A174B" }}
+                      style={{ fontWeight: 700, borderColor: "#F8B7D8", color: "#000" }}
                     >
                       <ChevronRight className="w-4 h-4" />
                       Join waitlist
