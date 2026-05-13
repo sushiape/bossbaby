@@ -69,7 +69,7 @@ const steps = [
     num: "01",
     tag: "Download",
     title: "Install the app.",
-    body: "Grab the Bossbaby app and you're basically already halfway there. It takes two minutes to set up and zero effort to actually use.",
+    body: "Download the Bossbaby app and you're already halfway there.\nIt takes two minutes to set up and zero effort to use.",
     note: null,
     photoSrc: null,
     flip: false,
@@ -133,19 +133,16 @@ export default function BossBabyHowItWorksPage({ currentPage, setCurrentPage }) 
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {/* Hero */}
-      <section className="relative overflow-hidden py-28 px-4 text-center" style={{ backgroundColor: brand.pink }}>
-        {[300, 500, 700].map((size) => (
-          <div key={size} style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: size, height: size, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.16)", pointerEvents: "none" }} />
-        ))}
+      <section className="relative overflow-hidden py-28 px-4 text-center" style={{ backgroundColor: brand.bg }}>
         <Container>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}>
-            <div style={{ display: "inline-block", background: "rgba(0,0,0,0.11)", borderRadius: 100, padding: "6px 18px", fontWeight: 700, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#fff", marginBottom: 20 }}>
+            <div style={{ display: "inline-block", background: "rgba(0,0,0,0.08)", borderRadius: 100, padding: "6px 18px", fontWeight: 700, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#000", marginBottom: 20 }}>
               How it works
             </div>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white mb-5 mx-auto max-w-3xl" style={{ fontWeight: 800, lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-black mb-5 mx-auto max-w-3xl" style={{ fontWeight: 800, lineHeight: 1.1, letterSpacing: "-0.02em" }}>
               Six steps to your perfect drink.
             </h1>
-            <p className="text-xl text-white/80 max-w-lg mx-auto mb-10" style={{ fontWeight: 400, lineHeight: 1.65 }}>
+            <p className="text-xl text-gray-700 max-w-lg mx-auto mb-10" style={{ fontWeight: 400, lineHeight: 1.65 }}>
               From download to first sip, the entire process takes way less time than your morning scroll.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
@@ -153,11 +150,11 @@ export default function BossBabyHowItWorksPage({ currentPage, setCurrentPage }) 
                 <button
                   key={s}
                   onClick={() => document.getElementById(`step-0${i + 1}`)?.scrollIntoView({ behavior: "smooth", block: "start" })}
-                  style={{ background: "rgba(255,255,255,0.17)", borderRadius: 100, padding: "7px 18px", fontWeight: 700, fontSize: 13, color: "#fff", border: "1px solid rgba(255,255,255,0.28)", display: "flex", alignItems: "center", gap: 7, cursor: "pointer", transition: "background 0.2s" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.32)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.17)"; }}
+                  style={{ background: "rgba(0,0,0,0.9)", borderRadius: 100, padding: "7px 18px", fontWeight: 700, fontSize: 13, color: "#fff", border: "1px solid rgba(0,0,0,0.9)", display: "flex", alignItems: "center", gap: 7, cursor: "pointer", transition: "background 0.2s" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.95)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.9)"; }}
                 >
-                  <span style={{ fontWeight: 800, fontSize: 10, opacity: 0.55 }}>0{i + 1}</span> {s}
+                  <span style={{ fontWeight: 800, fontSize: 10, opacity: 0.85 }}>0{i + 1}</span> {s}
                 </button>
               ))}
             </div>
@@ -177,7 +174,7 @@ export default function BossBabyHowItWorksPage({ currentPage, setCurrentPage }) 
                   <h2 className="text-4xl sm:text-5xl font-extrabold mb-3" style={{ fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
                     {step.title}
                   </h2>
-                  <p className="text-base text-gray-600 mb-4" style={{ lineHeight: 1.8, maxWidth: 440 }}>
+                  <p className="text-base text-gray-600 mb-4" style={{ lineHeight: 1.8, maxWidth: 440, whiteSpace: "pre-wrap" }}>
                     {step.body}
                   </p>
                   {step.note && (
@@ -219,7 +216,7 @@ export default function BossBabyHowItWorksPage({ currentPage, setCurrentPage }) 
                 <h2 className="text-4xl sm:text-5xl font-extrabold mb-3" style={{ fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
                   {step.title}
                 </h2>
-                <p className="text-base text-gray-600 mb-4" style={{ lineHeight: 1.8 }}>
+                <p className="text-base text-gray-600 mb-4" style={{ lineHeight: 1.8, whiteSpace: "pre-wrap" }}>
                   {step.body}
                 </p>
 

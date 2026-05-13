@@ -3,7 +3,7 @@ import React from "react";
 export default function Header({ currentPage, setCurrentPage }) {
   const links = [
     { label: 'Products', page: 'products', href: '/products' },
-    { label: 'How it works', page: 'howitworks', href: '/how-it-works' },
+    { label: 'AI machine', page: 'howitworks', href: '/how-it-works' },
     { label: 'About', page: 'about', href: '/about' },
     // { label: 'Community', page: 'community', href: '/community' }, // hidden for now
   ];
@@ -22,7 +22,7 @@ export default function Header({ currentPage, setCurrentPage }) {
         >
           bossbaby
         </a>
-        <nav className="flex items-center gap-2" style={{fontFamily: 'Poppins, sans-serif'}}>
+        <nav className="flex items-center gap-1" style={{fontFamily: 'Poppins, sans-serif'}}>
           {links.map(({ label, page, href }) => (
             <a
               key={page}
