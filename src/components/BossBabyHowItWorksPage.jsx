@@ -150,9 +150,9 @@ export default function BossBabyHowItWorksPage({ currentPage, setCurrentPage }) 
                 <button
                   key={s}
                   onClick={() => document.getElementById(`step-0${i + 1}`)?.scrollIntoView({ behavior: "smooth", block: "start" })}
-                  style={{ background: "rgba(0,0,0,0.9)", borderRadius: 100, padding: "7px 18px", fontWeight: 700, fontSize: 13, color: "#fff", border: "1px solid rgba(0,0,0,0.9)", display: "flex", alignItems: "center", gap: 7, cursor: "pointer", transition: "background 0.2s" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.95)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.9)"; }}
+                  style={{ background: brand.pink, borderRadius: 100, padding: "7px 18px", fontWeight: 700, fontSize: 13, color: "#fff", border: `1px solid ${brand.pink}`, display: "flex", alignItems: "center", gap: 7, cursor: "pointer", transition: "opacity 0.2s" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
                 >
                   <span style={{ fontWeight: 800, fontSize: 10, opacity: 0.85 }}>0{i + 1}</span> {s}
                 </button>

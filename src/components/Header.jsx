@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Header({ currentPage, setCurrentPage }) {
   const links = [
-    { label: 'Products', page: 'products', href: '/products' },
+    { label: 'Drinks', page: 'products', href: '/products' },
     { label: 'AI machine', page: 'howitworks', href: '/how-it-works' },
     { label: 'About', page: 'about', href: '/about' },
     // { label: 'Community', page: 'community', href: '/community' }, // hidden for now

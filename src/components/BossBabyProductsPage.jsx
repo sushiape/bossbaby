@@ -92,6 +92,14 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
       {/* Hero Section */}
       <section className="relative text-center py-24 px-4">
         <Container>
+          <div className="flex justify-center mb-5">
+            <span
+              className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full"
+              style={{ backgroundColor: "#FF89CC", color: "#fff" }}
+            >
+              Ready-to-go drinks
+            </span>
+          </div>
           <h1
             className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 max-w-[900px] mx-auto"
             style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
