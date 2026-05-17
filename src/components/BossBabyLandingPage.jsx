@@ -284,7 +284,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       {/* ── 1. Hero ── */}
       <section
         className="text-center py-32 px-4"
-        style={{ backgroundColor: "#FF66BA" }}
+        style={{ backgroundColor: "#FF89CC" }}
       >
         <motion.h1
           className="text-6xl sm:text-7xl md:text-8xl lg:text-[128px] font-extrabold leading-tight mb-6"
