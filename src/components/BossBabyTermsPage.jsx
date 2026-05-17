@@ -56,7 +56,7 @@ export default function BossBabyTermsPage({ currentPage, setCurrentPage }) {
               <p>Es gilt das Recht der Bundesrepublik Deutschland. Gerichtsstand ist, soweit gesetzlich zulässig, München.</p>
             </div>
 
-            <p className="text-sm text-gray-400 pt-4">Stand: April 2026</p>
+            <p className="text-sm text-gray-400 pt-4">Stand: Mai 2026</p>
           </div>
         </div>
       </section>
