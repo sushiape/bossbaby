@@ -52,7 +52,7 @@ export default function BossBabyAccessibilityPage({ currentPage, setCurrentPage 
               <p>Solltest du mit unserer Antwort nicht zufrieden sein, hast du die Möglichkeit, dich an die Schlichtungsstelle für Barrierefreiheit zu wenden. Weitere Informationen findest du unter <a href="https://www.schlichtungsstelle-bgg.de" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70" style={{ color: "#FF89CC" }}>www.schlichtungsstelle-bgg.de</a>.</p>
             </div>
 
-            <p className="text-sm text-gray-400 pt-4">Stand: April 2026</p>
+            <p className="text-sm text-gray-400 pt-4">Stand: Mai 2026</p>
           </div>
         </div>
       </section>
