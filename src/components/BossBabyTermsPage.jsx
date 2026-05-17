@@ -17,7 +17,7 @@ export default function BossBabyTermsPage({ currentPage, setCurrentPage }) {
 
             <div>
               <h2 className="font-bold mb-2 text-lg">1. Geltungsbereich</h2>
-              <p>Diese Allgemeinen Geschäftsbedingungen gelten für die Nutzung der Website bossbaby.de sowie für alle zukünftigen Vertragsbeziehungen zwischen Gabrielle Fu (Bossbaby) und den Nutzerinnen dieser Website.</p>
+              <p>Diese Allgemeinen Geschäftsbedingungen gelten für die Nutzung der Website hibossbaby.com sowie für alle zukünftigen Vertragsbeziehungen zwischen Gabrielle Fu (Bossbaby) und den Nutzerinnen dieser Website.</p>
             </div>
 
             <div>
