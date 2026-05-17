@@ -143,7 +143,7 @@ export default function BossBabyHowItWorksPage({ currentPage, setCurrentPage }) 
               Six steps to your perfect drink.
             </h1>
             <p className="text-xl text-gray-700 max-w-lg mx-auto mb-10" style={{ fontWeight: 400, lineHeight: 1.65 }}>
-              From download to first sip, the entire process takes way less time than your morning scroll.
+              From download to first sip, the entire process takes less time than your morning scroll.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               {["Install", "Profile", "Mood", "Formula", "Connect", "Enjoy"].map((s, i) => (
