@@ -564,9 +564,9 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </Container>
       </section>
 
+      {/* ── 6. AI machine teaser ── */}
       <section
         className="pt-10 pb-20 px-4 text-center"
-        {/* ── 6. AI machine teaser ── */}
         style={{ backgroundColor: "#fff" }}
       >
         <Container>
@@ -606,14 +606,6 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               and gives you the right formula on the spot. Just the nutrients you need,
               exactly when you need them.
             </motion.p>
-            <motion.div variants={fadeUp} className="mt-8">
-              <button
-                onClick={() => setCurrentPage("howitworks")}
-                className="inline-flex items-center justify-center rounded-full px-8 py-3 font-bold text-base bg-white text-black hover:bg-gray-100 transition-colors"
-              >
-                Read more
-              </button>
-            </motion.div>
             <motion.div variants={fadeUp} className="mt-8">
               <button
                 onClick={() => setCurrentPage("howitworks")}
