@@ -34,13 +34,15 @@ const viewport = { once: true, margin: "-70px" };
 
 const affiliations = [
   { name: "Growth Alliance Accelerator", logo: "https://framerusercontent.com/images/NSMdvir5eKfM69KzEdpQZYBBFNY.svg" },
-  { name: "Federal Ministry of Agriculture", logo: "https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=8" },
+  { name: "Federal Ministry of Agriculture, Food and Regional Identity", logo: "https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=8" },
+  { name: "Federal Ministry of Economic Affairs and Energy", logo: "https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Bilder/Logos/bmwe-social-preview-logo.jpg?__blob=normal&v=1", logoHeight: 23, logoMaxWidth: 84 },
   { name: "Rentenbank", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rentenbank_logo.svg" },
   { name: "TechQuartier", logo: "https://framerusercontent.com/images/ofOJUgFa83WGUnL2bf4V8anqOeQ.svg" },
   { name: "TUM", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Logo_of_the_Technical_University_of_Munich.svg" },
+  { name: "TUM Incubator", logo: "https://ut-um.files.svdcdn.com/production/media/images/venture-labs/TUM-UTUM-Logos.svg" },
   { name: "LMU Munich", logo: "https://cms-cdn.lmu.de/assets/img/Logo_LMU.svg" },
   { name: "UnternehmerTUM", logo: "https://ut-um.files.svdcdn.com/production/media/logos/logo-unternehmertum.svg" },
-  { name: "TUM Venture Labs", logo: "https://ut-um.files.svdcdn.com/production/media/images/venture-labs/TUM-UTUM-Logos.svg" },
+  { name: "TUM Venture Labs", logo: "/tum-venture-labs.png" },
   { name: "TUM Venture Lab FAB", logo: "https://www.tum-venture-labs.de/media/images/lab-logos/tum-venture-labs-food-agro-biotech.svg" },
   { name: "KfW Stiftung", logo: "https://kfw-stiftung.de/fileadmin/logo/Logo_KfW_Stiftung_rgb.svg" },
   { name: "Social Business Women e.V.", logo: "https://www.social-business-women.com/wp-content/uploads/2026/01/BerufsWege-fuer-Frauen-und-Social-Business-Women-eV_Logo_klein-1.png" },
@@ -294,7 +296,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                     <img
                       src={aff.logo}
                       alt={aff.name}
-                      style={{ height: "18px", width: "auto", maxWidth: "68px", objectFit: "contain" }}
+                      style={{ height: `${aff.logoHeight || 18}px`, width: "auto", maxWidth: `${aff.logoMaxWidth || 68}px`, objectFit: "contain" }}
                       onError={(e) => { e.currentTarget.style.display = "none"; }}
                     />
                     {aff.name}
