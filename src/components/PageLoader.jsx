@@ -14,7 +14,7 @@ const letterVariants = {
 
 export default function PageLoader({ onComplete }) {
   useEffect(() => {
-    const t = setTimeout(onComplete, 2200);
+    const t = setTimeout(onComplete, 2000);
     return () => clearTimeout(t);
   }, [onComplete]);
 

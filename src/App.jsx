@@ -61,6 +61,15 @@ function App() {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [normalizedPath]);
 
+  useEffect(() => {
+    // Show loader only when on landing page; hide for other pages.
+    if (currentPage === 'landing') {
+      setLoaderDone(false);
+    } else {
+      setLoaderDone(true);
+    }
+  }, [currentPage]);
+
   const setCurrentPage = (page) => {
     const targetPath = pageToPath[page] || '/';
     navigate(targetPath);
@@ -101,7 +110,7 @@ function App() {
   return (
     <div className="App">
       <AnimatePresence mode="wait">
-        {!loaderDone && (
+        {!loaderDone && currentPage === 'landing' && (
           <PageLoader key="loader" onComplete={() => setLoaderDone(true)} />
         )}
       </AnimatePresence>
