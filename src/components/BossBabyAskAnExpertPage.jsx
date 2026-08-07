@@ -112,14 +112,11 @@ export default function BossBabyAskAnExpertPage({ currentPage, setCurrentPage })
       <section className="py-20 px-4">
         <Container>
           <div className="max-w-[800px] mx-auto text-center">
-            <p className="inline-block rounded-full px-4 py-2 text-sm font-semibold mb-4" style={{ backgroundColor: brand.lightPink, color: brand.text }}>
-              Ask an Expert
-            </p>
             <h1 className="text-4xl sm:text-5xl font-extrabold mb-4" style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
-              Smart answers, zero fluff.
+              Curious? Just ask.
             </h1>
             <p className="text-lg text-gray-700 leading-relaxed mb-8">
-              Bring your questions about energy, skin, routines, hormones, and everyday wellness. Our experts answer in a way that feels useful, grounded, and actually doable.
+              Bring your questions about nutrition, beauty, and health and we'll answer them.
             </p>
             <button
               type="button"
@@ -133,9 +130,6 @@ export default function BossBabyAskAnExpertPage({ currentPage, setCurrentPage })
 
           <div className="mt-12 rounded-[32px] border bg-white/80 p-6 md:p-8 shadow-sm" style={{ borderColor: "#ffeaf4" }}>
             <div className="max-w-3xl mb-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em]" style={{ color: brand.pink }}>
-                Ask your own question
-              </p>
               <h2 className="text-2xl sm:text-3xl font-extrabold mt-2" style={{ fontWeight: 800 }}>
                 Hey, what’s on your mind today?
               </h2>
