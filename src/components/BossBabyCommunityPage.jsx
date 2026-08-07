@@ -18,20 +18,22 @@ const Container = ({ children, className = "" }) => (
 
 const features = [
   {
+    title: "Science Nuggets",
+    description: "All you've ever wanted to know about nutrition and more.",
+    page: "askexpert"
+  },
+  {
+    title: "Flavour Lab",
+    description: "Create with us: Taste, test, and co-create the next Bossbaby blends before anyone else. ",
+    page: "flavourlab"
+  },
+  {
     title: "Mini Glow-Ups",
     description: "Tiny routines, mini wellness bites and science nuggets read in 60s."
   },
   {
     title: "Bossbaby Squad",
     description: "Small unique groups for energy, focus, and beauty. Let's hype each other up!"
-  },
-  {
-    title: "Ask an Expert",
-    description: "Q&As with nutrition scientists and wellness nerds who speak your language."
-  },
-  {
-    title: "Flavour Lab",
-    description: "Create with us: Taste, test, and co-create the next Bossbaby blends before anyone else. "
   }
 ];
 
@@ -113,18 +115,20 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
       <section className="text-center py-20 px-4">
         <Container>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4" style={{fontWeight: 800, fontSize: 'clamp(32px, 5vw, 56px)'}}>
-            Where wellness meets real talk.
+            This space is for you.
           </h1>
           <p className="text-lg text-gray-600 max-w-[700px] mx-auto mt-4 mb-8" style={{fontSize: '1.1rem'}}>
-            A kind, hype heavy space to swap routines, ask smart questions, and celebrate micro wins.
+            A kind, hype heavy space to swap routines, ask questions, and celebrate micro wins.
           </p>
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 max-w-[1100px] mx-auto">
             {features.map((feature, index) => (
-              <div
+              <button
                 key={index}
-                className="bg-white border rounded-3xl p-8 shadow-md flex flex-col items-center text-center hover:-translate-y-1 transition-all"
+                type="button"
+                onClick={() => feature.page && setCurrentPage(feature.page)}
+                className="bg-white border rounded-3xl p-8 shadow-md flex flex-col items-center text-center hover:-translate-y-1 transition-all cursor-pointer w-full"
                 style={{
                   borderColor: '#ffeaf4',
                   boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
@@ -136,69 +140,12 @@ export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
                 <p className="text-sm text-gray-600 leading-relaxed max-w-[240px]">
                   {feature.description}
                 </p>
-              </div>
+              </button>
             ))}
           </div>
         </Container>
       </section>
 
-
-      {/* Feed Section */}
-      <section className="py-16 px-4">
-        <Container>
-          <h2 className="text-center text-3xl sm:text-4xl font-extrabold mb-6" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
-            Fresh from the feed
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            {feedPosts.map((post, index) => (
-              <div
-                key={index}
-                className="bg-white border rounded-2xl p-5 shadow-md hover:-translate-y-1 transition-all"
-                style={{
-                  borderColor: '#ffeaf4',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
-                }}
-              >
-                <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
-                  <span>{post.author} {post.time}</span>
-                  <span>{post.replies}</span>
-                </div>
-                <div className="font-bold text-base mt-2" style={{fontWeight: 700}}>
-                  {post.title}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Ambassadors Section */}
-      <section className="py-16 px-4">
-        <Container>
-          <h2 className="text-center text-3xl sm:text-4xl font-extrabold mb-6" style={{fontWeight: 800, letterSpacing: '-0.01em'}}>
-            Ambassadors
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            {ambassadors.map((amb, index) => (
-              <div
-                key={index}
-                className="bg-white border rounded-2xl p-5 shadow-md hover:-translate-y-1 transition-all"
-                style={{
-                  borderColor: '#ffeaf4',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
-                }}
-              >
-                <h4 className="font-extrabold mb-1" style={{fontWeight: 800}}>
-                  {amb.name}
-                </h4>
-                <p className="text-sm text-gray-600">
-                  {amb.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
 
       <Footer setCurrentPage={setCurrentPage} />
     </div>

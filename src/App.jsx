@@ -3,7 +3,9 @@ import { AnimatePresence } from 'framer-motion';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BossBabyLandingPage from './components/BossBabyLandingPage';
 import BossBabyProductsPage from './components/BossBabyProductsPage';
-// import BossBabyCommunityPage from './components/BossBabyCommunityPage'; // hidden for now
+import BossBabyCommunityPage from './components/BossBabyCommunityPage';
+import BossBabyAskAnExpertPage from './components/BossBabyAskAnExpertPage';
+import BossBabyFlavourLabPage from './components/BossBabyFlavourLabPage';
 import BossBabyAboutPage from './components/BossBabyAboutPage';
 import BossBabyImpressumPage from './components/BossBabyImpressumPage';
 import BossBabyPrivacyPage from './components/BossBabyPrivacyPage';
@@ -17,6 +19,8 @@ const pageToPath = {
   products: '/products',
   howitworks: '/how-it-works',
   community: '/community',
+  askexpert: '/ask-an-expert',
+  flavourlab: '/flavour-lab',
   about: '/about',
   impressum: '/impressum',
   privacy: '/privacy',
@@ -29,6 +33,8 @@ const pathToPage = {
   '/products': 'products',
   '/how-it-works': 'howitworks',
   '/community': 'community',
+  '/ask-an-expert': 'askexpert',
+  '/flavour-lab': 'flavourlab',
   '/about': 'about',
   '/impressum': 'impressum',
   '/privacy': 'privacy',
@@ -70,8 +76,12 @@ function App() {
         return <BossBabyProductsPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'howitworks':
         return <BossBabyHowItWorksPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
-      // case 'community': // hidden for now
-      //   return <BossBabyCommunityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'community':
+        return <BossBabyCommunityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'askexpert':
+        return <BossBabyAskAnExpertPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'flavourlab':
+        return <BossBabyFlavourLabPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'about':
         return <BossBabyAboutPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'impressum':
