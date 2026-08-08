@@ -51,6 +51,18 @@ function getMaterialFromPack(label) {
   return '';
 }
 
+function formatSuggestionTimestamp(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleString([], {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
 export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
   const [selections, setSelections] = useState({ pack: [], flavour: [] });
   const [otherComment, setOtherComment] = useState("");
@@ -124,11 +136,27 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
     if (!suggestion.trim()) return;
     try {
       const cur = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
-      cur.unshift({ id: Date.now(), text: suggestion.trim() });
+      cur.unshift({
+        id: Date.now(),
+        text: suggestion.trim(),
+        author: 'You',
+        createdAt: Date.now(),
+      });
       localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(cur));
       setSuggestions(cur);
       setSuggestion("");
       alert("Thanks — suggestion saved locally.");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const removeSuggestion = (id) => {
+    try {
+      const cur = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
+      const next = cur.filter((item) => item.id !== id);
+      localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(next));
+      setSuggestions(next);
     } catch (err) {
       console.error(err);
     }
@@ -284,6 +312,17 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               <div className="space-y-3">
                 {suggestions.slice(0, 6).map((item) => (
                   <div key={item.id} className="rounded-2xl border px-4 py-3" style={{ borderColor: "#f4ddea", backgroundColor: "#fffdfd" }}>
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{item.author || 'Anonymous'}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs text-gray-500">{formatSuggestionTimestamp(item.createdAt || item.id)}</p>
+                        {item.author === 'You' && (
+                          <button type="button" onClick={() => removeSuggestion(item.id)} className="text-xs font-semibold text-pink-600 hover:underline">
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    </div>
                     <p className="text-sm text-gray-800">{item.text}</p>
                   </div>
                 ))}
