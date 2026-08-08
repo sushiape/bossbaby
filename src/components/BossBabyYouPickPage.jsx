@@ -14,7 +14,7 @@ const Container = ({ children, className = "" }) => (
 );
 
 const defaultOptions = {
-  shape: ["Slim", "Rounded", "Square"],
+  shape: ["PET bottles", "Aluminium cans"],
   size: ["100ml", "250ml", "330ml", "500ml"],
   flavour: ["Matcha Mint", "Sunrise Guava", "Cacao Calm"],
 };
@@ -137,7 +137,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               {!hasVoted ? (
                 <form onSubmit={submitVote} className="space-y-4">
                   <div>
-                    <p className="text-sm font-semibold mb-2">Bottle shape (choose one)</p>
+                    <p className="text-sm font-semibold mb-2">Bottle type (choose one)</p>
                     <div className="flex gap-2 flex-wrap">
                       {defaultOptions.shape.map((s) => (
                         <button type="button" key={s} onClick={() => toggleChoice("shape", s)} className={`px-3 py-2 rounded-full border ${selections.shape.includes(s) ? "bg-black text-white" : "bg-[#fffdfd]"}`}>
