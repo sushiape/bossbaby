@@ -186,14 +186,11 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
       <section className="py-20 px-4">
         <Container>
-          <div className="max-w-[900px] mx-auto text-center mb-8">
-                  <p className="inline-block rounded-full px-4 py-2 text-sm font-semibold mb-4" style={{ backgroundColor: brand.lightPink, color: brand.text }}>
-                    It's Your Call, Babe.
-            </p>
+          <div className="max-w-[900px] mx-auto text-center mb-12 sm:mb-16">
             <h1 className="text-3xl sm:text-4xl font-extrabold mb-3" style={{ fontWeight: 800 }}>
-                It's Your Call, Babe.
+                    You pick. We make.
             </h1>
-            <p className="text-sm text-gray-700">Answer a quick question about pack and flavour. You can change your answers anytime.</p>
+                  <p className="text-sm text-gray-700">Design the next BIG thing with us.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
