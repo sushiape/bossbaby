@@ -79,7 +79,16 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
     setHasVoted(v.some((x) => x.userId === userId));
 
     try {
-      setSuggestions(JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]"));
+      const storedSuggestions = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
+      const normalizedSuggestions = storedSuggestions.map((item) => ({
+        ...item,
+        author: item.author || 'You',
+        canRemove: item.canRemove !== false,
+      }));
+      if (JSON.stringify(storedSuggestions) !== JSON.stringify(normalizedSuggestions)) {
+        localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(normalizedSuggestions));
+      }
+      setSuggestions(normalizedSuggestions);
     } catch (err) {
       console.error(err);
       setSuggestions([]);
@@ -140,6 +149,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
         id: Date.now(),
         text: suggestion.trim(),
         author: 'You',
+        canRemove: true,
         createdAt: Date.now(),
       });
       localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(cur));
@@ -316,7 +326,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                       <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{item.author || 'Anonymous'}</p>
                       <div className="flex items-center gap-2">
                         <p className="text-xs text-gray-500">{formatSuggestionTimestamp(item.createdAt || item.id)}</p>
-                        {item.author === 'You' && (
+                        {item.canRemove !== false && (
                           <button type="button" onClick={() => removeSuggestion(item.id)} className="text-xs font-semibold text-pink-600 hover:underline">
                             Remove
                           </button>
