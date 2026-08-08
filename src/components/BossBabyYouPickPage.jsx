@@ -18,7 +18,7 @@ const defaultOptions = {
     "100 ml PET · A concentrated daily shot",
     "250 ml PET · A small functional drink",
     "200 ml Can · Cute, compact, concentrated",
-    "250 ml Slim Can · More to sip, still sleek",
+    "250 ml Can · More to sip, still sleek",
   ],
   flavour: ["Mixed Berries", "Mango Peach", "Blueberry Coconut", "Vanilla Cream"],
 };
@@ -47,7 +47,7 @@ function getUserId() {
 function getMaterialFromPack(label) {
   if (!label) return '';
   if (label.toLowerCase().includes('pet')) return 'PET (plastic)';
-  if (label.toLowerCase().includes('slim')) return 'Aluminium';
+  if (label.toLowerCase().includes('slim') || label.toLowerCase().includes('can')) return 'Aluminium';
   return '';
 }
 
@@ -156,7 +156,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                           <button key={p} type="button" onClick={() => toggleChoice("pack", p)} className={`text-left p-3 rounded-2xl border ${sel ? "bg-black text-white" : "bg-[#fffdfd]"}`}>
                             <div className="flex items-center justify-between">
                               <div className="font-semibold">{p.split('·')[0].trim()}</div>
-                              <div className="text-xs px-2 py-1 rounded-full" style={sel ? { backgroundColor: '#111', color: '#fff' } : { backgroundColor: '#fff', border: '1px solid #eee', color: '#111' }}>{getMaterialFromPack(p)}</div>
+                              <span className={`text-xs px-3 py-1 rounded-full min-w-[86px] text-center ${sel ? 'bg-white/10 text-white border border-white/20' : 'bg-white text-gray-800 border border-gray-200'}`}>{getMaterialFromPack(p)}</span>
                             </div>
                             <div className={`text-xs mt-1 ${sel ? 'text-gray-200' : 'text-gray-700'}`}>{p.split('·')[1] ? p.split('·')[1].trim() : ''}</div>
                           </button>
@@ -220,9 +220,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                               <div key={opt} className="flex items-center gap-3">
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between">
-                                    <div className="text-sm font-semibold">{title}</div>
-                                    <div className="text-xs px-2 py-1 rounded-full bg-white border" style={{ borderColor: '#eee' }}>{material}</div>
-                                  </div>
+                                          <div className="text-sm font-semibold">{title}</div>
+                                          <span className="text-xs px-3 py-1 rounded-full min-w-[86px] text-center bg-white text-gray-800 border border-gray-200">{material}</span>
+                                        </div>
                                   <div className="text-xs text-gray-600 mt-1">{subtitle}</div>
                                   <div className="h-2 bg-[#f1f1f1] rounded overflow-hidden mt-2">
                                     <div style={{ width: `${pct}%` }} className="h-2 bg-black" />
