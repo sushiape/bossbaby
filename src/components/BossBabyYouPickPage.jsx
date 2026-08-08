@@ -57,6 +57,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
   const [votes, setVotes] = useState([]);
   const [hasVoted, setHasVoted] = useState(false);
   const [suggestion, setSuggestion] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
 
   const userId = getUserId();
 
@@ -64,6 +65,13 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
     const v = getStoredVotes();
     setVotes(v);
     setHasVoted(v.some((x) => x.userId === userId));
+
+    try {
+      setSuggestions(JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]"));
+    } catch (err) {
+      console.error(err);
+      setSuggestions([]);
+    }
   }, []);
 
   const toggleChoice = (category, value) => {
@@ -118,6 +126,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
       const cur = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
       cur.unshift({ id: Date.now(), text: suggestion.trim() });
       localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(cur));
+      setSuggestions(cur);
       setSuggestion("");
       alert("Thanks — suggestion saved locally.");
     } catch (err) {
@@ -267,6 +276,21 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               <input value={suggestion} onChange={(e) => setSuggestion(e.target.value)} placeholder="Share an idea" className="flex-1 rounded-full border px-4 py-2 text-sm" />
               <button className="rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ backgroundColor: brand.pink }}>Send</button>
             </form>
+          </div>
+
+          <div className="mt-6 rounded-2xl border bg-white p-6" style={{ borderColor: "#ffeaf4" }}>
+            <h3 className="font-extrabold mb-3">Latest suggestions</h3>
+            {suggestions.length ? (
+              <div className="space-y-3">
+                {suggestions.slice(0, 6).map((item) => (
+                  <div key={item.id} className="rounded-2xl border px-4 py-3" style={{ borderColor: "#f4ddea", backgroundColor: "#fffdfd" }}>
+                    <p className="text-sm text-gray-800">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-600">No suggestions yet. Be the first to drop one.</p>
+            )}
           </div>
         </Container>
       </section>
