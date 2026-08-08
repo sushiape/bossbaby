@@ -243,15 +243,16 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                             </div>
                           );
                         })}
-                        {/* Other */}
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1">
-                            <div className="h-2 bg-[#f1f1f1] rounded overflow-hidden">
-                              <div style={{ width: `${Math.round(((counts['Other'] || 0) / total) * 100)}%` }} className="h-2 bg-black" />
+                        {cat === 'flavour' && (
+                          <div className="flex items-center gap-3">
+                            <div className="flex-1">
+                              <div className="h-2 bg-[#f1f1f1] rounded overflow-hidden">
+                                <div style={{ width: `${Math.round(((counts['Other'] || 0) / total) * 100)}%` }} className="h-2 bg-black" />
+                              </div>
                             </div>
+                            <div className="text-xs w-16 text-right">{Math.round(((counts['Other'] || 0) / total) * 100)}%</div>
                           </div>
-                          <div className="text-xs w-16 text-right">{Math.round(((counts['Other'] || 0) / total) * 100)}%</div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   );
