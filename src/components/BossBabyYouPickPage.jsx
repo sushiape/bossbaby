@@ -145,13 +145,17 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
     e.preventDefault();
     if (!suggestion.trim()) return;
     const author = suggestionAuthor.trim();
+    if (!author) {
+      alert("Please add your name before sending.");
+      return;
+    }
     try {
       const cur = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
       cur.unshift({
         id: Date.now(),
         text: suggestion.trim(),
-        author: author || 'You',
-        authorName: author || 'You',
+        author,
+        authorName: author,
         canRemove: true,
         createdAt: Date.now(),
       });
@@ -315,9 +319,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
           <div className="mt-8 rounded-2xl border bg-white p-6" style={{ borderColor: "#ffeaf4" }}>
             <h3 className="font-extrabold mb-3">Suggest a flavour or idea</h3>
             <form onSubmit={submitSuggestion} className="flex gap-3">
-              <div className="flex-1 grid gap-3 sm:grid-cols-[1fr_180px]">
+              <div className="flex-1 grid gap-3 sm:grid-cols-[1fr_150px] sm:items-center">
                 <input value={suggestion} onChange={(e) => setSuggestion(e.target.value)} placeholder="Share an idea" className="w-full rounded-full border px-4 py-2 text-sm" />
-                <input value={suggestionAuthor} onChange={(e) => setSuggestionAuthor(e.target.value)} placeholder="Your name (optional)" className="w-full rounded-full border px-4 py-2 text-sm" />
+                <input value={suggestionAuthor} onChange={(e) => setSuggestionAuthor(e.target.value)} placeholder="Your name" className="w-full rounded-full border px-4 py-2 text-sm sm:max-w-[150px]" />
               </div>
               <button className="rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ backgroundColor: brand.pink }}>Send</button>
             </form>
