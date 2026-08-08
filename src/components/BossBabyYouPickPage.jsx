@@ -192,7 +192,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                 </form>
               ) : (
                 <div>
-                  <p className="text-sm text-gray-600 mb-3">Thanks — your vote is counted. You can change it later.</p>
+                  <p className="text-sm text-gray-600 mb-3">Thank you. Your vote is counted. ✨ Changed your mind? Vote again.</p>
                   <button onClick={changeVote} className="rounded-full px-4 py-2 border text-sm">Change my vote</button>
                 </div>
               )}
