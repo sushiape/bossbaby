@@ -23,13 +23,13 @@ const features = [
     page: "askexpert"
   },
   {
-    title: "Baby, We’re Outside.",
-    description: "Pop-ups, events, tastings and everywhere you can find Bossbaby IRL.",
+    title: "Baby, It's Cold Outside",
+    description: "Because we're missing you! Pop-ups, tastings, events and everywhere Bossbaby is showing up IRL.",
     page: "flavourlab"
   },
   {
-    title: "You Pick, We Make.",
-    description: "Vote, taste, test and help shape what Bossbaby creates next.",
+    title: "It's Your Call, Babe.",
+    description: "Vote, taste, test and decide what Bossbaby creates next.",
     page: "youpick"
   },
   {
