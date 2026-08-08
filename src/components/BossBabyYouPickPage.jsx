@@ -15,7 +15,7 @@ const Container = ({ children, className = "" }) => (
 
 const defaultOptions = {
   shape: ["Slim", "Rounded", "Square"],
-  size: ["250ml", "330ml", "500ml"],
+  size: ["100ml", "250ml", "330ml", "500ml"],
   flavour: ["Matcha Mint", "Sunrise Guava", "Cacao Calm"],
 };
 
@@ -57,6 +57,11 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
   const toggleChoice = (category, value) => {
     setSelections((prev) => {
+      // single-choice for shape and size
+      if (category === "shape" || category === "size") {
+        const already = prev[category] && prev[category][0] === value;
+        return { ...prev, [category]: already ? [] : [value] };
+      }
       const arr = new Set(prev[category]);
       if (arr.has(value)) arr.delete(value);
       else arr.add(value);
@@ -116,11 +121,11 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
       <section className="py-20 px-4">
         <Container>
           <div className="max-w-[900px] mx-auto text-center mb-8">
-            <p className="inline-block rounded-full px-4 py-2 text-sm font-semibold mb-4" style={{ backgroundColor: brand.lightPink, color: brand.text }}>
-              You Pick, We Make
+                  <p className="inline-block rounded-full px-4 py-2 text-sm font-semibold mb-4" style={{ backgroundColor: brand.lightPink, color: brand.text }}>
+                    It's Your Call, Babe.
             </p>
             <h1 className="text-3xl sm:text-4xl font-extrabold mb-3" style={{ fontWeight: 800 }}>
-              Help decide what Bossbaby builds next
+                It's Your Call, Babe.
             </h1>
             <p className="text-sm text-gray-700">Answer a few quick questions about bottle shape, size, and flavour. You can change your answers anytime.</p>
           </div>
@@ -132,7 +137,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               {!hasVoted ? (
                 <form onSubmit={submitVote} className="space-y-4">
                   <div>
-                    <p className="text-sm font-semibold mb-2">Bottle shape (choose any)</p>
+                    <p className="text-sm font-semibold mb-2">Bottle shape (choose one)</p>
                     <div className="flex gap-2 flex-wrap">
                       {defaultOptions.shape.map((s) => (
                         <button type="button" key={s} onClick={() => toggleChoice("shape", s)} className={`px-3 py-2 rounded-full border ${selections.shape.includes(s) ? "bg-black text-white" : "bg-[#fffdfd]"}`}>
@@ -143,7 +148,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                   </div>
 
                   <div>
-                    <p className="text-sm font-semibold mb-2">Size (choose any)</p>
+                    <p className="text-sm font-semibold mb-2">Size (choose one)</p>
                     <div className="flex gap-2 flex-wrap">
                       {defaultOptions.size.map((s) => (
                         <button type="button" key={s} onClick={() => toggleChoice("size", s)} className={`px-3 py-2 rounded-full border ${selections.size.includes(s) ? "bg-black text-white" : "bg-[#fffdfd]"}`}>
