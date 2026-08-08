@@ -6,6 +6,7 @@ import BossBabyProductsPage from './components/BossBabyProductsPage';
 import BossBabyCommunityPage from './components/BossBabyCommunityPage';
 import BossBabyAskAnExpertPage from './components/BossBabyAskAnExpertPage';
 import BossBabyFlavourLabPage from './components/BossBabyFlavourLabPage';
+import BossBabyYouPickPage from './components/BossBabyYouPickPage';
 import BossBabyAboutPage from './components/BossBabyAboutPage';
 import BossBabyImpressumPage from './components/BossBabyImpressumPage';
 import BossBabyPrivacyPage from './components/BossBabyPrivacyPage';
@@ -21,6 +22,7 @@ const pageToPath = {
   community: '/community',
   askexpert: '/ask-an-expert',
   flavourlab: '/flavour-lab',
+  youpick: '/you-pick',
   about: '/about',
   impressum: '/impressum',
   privacy: '/privacy',
@@ -35,6 +37,7 @@ const pathToPage = {
   '/community': 'community',
   '/ask-an-expert': 'askexpert',
   '/flavour-lab': 'flavourlab',
+  '/you-pick': 'youpick',
   '/about': 'about',
   '/impressum': 'impressum',
   '/privacy': 'privacy',
@@ -89,6 +92,8 @@ function App() {
         return <BossBabyCommunityPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'askexpert':
         return <BossBabyAskAnExpertPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
+      case 'youpick':
+        return <BossBabyYouPickPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'flavourlab':
         return <BossBabyFlavourLabPage currentPage={currentPage} setCurrentPage={setCurrentPage} />;
       case 'about':

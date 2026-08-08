@@ -18,22 +18,23 @@ const Container = ({ children, className = "" }) => (
 
 const features = [
   {
-    title: "Science Nuggets",
-    description: "All you've ever wanted to know about nutrition and more.",
+    title: "Hot Girls Read",
+    description: "The science behind energy, mood, skin, nutrition and what your body is actually doing.",
     page: "askexpert"
   },
   {
-    title: "Flavour Lab",
-    description: "Create with us: Taste, test, and co-create the next Bossbaby blends before anyone else. ",
+    title: "Baby, We’re Outside.",
+    description: "Pop-ups, events, tastings and everywhere you can find Bossbaby IRL.",
     page: "flavourlab"
   },
   {
-    title: "Mini Glow-Ups",
-    description: "Tiny routines, mini wellness bites and science nuggets read in 60s."
+    title: "You Pick, We Make.",
+    description: "Vote, taste, test and help shape what Bossbaby creates next.",
+    page: "youpick"
   },
   {
-    title: "Bossbaby Squad",
-    description: "Small unique groups for energy, focus, and beauty. Let's hype each other up!"
+    title: "Let's Talk Business, Babe.",
+    description: "Big ideas, startup 101, founder lessons and the real stuff behind building a business."
   }
 ];
 
@@ -108,17 +109,17 @@ const ambassadors = [
 
 export default function BossBabyCommunityPage({ currentPage, setCurrentPage }) {
   return (
-    <div className="min-h-screen" style={{backgroundColor: brand.bg, fontFamily: 'Poppins, sans-serif', color: brand.text}}>
+    <div className="min-h-screen flex flex-col" style={{backgroundColor: brand.bg, fontFamily: 'Poppins, sans-serif', color: brand.text}}>
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {/* Hero Section */}
-      <section className="text-center py-20 px-4">
+      <section className="text-center py-20 px-4 flex-1">
         <Container>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4" style={{fontWeight: 800, fontSize: 'clamp(32px, 5vw, 56px)'}}>
             This space is for you.
           </h1>
           <p className="text-lg text-gray-600 max-w-[700px] mx-auto mt-4 mb-8" style={{fontSize: '1.1rem'}}>
-            A kind, hype heavy space to swap routines, ask questions, and celebrate micro wins.
+            Get nerdy. Talk business. Meet us IRL. Help decide what comes next.
           </p>
 
           {/* Features Grid */}
