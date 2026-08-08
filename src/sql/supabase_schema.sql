@@ -13,11 +13,6 @@ create table if not exists suggestions (
 
 alter table suggestions enable row level security;
 
-drop policy if exists suggestions_public_select on suggestions;
-drop policy if exists suggestions_allow_insert_any_client on suggestions;
-drop policy if exists suggestions_owner_modify on suggestions;
-drop policy if exists suggestions_owner_delete on suggestions;
-
 create policy "suggestions_public_select" on suggestions
   for select using (true);
 
@@ -31,6 +26,13 @@ create policy "suggestions_update_own" on suggestions
 create policy "suggestions_delete_own" on suggestions
   for delete using (user_id = auth.uid());
 
+do $$
+begin
+  if exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
+    alter publication supabase_realtime add table suggestions;
+  end if;
+end $$;
+
 create table if not exists youpick_votes (
   id uuid primary key default gen_random_uuid(),
   poll_id text not null default 'default',
@@ -42,11 +44,6 @@ create table if not exists youpick_votes (
 );
 
 alter table youpick_votes enable row level security;
-
-drop policy if exists votes_public_select on youpick_votes;
-drop policy if exists votes_allow_insert_any_client on youpick_votes;
-drop policy if exists votes_owner_upsert on youpick_votes;
-drop policy if exists votes_owner_delete on youpick_votes;
 
 create policy "votes_public_select" on youpick_votes
   for select using (true);

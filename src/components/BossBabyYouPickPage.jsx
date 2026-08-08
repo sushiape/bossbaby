@@ -88,6 +88,11 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
   const [authUserId, setAuthUserId] = useState(null);
   const [authReady, setAuthReady] = useState(!supabase);
   const [authError, setAuthError] = useState("");
+  const [voteError, setVoteError] = useState("");
+  const [suggestionError, setSuggestionError] = useState("");
+  const [isVoteSubmitting, setIsVoteSubmitting] = useState(false);
+  const [isSuggestionSubmitting, setIsSuggestionSubmitting] = useState(false);
+  const [isSuggestionsLoading, setIsSuggestionsLoading] = useState(false);
 
   const localUserId = useState(() => (!supabase ? getUserId() : null))[0];
   const currentUserId = supabase ? authUserId : localUserId;
@@ -141,6 +146,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
     if (supabase && (!authReady || !currentUserId)) return;
 
     const loadData = async () => {
+      setIsSuggestionsLoading(true);
       if (supabase) {
         try {
           const { data: suggestionData, error: suggestionError } = await supabase
@@ -167,12 +173,14 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
           setVotes(mappedVotes);
           setHasVoted(mappedVotes.some((x) => x.userId === currentUserId));
+          setIsSuggestionsLoading(false);
           return;
         } catch (err) {
           console.error(err);
           setSuggestions([]);
           setVotes([]);
           setHasVoted(false);
+          setIsSuggestionsLoading(false);
           return;
         }
       }
@@ -185,15 +193,47 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
         const storedSuggestions = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
         const normalizedSuggestions = storedSuggestions.map((item) => normalizeSuggestion(item, currentUserId));
         setSuggestions(normalizedSuggestions);
+        setIsSuggestionsLoading(false);
       } catch (err) {
         console.error(err);
         setSuggestions([]);
         setVotes([]);
+        setIsSuggestionsLoading(false);
       }
     };
 
     loadData();
   }, [authReady, currentUserId]);
+
+  useEffect(() => {
+    if (!supabase || !currentUserId) return;
+
+    const channel = supabase
+      .channel('youpick-suggestions-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: SUGGESTIONS_TABLE },
+        async () => {
+          try {
+            const { data, error } = await supabase
+              .from(SUGGESTIONS_TABLE)
+              .select('id, user_id, text, author_name, created_at')
+              .order('created_at', { ascending: false })
+              .limit(50);
+
+            if (error) throw error;
+            setSuggestions((data || []).map((item) => normalizeSuggestion(item, currentUserId)));
+          } catch (error) {
+            console.error('Supabase realtime refresh error', error);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentUserId]);
 
   const toggleChoice = (category, value) => {
     setSelections((prev) => {
@@ -211,8 +251,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
   const submitVote = (e) => {
     e.preventDefault();
+    setVoteError("");
     if (supabase && !currentUserId) {
-      alert("We couldn't save your vote. Please try again 💗");
+      setVoteError("We couldn't save your vote. Please try again 💗");
       return;
     }
 
@@ -225,8 +266,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
     if (supabase) {
       (async () => {
+        setIsVoteSubmitting(true);
         try {
-          // upsert to ensure a single vote per (poll_id, client_id)
+          // upsert to ensure a single vote per (poll_id, user_id)
           await supabase.from(VOTES_TABLE).upsert([payload], { onConflict: 'poll_id,user_id' });
           const { data: voteData, error: voteError } = await supabase.from(VOTES_TABLE).select('id, poll_id, user_id, selections, other_comment, created_at');
           if (voteError) throw voteError;
@@ -240,7 +282,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
           setHasVoted(mapped.some((x) => x.userId === currentUserId));
         } catch (err) {
           console.error('Supabase vote submit error', err);
-          alert("We couldn't save your vote. Please try again 💗");
+          setVoteError("We couldn't save your vote. Please try again 💗");
+        } finally {
+          setIsVoteSubmitting(false);
         }
       })();
       return;
@@ -278,6 +322,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
   const submitSuggestion = (e) => {
     e.preventDefault();
+    setSuggestionError("");
     if (!suggestion.trim()) return;
     const author = suggestionAuthor.trim();
     if (!author) {
@@ -287,18 +332,19 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
     try {
       if (supabase) {
         if (!currentUserId) {
-          alert("Please wait while we sign you in anonymously.");
+          setSuggestionError("Please wait while we sign you in anonymously.");
           return;
         }
 
-        supabase
-          .from(SUGGESTIONS_TABLE)
-          .insert({
+        (async () => {
+          setIsSuggestionSubmitting(true);
+          try {
+            const { error } = await supabase.from(SUGGESTIONS_TABLE).insert({
             text: suggestion.trim(),
             author_name: author,
             user_id: currentUserId,
-          })
-          .then(async ({ error }) => {
+            });
+
             if (error) throw error;
 
             const { data } = await supabase
@@ -311,11 +357,13 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
             setSuggestion("");
             setSuggestionAuthor("");
             alert("Thanks — suggestion saved and shared.");
-          })
-          .catch((err) => {
+          } catch (err) {
             console.error(err);
-            alert("Could not save suggestion to Supabase. Using local mode instead.");
-          });
+            setSuggestionError("Could not save suggestion. Please try again.");
+          } finally {
+            setIsSuggestionSubmitting(false);
+          }
+        })();
         return;
       }
 
@@ -336,6 +384,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
       alert("Thanks — suggestion saved locally.");
     } catch (err) {
       console.error(err);
+      if (supabase) {
+        setSuggestionError("Could not save suggestion. Please try again.");
+      }
     }
   };
 
@@ -380,6 +431,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                     You pick. We make.
             </h1>
                   <p className="text-sm text-gray-700">Design the next BIG thing with us.</p>
+              {authError && <p className="mt-3 text-sm text-red-700">{authError}</p>}
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -423,13 +475,14 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                   </div>
 
                   <div className="flex gap-3">
-                    <button type="submit" className="rounded-full px-5 py-2 text-sm font-semibold text-white" style={{ backgroundColor: brand.pink }}>
-                      Submit vote
+                    <button type="submit" disabled={isVoteSubmitting} className="rounded-full px-5 py-2 text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed" style={{ backgroundColor: brand.pink }}>
+                      {isVoteSubmitting ? 'Saving...' : 'Submit vote'}
                     </button>
-                    <button type="button" onClick={() => { setSelections({ pack: [], flavour: [] }); setOtherComment(""); }} className="rounded-full px-4 py-2 border text-sm">
+                    <button type="button" onClick={() => { setSelections({ pack: [], flavour: [] }); setOtherComment(""); }} className="rounded-full px-4 py-2 border text-sm disabled:opacity-60 disabled:cursor-not-allowed" disabled={isVoteSubmitting}>
                       Reset
                     </button>
                   </div>
+                  {voteError && <p className="text-sm text-red-700">{voteError}</p>}
                 </form>
               ) : (
                 <div>
@@ -515,8 +568,11 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                 <input value={suggestion} onChange={(e) => setSuggestion(e.target.value)} placeholder="Share an idea" className="w-full rounded-full border px-4 py-2 text-sm" />
                 <input value={suggestionAuthor} onChange={(e) => setSuggestionAuthor(e.target.value)} placeholder="Your name" className="w-full rounded-full border px-4 py-2 text-sm sm:max-w-[150px]" />
               </div>
-              <button className="rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ backgroundColor: brand.pink }}>Send</button>
+              <button disabled={isSuggestionSubmitting} className="rounded-full px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed" style={{ backgroundColor: brand.pink }}>
+                {isSuggestionSubmitting ? 'Sending...' : 'Send'}
+              </button>
             </form>
+            {suggestionError && <p className="mt-3 text-sm text-red-700">{suggestionError}</p>}
           </div>
 
           <div className="mt-6 rounded-2xl border bg-white p-6" style={{ borderColor: "#ffeaf4" }}>
@@ -524,7 +580,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
             {isSupabaseConfigured && (
               <p className="text-xs text-gray-500 mb-3">Shared feed connected. You should now see comments from other users here.</p>
             )}
-            {suggestions.length ? (
+            {isSuggestionsLoading ? (
+              <p className="text-sm text-gray-600">Loading suggestions…</p>
+            ) : suggestions.length ? (
               <div className="space-y-3">
                 {suggestions.slice(0, 6).map((item) => (
                   <div key={item.id} className="rounded-2xl border px-4 py-3" style={{ borderColor: "#f4ddea", backgroundColor: "#fffdfd" }}>
