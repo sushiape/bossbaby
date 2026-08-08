@@ -290,22 +290,28 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                           return (
                             <div key={opt} className="flex items-center gap-3">
                               <div className="flex-1">
+                                <div className="flex items-center justify-between mb-1">
+                                  <div className="text-sm font-semibold">{opt}</div>
+                                  <div className="text-xs text-gray-500">{pct}%</div>
+                                </div>
                                 <div className="h-2 bg-[#f1f1f1] rounded overflow-hidden">
                                   <div style={{ width: `${pct}%` }} className="h-2 bg-black" />
                                 </div>
                               </div>
-                              <div className="text-xs w-16 text-right">{pct}%</div>
                             </div>
                           );
                         })}
                         {cat === 'flavour' && (
                           <div className="flex items-center gap-3">
                             <div className="flex-1">
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="text-sm font-semibold">Others</div>
+                                <div className="text-xs text-gray-500">{Math.round(((counts['Other'] || 0) / total) * 100)}%</div>
+                              </div>
                               <div className="h-2 bg-[#f1f1f1] rounded overflow-hidden">
                                 <div style={{ width: `${Math.round(((counts['Other'] || 0) / total) * 100)}%` }} className="h-2 bg-black" />
                               </div>
                             </div>
-                            <div className="text-xs w-16 text-right">{Math.round(((counts['Other'] || 0) / total) * 100)}%</div>
                           </div>
                         )}
                       </div>
