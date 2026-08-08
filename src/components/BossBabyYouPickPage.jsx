@@ -17,10 +17,10 @@ const defaultOptions = {
   pack: [
     "100 ml PET · A concentrated daily shot",
     "250 ml PET · A small functional drink",
-    "200 ml Slim · Cute, compact, concentrated",
-    "250 ml Slim · More to sip, still sleek",
+    "200 ml Can · Cute, compact, concentrated",
+    "250 ml Slim Can · More to sip, still sleek",
   ],
-  flavour: ["Matcha Mint", "Sunrise Guava", "Cacao Calm"],
+  flavour: ["Mixed Berries", "Mango Peach", "Blueberry Coconut", "Vanilla Cream"],
 };
 
 const VOTES_KEY = "youPickVotes";
@@ -47,7 +47,7 @@ function getUserId() {
 function getMaterialFromPack(label) {
   if (!label) return '';
   if (label.toLowerCase().includes('pet')) return 'PET (plastic)';
-  if (label.toLowerCase().includes('slim')) return 'Aluminium can';
+  if (label.toLowerCase().includes('slim')) return 'Aluminium';
   return '';
 }
 
