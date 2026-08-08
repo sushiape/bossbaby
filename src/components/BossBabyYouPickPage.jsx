@@ -14,8 +14,12 @@ const Container = ({ children, className = "" }) => (
 );
 
 const defaultOptions = {
-  shape: ["PET bottles", "Aluminium cans"],
-  size: ["100ml", "250ml", "330ml", "500ml"],
+  pack: [
+    "100 ml PET · A concentrated daily shot",
+    "250 ml PET · A small functional drink",
+    "200 ml Slim · Cute, compact, concentrated",
+    "250 ml Slim · More to sip, still sleek",
+  ],
   flavour: ["Matcha Mint", "Sunrise Guava", "Cacao Calm"],
 };
 
@@ -40,8 +44,15 @@ function getUserId() {
   return id;
 }
 
+function getMaterialFromPack(label) {
+  if (!label) return '';
+  if (label.toLowerCase().includes('pet')) return 'PET (plastic)';
+  if (label.toLowerCase().includes('slim')) return 'Aluminium can';
+  return '';
+}
+
 export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
-  const [selections, setSelections] = useState({ shape: [], size: [], flavour: [] });
+  const [selections, setSelections] = useState({ pack: [], flavour: [] });
   const [otherComment, setOtherComment] = useState("");
   const [votes, setVotes] = useState([]);
   const [hasVoted, setHasVoted] = useState(false);
@@ -57,8 +68,8 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
   const toggleChoice = (category, value) => {
     setSelections((prev) => {
-      // single-choice for shape and size
-      if (category === "shape" || category === "size") {
+      // single-choice for pack
+      if (category === "pack") {
         const already = prev[category] && prev[category][0] === value;
         return { ...prev, [category]: already ? [] : [value] };
       }
@@ -127,7 +138,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
             <h1 className="text-3xl sm:text-4xl font-extrabold mb-3" style={{ fontWeight: 800 }}>
                 It's Your Call, Babe.
             </h1>
-            <p className="text-sm text-gray-700">Answer a few quick questions about bottle shape, size, and flavour. You can change your answers anytime.</p>
+            <p className="text-sm text-gray-700">Answer a quick question about pack and flavour. You can change your answers anytime.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -137,24 +148,20 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               {!hasVoted ? (
                 <form onSubmit={submitVote} className="space-y-4">
                   <div>
-                    <p className="text-sm font-semibold mb-2">Bottle type (choose one)</p>
-                    <div className="flex gap-2 flex-wrap">
-                      {defaultOptions.shape.map((s) => (
-                        <button type="button" key={s} onClick={() => toggleChoice("shape", s)} className={`px-3 py-2 rounded-full border ${selections.shape.includes(s) ? "bg-black text-white" : "bg-[#fffdfd]"}`}>
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold mb-2">Size (choose one)</p>
-                    <div className="flex gap-2 flex-wrap">
-                      {defaultOptions.size.map((s) => (
-                        <button type="button" key={s} onClick={() => toggleChoice("size", s)} className={`px-3 py-2 rounded-full border ${selections.size.includes(s) ? "bg-black text-white" : "bg-[#fffdfd]"}`}>
-                          {s}
-                        </button>
-                      ))}
+                    <p className="text-sm font-semibold mb-2">Pack (choose one)</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {defaultOptions.pack.map((p) => {
+                        const sel = selections.pack.includes(p);
+                        return (
+                          <button key={p} type="button" onClick={() => toggleChoice("pack", p)} className={`text-left p-3 rounded-2xl border ${sel ? "bg-black text-white" : "bg-[#fffdfd]"}`}>
+                            <div className="flex items-center justify-between">
+                              <div className="font-semibold">{p.split('·')[0].trim()}</div>
+                              <div className="text-xs px-2 py-1 rounded-full" style={sel ? { backgroundColor: '#111', color: '#fff' } : { backgroundColor: '#fff', border: '1px solid #eee', color: '#111' }}>{getMaterialFromPack(p)}</div>
+                            </div>
+                            <div className={`text-xs mt-1 ${sel ? 'text-gray-200' : 'text-gray-700'}`}>{p.split('·')[1] ? p.split('·')[1].trim() : ''}</div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -178,7 +185,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                     <button type="submit" className="rounded-full px-5 py-2 text-sm font-semibold text-white" style={{ backgroundColor: brand.pink }}>
                       Submit vote
                     </button>
-                    <button type="button" onClick={() => { setSelections({ shape: [], size: [], flavour: [] }); setOtherComment(""); }} className="rounded-full px-4 py-2 border text-sm">
+                    <button type="button" onClick={() => { setSelections({ pack: [], flavour: [] }); setOtherComment(""); }} className="rounded-full px-4 py-2 border text-sm">
                       Reset
                     </button>
                   </div>
@@ -195,7 +202,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               <h3 className="font-extrabold mb-3">Live results</h3>
 
               <div className="space-y-4">
-                {(["shape", "size", "flavour"]).map((cat) => {
+                {["pack", "flavour"].map((cat) => {
                   const { counts, total } = tally(cat);
                   const options = defaultOptions[cat];
                   return (
