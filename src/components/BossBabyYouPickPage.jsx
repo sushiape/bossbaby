@@ -202,16 +202,36 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               <h3 className="font-extrabold mb-3">Live results</h3>
 
               <div className="space-y-4">
-                {["pack", "flavour"].map((cat) => {
+                {['pack', 'flavour'].map((cat) => {
                   const { counts, total } = tally(cat);
                   const options = defaultOptions[cat];
                   return (
                     <div key={cat}>
-                      <p className="text-sm font-semibold capitalize mb-2">{cat}</p>
+                      <p className="text-sm font-semibold mb-2">{cat === 'pack' ? 'Pack' : 'Flavour'}</p>
                       <div className="space-y-2">
                         {options.map((opt) => {
                           const count = counts[opt] || 0;
                           const pct = Math.round((count / total) * 100);
+                          if (cat === 'pack') {
+                            const title = opt.split('·')[0].trim();
+                            const subtitle = opt.split('·')[1] ? opt.split('·')[1].trim() : '';
+                            const material = getMaterialFromPack(opt);
+                            return (
+                              <div key={opt} className="flex items-center gap-3">
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <div className="text-sm font-semibold">{title}</div>
+                                    <div className="text-xs px-2 py-1 rounded-full bg-white border" style={{ borderColor: '#eee' }}>{material}</div>
+                                  </div>
+                                  <div className="text-xs text-gray-600 mt-1">{subtitle}</div>
+                                  <div className="h-2 bg-[#f1f1f1] rounded overflow-hidden mt-2">
+                                    <div style={{ width: `${pct}%` }} className="h-2 bg-black" />
+                                  </div>
+                                </div>
+                                <div className="text-xs w-16 text-right">{pct}%</div>
+                              </div>
+                            );
+                          }
                           return (
                             <div key={opt} className="flex items-center gap-3">
                               <div className="flex-1">
@@ -227,10 +247,10 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                         <div className="flex items-center gap-3">
                           <div className="flex-1">
                             <div className="h-2 bg-[#f1f1f1] rounded overflow-hidden">
-                              <div style={{ width: `${Math.round(((counts["Other"] || 0) / total) * 100)}%` }} className="h-2 bg-black" />
+                              <div style={{ width: `${Math.round(((counts['Other'] || 0) / total) * 100)}%` }} className="h-2 bg-black" />
                             </div>
                           </div>
-                          <div className="text-xs w-16 text-right">{Math.round(((counts["Other"] || 0) / total) * 100)}%</div>
+                          <div className="text-xs w-16 text-right">{Math.round(((counts['Other'] || 0) / total) * 100)}%</div>
                         </div>
                       </div>
                     </div>
