@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import { supabase, SUGGESTIONS_TABLE, VOTES_TABLE, isSupabaseConfigured } from "../lib/supabaseClient";
 
 const brand = {
   pink: "#FF89CC",
@@ -63,6 +64,19 @@ function formatSuggestionTimestamp(value) {
   });
 }
 
+function normalizeSuggestion(item, currentUserId) {
+  const authorName = item.author_name || item.authorName || item.author || "You";
+  return {
+    id: item.id,
+    text: item.text,
+    author: authorName,
+    authorName,
+    canRemove: item.user_id ? item.user_id === currentUserId : item.canRemove !== false,
+    createdAt: item.created_at || item.createdAt || item.id,
+    userId: item.user_id || item.userId || currentUserId,
+  };
+}
+
 export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
   const [selections, setSelections] = useState({ pack: [], flavour: [] });
   const [otherComment, setOtherComment] = useState("");
@@ -71,30 +85,115 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
   const [suggestion, setSuggestion] = useState("");
   const [suggestionAuthor, setSuggestionAuthor] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [authUserId, setAuthUserId] = useState(null);
+  const [authReady, setAuthReady] = useState(!supabase);
+  const [authError, setAuthError] = useState("");
 
-  const userId = getUserId();
+  const localUserId = useState(() => (!supabase ? getUserId() : null))[0];
+  const currentUserId = supabase ? authUserId : localUserId;
 
   useEffect(() => {
-    const v = getStoredVotes();
-    setVotes(v);
-    setHasVoted(v.some((x) => x.userId === userId));
+    if (!supabase) return;
 
-    try {
-      const storedSuggestions = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
-      const normalizedSuggestions = storedSuggestions.map((item) => ({
-        ...item,
-        author: item.author || 'You',
-        canRemove: item.canRemove !== false,
-      }));
-      if (JSON.stringify(storedSuggestions) !== JSON.stringify(normalizedSuggestions)) {
-        localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(normalizedSuggestions));
+    let cancelled = false;
+
+    const bootAnonymousAuth = async () => {
+      try {
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
+
+        let session = sessionData?.session || null;
+        if (!session) {
+          const { data, error: signInError } = await supabase.auth.signInAnonymously();
+          if (signInError) throw signInError;
+          session = data?.session || null;
+        }
+
+        if (!cancelled) {
+          setAuthUserId(session?.user?.id || null);
+          setAuthReady(true);
+        }
+      } catch (error) {
+        console.error(error);
+        if (!cancelled) {
+          setAuthError("Anonymous sign-in failed. Refresh to try again.");
+          setAuthReady(true);
+        }
       }
-      setSuggestions(normalizedSuggestions);
-    } catch (err) {
-      console.error(err);
-      setSuggestions([]);
-    }
+    };
+
+    bootAnonymousAuth();
+
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!cancelled) {
+        setAuthUserId(session?.user?.id || null);
+        setAuthReady(true);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      data.subscription.unsubscribe();
+    };
   }, []);
+
+  useEffect(() => {
+    if (supabase && (!authReady || !currentUserId)) return;
+
+    const loadData = async () => {
+      if (supabase) {
+        try {
+          const { data: suggestionData, error: suggestionError } = await supabase
+            .from(SUGGESTIONS_TABLE)
+            .select('id, user_id, text, author_name, created_at')
+            .order('created_at', { ascending: false })
+            .limit(50);
+
+          if (suggestionError) throw suggestionError;
+          setSuggestions((suggestionData || []).map((item) => normalizeSuggestion(item, currentUserId)));
+
+          const { data: voteData, error: voteError } = await supabase
+            .from(VOTES_TABLE)
+            .select('id, poll_id, user_id, selections, other_comment, created_at');
+
+          if (voteError) throw voteError;
+
+          const mappedVotes = (voteData || []).map((r) => ({
+            userId: r.user_id,
+            ts: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
+            selections: r.selections || { pack: [], flavour: [] },
+            otherComment: r.other_comment || null,
+          }));
+
+          setVotes(mappedVotes);
+          setHasVoted(mappedVotes.some((x) => x.userId === currentUserId));
+          return;
+        } catch (err) {
+          console.error(err);
+          setSuggestions([]);
+          setVotes([]);
+          setHasVoted(false);
+          return;
+        }
+      }
+
+      try {
+        const storedVotes = getStoredVotes();
+        setVotes(storedVotes);
+        setHasVoted(storedVotes.some((x) => x.userId === currentUserId));
+
+        const storedSuggestions = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
+        const normalizedSuggestions = storedSuggestions.map((item) => normalizeSuggestion(item, currentUserId));
+        setSuggestions(normalizedSuggestions);
+      } catch (err) {
+        console.error(err);
+        setSuggestions([]);
+        setVotes([]);
+      }
+    };
+
+    loadData();
+  }, [authReady, currentUserId]);
 
   const toggleChoice = (category, value) => {
     setSelections((prev) => {
@@ -112,14 +211,50 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
   const submitVote = (e) => {
     e.preventDefault();
-    const current = getStoredVotes().filter((x) => x.userId !== userId);
+    if (supabase && !currentUserId) {
+      alert("We couldn't save your vote. Please try again 💗");
+      return;
+    }
+
     const payload = {
-      userId,
+      poll_id: 'default',
+      user_id: currentUserId,
+      selections,
+      other_comment: otherComment.trim() || null,
+    };
+
+    if (supabase) {
+      (async () => {
+        try {
+          // upsert to ensure a single vote per (poll_id, client_id)
+          await supabase.from(VOTES_TABLE).upsert([payload], { onConflict: 'poll_id,user_id' });
+          const { data: voteData, error: voteError } = await supabase.from(VOTES_TABLE).select('id, poll_id, user_id, selections, other_comment, created_at');
+          if (voteError) throw voteError;
+          const mapped = (voteData || []).map((r) => ({
+            userId: r.user_id,
+            ts: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
+            selections: r.selections || { pack: [], flavour: [] },
+            otherComment: r.other_comment || null,
+          }));
+          setVotes(mapped);
+          setHasVoted(mapped.some((x) => x.userId === currentUserId));
+        } catch (err) {
+          console.error('Supabase vote submit error', err);
+          alert("We couldn't save your vote. Please try again 💗");
+        }
+      })();
+      return;
+    }
+
+    // fallback when supabase not configured: keep localStorage behavior
+    const current = getStoredVotes().filter((x) => x.userId !== currentUserId);
+    const localPayload = {
+      userId: currentUserId,
       ts: Date.now(),
       selections,
       otherComment: otherComment.trim() || null,
     };
-    const updated = [...current, payload];
+    const updated = [...current, localPayload];
     localStorage.setItem(VOTES_KEY, JSON.stringify(updated));
     setVotes(updated);
     setHasVoted(true);
@@ -150,6 +285,40 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
       return;
     }
     try {
+      if (supabase) {
+        if (!currentUserId) {
+          alert("Please wait while we sign you in anonymously.");
+          return;
+        }
+
+        supabase
+          .from(SUGGESTIONS_TABLE)
+          .insert({
+            text: suggestion.trim(),
+            author_name: author,
+            user_id: currentUserId,
+          })
+          .then(async ({ error }) => {
+            if (error) throw error;
+
+            const { data } = await supabase
+              .from(SUGGESTIONS_TABLE)
+              .select("id, user_id, text, author_name, created_at")
+              .order("created_at", { ascending: false })
+              .limit(50);
+
+            setSuggestions((data || []).map((item) => normalizeSuggestion(item, currentUserId)));
+            setSuggestion("");
+            setSuggestionAuthor("");
+            alert("Thanks — suggestion saved and shared.");
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("Could not save suggestion to Supabase. Using local mode instead.");
+          });
+        return;
+      }
+
       const cur = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
       cur.unshift({
         id: Date.now(),
@@ -158,6 +327,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
         authorName: author,
         canRemove: true,
         createdAt: Date.now(),
+        userId: currentUserId,
       });
       localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(cur));
       setSuggestions(cur);
@@ -171,6 +341,25 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
   const removeSuggestion = (id) => {
     try {
+      if (supabase) {
+        if (!currentUserId) return;
+
+        supabase
+          .from(SUGGESTIONS_TABLE)
+          .delete()
+          .eq("id", id)
+          .eq("user_id", currentUserId)
+          .then(({ error }) => {
+            if (error) throw error;
+
+            setSuggestions((prev) => prev.filter((item) => item.id !== id));
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+        return;
+      }
+
       const cur = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
       const next = cur.filter((item) => item.id !== id);
       localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(next));
@@ -332,6 +521,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
           <div className="mt-6 rounded-2xl border bg-white p-6" style={{ borderColor: "#ffeaf4" }}>
             <h3 className="font-extrabold mb-3">Latest suggestions</h3>
+            {isSupabaseConfigured && (
+              <p className="text-xs text-gray-500 mb-3">Shared feed connected. You should now see comments from other users here.</p>
+            )}
             {suggestions.length ? (
               <div className="space-y-3">
                 {suggestions.slice(0, 6).map((item) => (
