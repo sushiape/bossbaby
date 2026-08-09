@@ -16,8 +16,8 @@ const Container = ({ children, className = "" }) => (
 
 const defaultOptions = {
   pack: [
-    "100 ml PET · A concentrated daily shot",
-    "250 ml PET · A small functional drink",
+    "100 ml Bottle · A concentrated daily shot",
+    "250 ml Bottle · A small functional drink",
     "200 ml Can · Cute, compact, concentrated",
     "250 ml Can · More to sip, still sleek",
   ],
