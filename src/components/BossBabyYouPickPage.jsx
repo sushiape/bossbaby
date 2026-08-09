@@ -24,6 +24,25 @@ const defaultOptions = {
   flavour: ["Mixed Berries", "Mango Peach", "Blueberry Coconut", "Vanilla Cream"],
 };
 
+// largest-remainder rounding so the bars in a category add up to exactly 100
+function toPercentages(values) {
+  const total = values.reduce((sum, value) => sum + value, 0);
+  if (!total) return values.map(() => 0);
+
+  const exact = values.map((value) => (value / total) * 100);
+  const percents = exact.map((value) => Math.floor(value));
+  const leftover = 100 - percents.reduce((sum, value) => sum + value, 0);
+  const byRemainder = exact
+    .map((value, index) => ({ index, remainder: value - Math.floor(value) }))
+    .sort((left, right) => right.remainder - left.remainder);
+
+  for (let i = 0; i < leftover; i += 1) {
+    percents[byRemainder[i % byRemainder.length].index] += 1;
+  }
+
+  return percents;
+}
+
 const VOTES_KEY = "youPickVotes";
 const USER_KEY = "youPickUserId";
 const SUGGESTIONS_KEY = "youPickSuggestions";
@@ -309,15 +328,26 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
   };
 
   const tally = (cat) => {
+    const rows = cat === 'flavour' ? [...defaultOptions.flavour, "Other"] : defaultOptions[cat];
     const counts = {};
+    rows.forEach((row) => {
+      counts[row] = 0;
+    });
+
     votes.forEach((v) => {
       (v.selections[cat] || []).forEach((s) => {
-        counts[s] = (counts[s] || 0) + 1;
+        if (s in counts) counts[s] += 1;
       });
-      if (v.otherComment) counts["Other"] = (counts["Other"] || 0) + 1;
+      if (cat === 'flavour' && v.otherComment) counts["Other"] += 1;
     });
-    const total = votes.length || 1;
-    return { counts, total };
+
+    const values = toPercentages(rows.map((row) => counts[row]));
+    const percents = {};
+    rows.forEach((row, index) => {
+      percents[row] = values[index];
+    });
+
+    return { counts, percents };
   };
 
   const submitSuggestion = (e) => {
@@ -497,15 +527,14 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
 
               <div className="space-y-4">
                 {['pack', 'flavour'].map((cat) => {
-                  const { counts, total } = tally(cat);
+                  const { percents } = tally(cat);
                   const options = defaultOptions[cat];
                   return (
                     <div key={cat}>
                       <p className="text-sm font-semibold mb-2">{cat === 'pack' ? 'Bottle type' : 'Flavour'}</p>
                       <div className="space-y-2">
                         {options.map((opt) => {
-                          const count = counts[opt] || 0;
-                          const pct = Math.round((count / total) * 100);
+                          const pct = percents[opt] || 0;
                           if (cat === 'pack') {
                             const title = opt.split('·')[0].trim();
                             const subtitle = opt.split('·')[1] ? opt.split('·')[1].trim() : '';
@@ -545,10 +574,10 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                             <div className="flex-1">
                               <div className="flex items-center justify-between mb-1">
                                 <div className="text-sm font-semibold">Others</div>
-                                <div className="text-xs text-gray-500">{Math.round(((counts['Other'] || 0) / total) * 100)}%</div>
+                                <div className="text-xs text-gray-500">{percents['Other'] || 0}%</div>
                               </div>
                               <div className="h-2 bg-[#f1f1f1] rounded overflow-hidden">
-                                <div style={{ width: `${Math.round(((counts['Other'] || 0) / total) * 100)}%` }} className="h-2 bg-black" />
+                                <div style={{ width: `${percents['Other'] || 0}%` }} className="h-2 bg-black" />
                               </div>
                             </div>
                           </div>
