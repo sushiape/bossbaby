@@ -66,8 +66,9 @@ function getUserId() {
 
 function getMaterialFromPack(label) {
   if (!label) return '';
-  if (label.toLowerCase().includes('pet')) return 'PET (plastic)';
-  if (label.toLowerCase().includes('slim') || label.toLowerCase().includes('can')) return 'Aluminium';
+  const title = label.split('·')[0].toLowerCase();
+  if (title.includes('pet') || title.includes('bottle')) return 'PET (plastic)';
+  if (title.includes('slim') || title.includes('can')) return 'Aluminium';
   return '';
 }
 
