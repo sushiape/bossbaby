@@ -21,7 +21,7 @@ const defaultOptions = {
     "200 ml Can · Cute, compact, concentrated",
     "250 ml Can · More to sip, still sleek",
   ],
-  flavour: ["Mixed Berries", "Mango Peach", "Blueberry Coconut", "Vanilla Cream"],
+  flavour: ["Mixed Berries", "Mango Peach", "Blueberry Coconut", "Vanilla Cream", "Other: Adding to Suggestions"],
 };
 
 // largest-remainder rounding so the bars in a category add up to exactly 100
@@ -84,7 +84,7 @@ function formatSuggestionTimestamp(value) {
 }
 
 function normalizeSuggestion(item, currentUserId) {
-  const authorName = item.author_name || item.authorName || item.author || "You";
+  const authorName = item.author_name || item.authorName || item.author || "Anonymous";
   return {
     id: item.id,
     text: item.text,
@@ -96,9 +96,16 @@ function normalizeSuggestion(item, currentUserId) {
   };
 }
 
+function sortSuggestionsNewestFirst(items) {
+  return [...items].sort((left, right) => {
+    const leftTime = new Date(left.createdAt || left.created_at || left.id).getTime();
+    const rightTime = new Date(right.createdAt || right.created_at || right.id).getTime();
+    return rightTime - leftTime;
+  });
+}
+
 export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
   const [selections, setSelections] = useState({ pack: [], flavour: [] });
-  const [otherComment, setOtherComment] = useState("");
   const [votes, setVotes] = useState([]);
   const [hasVoted, setHasVoted] = useState(false);
   const [suggestion, setSuggestion] = useState("");
@@ -162,70 +169,89 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
   }, []);
 
   useEffect(() => {
-    if (supabase && (!authReady || !currentUserId)) return;
-
-    const loadData = async () => {
-      setIsSuggestionsLoading(true);
-      if (supabase) {
-        try {
-          const { data: suggestionData, error: suggestionError } = await supabase
-            .from(SUGGESTIONS_TABLE)
-            .select('id, user_id, text, author_name, created_at')
-            .order('created_at', { ascending: false })
-            .limit(50);
-
-          if (suggestionError) throw suggestionError;
-          setSuggestions((suggestionData || []).map((item) => normalizeSuggestion(item, currentUserId)));
-
-          const { data: voteData, error: voteError } = await supabase
-            .from(VOTES_TABLE)
-            .select('id, poll_id, user_id, selections, other_comment, created_at');
-
-          if (voteError) throw voteError;
-
-          const mappedVotes = (voteData || []).map((r) => ({
-            userId: r.user_id,
-            ts: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
-            selections: r.selections || { pack: [], flavour: [] },
-            otherComment: r.other_comment || null,
-          }));
-
-          setVotes(mappedVotes);
-          setHasVoted(mappedVotes.some((x) => x.userId === currentUserId));
-          setIsSuggestionsLoading(false);
-          return;
-        } catch (err) {
-          console.error(err);
-          setSuggestions([]);
-          setVotes([]);
-          setHasVoted(false);
-          setIsSuggestionsLoading(false);
-          return;
-        }
-      }
-
+    if (!supabase) {
       try {
         const storedVotes = getStoredVotes();
         setVotes(storedVotes);
         setHasVoted(storedVotes.some((x) => x.userId === currentUserId));
 
         const storedSuggestions = JSON.parse(localStorage.getItem(SUGGESTIONS_KEY) || "[]");
-        const normalizedSuggestions = storedSuggestions.map((item) => normalizeSuggestion(item, currentUserId));
-        setSuggestions(normalizedSuggestions);
-        setIsSuggestionsLoading(false);
+        setSuggestions(sortSuggestionsNewestFirst(storedSuggestions.map((item) => normalizeSuggestion(item, currentUserId))));
       } catch (err) {
         console.error(err);
         setSuggestions([]);
         setVotes([]);
-        setIsSuggestionsLoading(false);
+      }
+      setIsSuggestionsLoading(false);
+      return;
+    }
+
+    const loadVotes = async () => {
+      if (!authReady || !currentUserId) return;
+
+      try {
+        const { data: voteData, error: voteError } = await supabase
+          .from(VOTES_TABLE)
+          .select('id, poll_id, user_id, selections, other_comment, created_at');
+
+        if (voteError) throw voteError;
+
+        const mappedVotes = (voteData || []).map((r) => ({
+          userId: r.user_id,
+          ts: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
+          selections: r.selections || { pack: [], flavour: [] },
+          otherComment: r.other_comment || null,
+        }));
+
+        setVotes(mappedVotes);
+        setHasVoted(mappedVotes.some((x) => x.userId === currentUserId));
+      } catch (err) {
+        console.error(err);
+        setVotes([]);
+        setHasVoted(false);
       }
     };
 
-    loadData();
+    loadVotes();
   }, [authReady, currentUserId]);
 
   useEffect(() => {
-    if (!supabase || !currentUserId) return;
+    if (!supabase) return;
+
+    let cancelled = false;
+
+    const loadSuggestions = async () => {
+      setIsSuggestionsLoading(true);
+      try {
+        const { data: suggestionData, error: suggestionError } = await supabase
+          .from(SUGGESTIONS_TABLE)
+          .select('id, user_id, text, author_name, created_at')
+          .order('created_at', { ascending: false })
+          .limit(50);
+
+        if (suggestionError) throw suggestionError;
+        if (!cancelled) {
+          setSuggestions(sortSuggestionsNewestFirst((suggestionData || []).map((item) => normalizeSuggestion(item, currentUserId))));
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) {
+          setSuggestions([]);
+        }
+      } finally {
+        if (!cancelled) setIsSuggestionsLoading(false);
+      }
+    };
+
+    loadSuggestions();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentUserId]);
+
+  useEffect(() => {
+    if (!supabase) return;
 
     const channel = supabase
       .channel('youpick-suggestions-realtime')
@@ -241,7 +267,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               .limit(50);
 
             if (error) throw error;
-            setSuggestions((data || []).map((item) => normalizeSuggestion(item, currentUserId)));
+            setSuggestions(sortSuggestionsNewestFirst((data || []).map((item) => normalizeSuggestion(item, currentUserId))));
           } catch (error) {
             console.error('Supabase realtime refresh error', error);
           }
@@ -280,7 +306,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
       poll_id: 'default',
       user_id: currentUserId,
       selections,
-      other_comment: otherComment.trim() || null,
+      other_comment: null,
     };
 
     if (supabase) {
@@ -315,7 +341,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
       userId: currentUserId,
       ts: Date.now(),
       selections,
-      otherComment: otherComment.trim() || null,
+      otherComment: null,
     };
     const updated = [...current, localPayload];
     localStorage.setItem(VOTES_KEY, JSON.stringify(updated));
@@ -356,7 +382,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
     if (!suggestion.trim()) return;
     const author = suggestionAuthor.trim();
     if (!author) {
-      alert("Please add your name before sending.");
+      setSuggestionError("Please add your name before sending.");
       return;
     }
     try {
@@ -370,9 +396,9 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
           setIsSuggestionSubmitting(true);
           try {
             const { error } = await supabase.from(SUGGESTIONS_TABLE).insert({
-            text: suggestion.trim(),
-            author_name: author,
-            user_id: currentUserId,
+              text: suggestion.trim(),
+              author_name: author,
+              user_id: currentUserId,
             });
 
             if (error) throw error;
@@ -383,7 +409,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
               .order("created_at", { ascending: false })
               .limit(50);
 
-            setSuggestions((data || []).map((item) => normalizeSuggestion(item, currentUserId)));
+            setSuggestions(sortSuggestionsNewestFirst((data || []).map((item) => normalizeSuggestion(item, currentUserId))));
             setSuggestion("");
             setSuggestionAuthor("");
             alert("Thanks — suggestion saved and shared.");
@@ -408,7 +434,7 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
         userId: currentUserId,
       });
       localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(cur));
-      setSuggestions(cur);
+      setSuggestions(sortSuggestionsNewestFirst(cur));
       setSuggestion("");
       setSuggestionAuthor("");
       alert("Thanks — suggestion saved locally.");
@@ -457,10 +483,10 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
       <section className="py-20 px-4">
         <Container>
           <div className="max-w-[900px] mx-auto text-center mb-12 sm:mb-16">
-            <h1 className="text-3xl sm:text-4xl font-extrabold mb-3" style={{ fontWeight: 800 }}>
+                <h1 className="text-4xl sm:text-5xl font-extrabold mb-4" style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
                     You pick. We make.
             </h1>
-                  <p className="text-sm text-gray-700">Design the next BIG thing with us.</p>
+                  <p className="text-lg text-gray-700 leading-relaxed">Design the next BIG (or petit) thing with us.</p>
               {authError && <p className="mt-3 text-sm text-red-700">{authError}</p>}
           </div>
 
@@ -499,16 +525,11 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
                     </div>
                   </div>
 
-                  <div>
-                    <p className="text-sm font-semibold mb-2">Other (optional)</p>
-                    <input value={otherComment} onChange={(e) => setOtherComment(e.target.value)} placeholder="Add a note or idea" className="w-full rounded-full border px-4 py-2 text-sm" />
-                  </div>
-
                   <div className="flex gap-3">
                     <button type="submit" disabled={isVoteSubmitting} className="rounded-full px-5 py-2 text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed" style={{ backgroundColor: brand.pink }}>
                       {isVoteSubmitting ? 'Saving...' : 'Submit vote'}
                     </button>
-                    <button type="button" onClick={() => { setSelections({ pack: [], flavour: [] }); setOtherComment(""); }} className="rounded-full px-4 py-2 border text-sm disabled:opacity-60 disabled:cursor-not-allowed" disabled={isVoteSubmitting}>
+                    <button type="button" onClick={() => { setSelections({ pack: [], flavour: [] }); }} className="rounded-full px-4 py-2 border text-sm disabled:opacity-60 disabled:cursor-not-allowed" disabled={isVoteSubmitting}>
                       Reset
                     </button>
                   </div>
@@ -591,48 +612,80 @@ export default function BossBabyYouPickPage({ currentPage, setCurrentPage }) {
           </div>
 
           <div className="mt-8 rounded-2xl border bg-white p-6" style={{ borderColor: "#ffeaf4" }}>
-            <h3 className="font-extrabold mb-3">Suggest a flavour or idea</h3>
-            <form onSubmit={submitSuggestion} className="flex gap-3">
-              <div className="flex-1 grid gap-3 sm:grid-cols-[1fr_150px] sm:items-center">
-                <input value={suggestion} onChange={(e) => setSuggestion(e.target.value)} placeholder="Share an idea" className="w-full rounded-full border px-4 py-2 text-sm" />
-                <input value={suggestionAuthor} onChange={(e) => setSuggestionAuthor(e.target.value)} placeholder="Your name" className="w-full rounded-full border px-4 py-2 text-sm sm:max-w-[150px]" />
-              </div>
-              <button disabled={isSuggestionSubmitting} className="rounded-full px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed" style={{ backgroundColor: brand.pink }}>
-                {isSuggestionSubmitting ? 'Sending...' : 'Send'}
-              </button>
-            </form>
-            {suggestionError && <p className="mt-3 text-sm text-red-700">{suggestionError}</p>}
-          </div>
+            <div className="mb-5">
+              <h3 className="font-extrabold text-lg">Share your thoughts! We'd love to hear them!</h3>
+              <p className="text-sm text-gray-600 mt-1">Tell us your favourite flavours and ideas and see them come to life!</p>
+            </div>
 
-          <div className="mt-6 rounded-2xl border bg-white p-6" style={{ borderColor: "#ffeaf4" }}>
-            <h3 className="font-extrabold mb-3">Latest suggestions</h3>
-            {isSupabaseConfigured && (
-              <p className="text-xs text-gray-500 mb-3">Shared feed connected. You should now see comments from other users here.</p>
-            )}
-            {isSuggestionsLoading ? (
-              <p className="text-sm text-gray-600">Loading suggestions…</p>
-            ) : suggestions.length ? (
-              <div className="space-y-3">
-                {suggestions.slice(0, 6).map((item) => (
-                  <div key={item.id} className="rounded-2xl border px-4 py-3" style={{ borderColor: "#f4ddea", backgroundColor: "#fffdfd" }}>
-                    <div className="flex items-center justify-between gap-3 mb-2">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{item.authorName || item.author || 'Anonymous'}</p>
-                      <div className="flex items-center gap-2">
-                        <p className="text-xs text-gray-500">{formatSuggestionTimestamp(item.createdAt || item.id)}</p>
-                        {item.canRemove !== false && (
-                          <button type="button" onClick={() => removeSuggestion(item.id)} className="text-xs font-semibold text-pink-600 hover:underline">
-                            Remove
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-800">{item.text}</p>
-                  </div>
-                ))}
+            <form onSubmit={submitSuggestion} className="space-y-3">
+              <div>
+                <label className="block text-sm font-semibold mb-2" htmlFor="community-suggestion">What should we make next?</label>
+                <textarea
+                  id="community-suggestion"
+                  value={suggestion}
+                  onChange={(e) => setSuggestion(e.target.value)}
+                  placeholder="Share a flavor, format, or packaging idea"
+                  rows={4}
+                  className="w-full rounded-2xl border px-4 py-3 text-sm"
+                />
               </div>
-            ) : (
-              <p className="text-sm text-gray-600">No suggestions yet. Be the first to drop one.</p>
-            )}
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <div className="flex-1">
+                  <label className="block text-sm font-semibold mb-2" htmlFor="community-suggestion-name">Name</label>
+                  <input
+                    id="community-suggestion-name"
+                    value={suggestionAuthor}
+                    onChange={(e) => setSuggestionAuthor(e.target.value)}
+                    placeholder="Your name"
+                    required
+                    className="w-full rounded-full border px-4 py-2 text-sm"
+                  />
+                </div>
+
+                <div className="flex-shrink-0">
+                  <button
+                    type="submit"
+                    disabled={isSuggestionSubmitting}
+                    className="rounded-full px-5 py-2 text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: brand.pink }}
+                  >
+                    {isSuggestionSubmitting ? 'Sending...' : 'Submit suggestion'}
+                  </button>
+                </div>
+              </div>
+
+              {suggestionError && <p className="text-sm text-red-700">{suggestionError}</p>}
+            </form>
+
+            <div className="mt-6 border-t pt-5" style={{ borderColor: '#f4ddea' }}>
+              <h4 className="font-semibold mb-3">Latest suggestions</h4>
+              {isSupabaseConfigured && <p className="text-xs text-gray-500 mb-3">Shared feed connected.</p>}
+              {isSuggestionsLoading ? (
+                <p className="text-sm text-gray-600">Loading suggestions…</p>
+              ) : suggestions.length ? (
+                <div className="space-y-3">
+                  {suggestions.slice(0, 8).map((item) => (
+                    <div key={item.id} className="rounded-2xl border px-4 py-3" style={{ borderColor: "#f4ddea", backgroundColor: "#fffdfd" }}>
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{item.authorName || item.author || 'Anonymous'}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs text-gray-500">{formatSuggestionTimestamp(item.createdAt || item.id)}</p>
+                          {item.canRemove !== false && (
+                            <button type="button" onClick={() => removeSuggestion(item.id)} className="text-xs font-semibold text-pink-600 hover:underline">
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-800 whitespace-pre-wrap">{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600">No suggestions yet. Be the first to drop one.</p>
+              )}
+            </div>
           </div>
         </Container>
       </section>
