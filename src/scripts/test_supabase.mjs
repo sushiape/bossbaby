@@ -82,7 +82,7 @@ async function run() {
   const votePayload = {
     poll_id: pollId,
     user_id: ownerId,
-    selections: { pack: ['100 ml PET · A concentrated daily shot'], flavour: ['Mixed Berries'] },
+    selections: { pack: ['100 ml Bottle · A concentrated daily shot'], flavour: ['Mixed Berries'] },
     other_comment: 'script test',
   };
 
