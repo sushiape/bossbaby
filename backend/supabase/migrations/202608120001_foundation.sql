@@ -157,6 +157,35 @@ begin
 end
 $$;
 
+-- One pre-migration production vote contains no selected option. It carries no
+-- voting signal and cannot satisfy the new resource contract. Remove only that
+-- legacy shape, with a guard against unexpectedly broad data cleanup.
+do $$
+declare
+  empty_vote_count integer;
+begin
+  select count(*)
+  into empty_vote_count
+  from public.youpick_votes
+  where jsonb_typeof(selections) = 'object'
+    and jsonb_typeof(coalesce(selections -> 'pack', '[]'::jsonb)) = 'array'
+    and jsonb_typeof(coalesce(selections -> 'flavour', '[]'::jsonb)) = 'array'
+    and jsonb_array_length(coalesce(selections -> 'pack', '[]'::jsonb)) = 0
+    and jsonb_array_length(coalesce(selections -> 'flavour', '[]'::jsonb)) = 0;
+
+  if empty_vote_count > 1 then
+    raise exception 'Refusing to remove % empty legacy votes; expected at most one', empty_vote_count;
+  end if;
+
+  delete from public.youpick_votes
+  where jsonb_typeof(selections) = 'object'
+    and jsonb_typeof(coalesce(selections -> 'pack', '[]'::jsonb)) = 'array'
+    and jsonb_typeof(coalesce(selections -> 'flavour', '[]'::jsonb)) = 'array'
+    and jsonb_array_length(coalesce(selections -> 'pack', '[]'::jsonb)) = 0
+    and jsonb_array_length(coalesce(selections -> 'flavour', '[]'::jsonb)) = 0;
+end
+$$;
+
 alter table public.suggestions
   validate constraint suggestions_text_length,
   validate constraint suggestions_author_name_length;
