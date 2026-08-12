@@ -107,7 +107,7 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
       } else {
         setStatus("error");
       }
-    } catch (err) {
+    } catch {
       setStatus("error");
     }
   };
