@@ -18,7 +18,7 @@ export default function BossBabyPrivacyPage({ currentPage, setCurrentPage }) {
             <div>
               <h2 className="font-bold mb-2 text-lg">1. Verantwortlicher</h2>
               <p>Verantwortlicher im Sinne der DSGVO ist:</p>
-              <p className="mt-2">Gabrielle Fu<br />Bossbaby<br />c/o TUM Venture Lab Food, Agro &amp; BioTech<br />Alte Akademie 8<br />85354 Freising<br />Deutschland</p>
+              <p className="mt-2">Gabrielle Fu<br />Bossbaby<br />Connollystraße 3<br />80809 München<br />Deutschland</p>
               <p className="mt-2">E-Mail: <a href="mailto:bossbabiezzy@gmail.com" className="underline hover:opacity-70" style={{ color: "#FF89CC" }}>bossbabiezzy@gmail.com</a></p>
             </div>
 
@@ -67,7 +67,7 @@ export default function BossBabyPrivacyPage({ currentPage, setCurrentPage }) {
               <p>Unsere Website verwendet keine Tracking-Cookies oder Analyse-Tools von Drittanbietern. Es werden keine Nutzungsprofile erstellt.</p>
             </div>
 
-            <p className="text-sm text-gray-400 pt-4">Stand: April 2026</p>
+            <p className="text-sm text-gray-400 pt-4">Stand: Mai 2026</p>
           </div>
         </div>
       </section>
