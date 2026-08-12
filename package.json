@@ -10,9 +10,28 @@
     "npm": ">=11"
   },
   "scripts": {
-    "dev": "npm run dev --workspace frontend",
+    "dev": "npm run dev:backend && npm run dev:frontend",
+    "dev:backend": "supabase --workdir backend start",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "stop:backend": "supabase --workdir backend stop",
+    "db:reset": "supabase --workdir backend db reset",
     "build": "npm run build --workspace frontend",
-    "lint": "npm run lint --workspace frontend",
-    "typecheck": "npm run typecheck --workspace frontend"
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "npm run lint --workspace frontend",
+    "lint:backend": "deno lint backend/supabase/functions backend/supabase/tests && deno fmt --check backend/supabase/functions backend/supabase/tests",
+    "typecheck": "npm run typecheck:frontend && npm run typecheck:backend",
+    "typecheck:frontend": "npm run typecheck --workspace frontend",
+    "typecheck:backend": "deno check backend/supabase/functions/you-pick/index.ts",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "npm run test --workspace frontend",
+    "test:backend": "npm run test:backend:unit && npm run test:integration",
+    "test:backend:unit": "deno test --allow-env --allow-read backend/supabase/tests/unit",
+    "test:integration": "node scripts/run-local-supabase-command.mjs deno test --allow-env --allow-net --allow-read backend/supabase/tests/integration",
+    "test:e2e": "node scripts/run-local-supabase-command.mjs npm run test:e2e --workspace frontend",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "deno": "2.2.15",
+    "supabase": "2.113.0"
   }
 }

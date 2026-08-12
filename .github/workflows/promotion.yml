@@ -1,0 +1,55 @@
+name: Promotion CI
+
+on:
+  push:
+    branches: [dev]
+
+concurrency:
+  group: promote-dev
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  full-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.2.15
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run dev:backend
+      - run: npm run check
+      - run: npm run test:e2e
+      - if: always()
+        run: npm run stop:backend
+
+  open-promotion:
+    needs: full-suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create or update exact dev-to-main promotion PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin dev main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/dev)"
+          pr_number="$(gh pr list --base main --head dev --state open --json number --jq '.[0].number // empty')"
+          if [ -z "$pr_number" ]; then
+            gh pr create --base main --head dev --title "Promote dev to main" --body "Automated promotion of exact tested dev head: \`$(git rev-parse HEAD)\`."
+            pr_number="$(gh pr list --base main --head dev --state open --json number --jq '.[0].number')"
+          fi
+          gh pr merge "$pr_number" --auto --merge
