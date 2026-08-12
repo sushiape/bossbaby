@@ -3,6 +3,10 @@ import { lazy, type ComponentType } from "react";
 export type PageId =
   | "landing"
   | "products"
+  | "howitworks"
+  | "community"
+  | "askexpert"
+  | "flavourlab"
   | "youpick"
   | "about"
   | "impressum"
@@ -24,7 +28,11 @@ interface RouteDefinition {
 
 export const routes: RouteDefinition[] = [
   { id: "landing", path: "/", component: lazy(() => import("../pages/BossBabyLandingPage")) },
-  { id: "products", path: "/products", navigationLabel: "Products", component: lazy(() => import("../pages/BossBabyProductsPage")) },
+  { id: "products", path: "/products", navigationLabel: "Drinks", component: lazy(() => import("../pages/BossBabyProductsPage")) },
+  { id: "howitworks", path: "/how-it-works", navigationLabel: "AI machine", component: lazy(() => import("../pages/BossBabyHowItWorksPage")) },
+  { id: "community", path: "/community", navigationLabel: "Bossbabes", component: lazy(() => import("../pages/BossBabyCommunityPage")) },
+  { id: "askexpert", path: "/ask-an-expert", component: lazy(() => import("../pages/BossBabyAskAnExpertPage")) },
+  { id: "flavourlab", path: "/flavour-lab", component: lazy(() => import("../pages/BossBabyFlavourLabPage")) },
   { id: "youpick", path: "/you-pick", component: lazy(() => import("../features/you-pick/components/YouPickPage")) },
   { id: "about", path: "/about", navigationLabel: "About", component: lazy(() => import("../pages/BossBabyAboutPage")) },
   { id: "impressum", path: "/impressum", component: lazy(() => import("../pages/BossBabyImpressumPage")) },

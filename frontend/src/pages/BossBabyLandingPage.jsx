@@ -149,8 +149,14 @@ const affiliations = [
     logo: "https://framerusercontent.com/images/NSMdvir5eKfM69KzEdpQZYBBFNY.svg",
   },
   {
-    name: "Federal Ministry of Agriculture",
+    name: "Federal Ministry of Agriculture, Food and Regional Identity",
     logo: "https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=8",
+  },
+  {
+    name: "Federal Ministry of Economic Affairs and Energy",
+    logo: "https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Bilder/Logos/bmwe-social-preview-logo.jpg?__blob=normal&v=1",
+    logoHeight: 25,
+    logoMaxWidth: 88,
   },
   {
     name: "Rentenbank",
@@ -165,6 +171,10 @@ const affiliations = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Logo_of_the_Technical_University_of_Munich.svg",
   },
   {
+    name: "TUM Incubator",
+    logo: "https://ut-um.files.svdcdn.com/production/media/images/venture-labs/TUM-UTUM-Logos.svg",
+  },
+  {
     name: "LMU Munich",
     logo: "https://cms-cdn.lmu.de/assets/img/Logo_LMU.svg",
   },
@@ -174,7 +184,7 @@ const affiliations = [
   },
   {
     name: "TUM Venture Labs",
-    logo: "https://ut-um.files.svdcdn.com/production/media/images/venture-labs/TUM-UTUM-Logos.svg",
+    logo: "/tum-venture-labs.png",
   },
   {
     name: "TUM Venture Lab FAB",
@@ -303,7 +313,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
       {/* ── 1. Hero ── */}
       <section
         className="text-center py-32 px-4"
-        style={{ backgroundColor: "#FF64BE" }}
+        style={{ backgroundColor: "#FF89CC" }}
       >
         <motion.h1
           className="text-6xl sm:text-7xl md:text-8xl lg:text-[128px] font-extrabold leading-tight mb-6"
@@ -448,7 +458,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
                 <img
                   src={affiliation.logo}
                   alt={affiliation.name}
-                  style={{ height: "20px", width: "auto", maxWidth: "72px", objectFit: "contain" }}
+                  style={{ height: `${affiliation.logoHeight || 20}px`, width: "auto", maxWidth: `${affiliation.logoMaxWidth || 72}px`, objectFit: "contain" }}
                   onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
                 {affiliation.name}
@@ -684,6 +694,14 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               and gives you the right formula on the spot. Just the nutrients you need,
               exactly when you need them.
             </motion.p>
+            <motion.div variants={fadeUp} className="mt-8">
+              <button
+                onClick={() => setCurrentPage("howitworks")}
+                className="inline-flex items-center justify-center rounded-full px-8 py-3 font-bold text-base bg-white text-black hover:bg-gray-100 transition-colors"
+              >
+                Read more
+              </button>
+            </motion.div>
           </motion.div>
         </Container>
       </section>

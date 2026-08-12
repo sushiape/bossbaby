@@ -17,12 +17,12 @@ export default function BossBabyTermsPage({ currentPage, setCurrentPage }) {
 
             <div>
               <h2 className="font-bold mb-2 text-lg">1. Geltungsbereich</h2>
-              <p>Diese Allgemeinen Geschäftsbedingungen gelten für die Nutzung der Website bossbaby.de sowie für alle zukünftigen Vertragsbeziehungen zwischen Gabrielle Fu (Bossbaby) und den Nutzerinnen dieser Website.</p>
+              <p>Diese Allgemeinen Geschäftsbedingungen gelten für die Nutzung der Website hibossbaby.com sowie für alle zukünftigen Vertragsbeziehungen zwischen Gabrielle Fu (Bossbaby) und den Nutzerinnen dieser Website.</p>
             </div>
 
             <div>
               <h2 className="font-bold mb-2 text-lg">2. Anbieter</h2>
-              <p>Gabrielle Fu<br />Bossbaby<br />c/o TUM Venture Lab Food, Agro &amp; BioTech<br />Alte Akademie 8<br />85354 Freising<br />Deutschland</p>
+              <p>Gabrielle Fu<br />Bossbaby<br />Connollystraße 3<br />80809 München<br />Deutschland</p>
               <p className="mt-2">E-Mail: <a href="mailto:bossbabiezzy@gmail.com" className="underline hover:opacity-70" style={{ color: "#FF89CC" }}>bossbabiezzy@gmail.com</a></p>
             </div>
 
@@ -53,10 +53,10 @@ export default function BossBabyTermsPage({ currentPage, setCurrentPage }) {
 
             <div>
               <h2 className="font-bold mb-2 text-lg">8. Anwendbares Recht</h2>
-              <p>Es gilt das Recht der Bundesrepublik Deutschland. Gerichtsstand ist, soweit gesetzlich zulässig, Freising.</p>
+              <p>Es gilt das Recht der Bundesrepublik Deutschland. Gerichtsstand ist, soweit gesetzlich zulässig, München.</p>
             </div>
 
-            <p className="text-sm text-gray-400 pt-4">Stand: April 2026</p>
+            <p className="text-sm text-gray-400 pt-4">Stand: Mai 2026</p>
           </div>
         </div>
       </section>

@@ -8,13 +8,13 @@ const letterVariants = {
   visible: (i) => ({
     y: 0,
     opacity: 1,
-    transition: { duration: 0.55, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.44, delay: i * 0.056, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
 export default function PageLoader({ onComplete }) {
   useEffect(() => {
-    const t = setTimeout(onComplete, 2200);
+    const t = setTimeout(onComplete, 1600);
     return () => clearTimeout(t);
   }, [onComplete]);
 
@@ -49,7 +49,7 @@ export default function PageLoader({ onComplete }) {
       <motion.p
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.5 }}
+        transition={{ delay: 0.72, duration: 0.5 }}
         style={{
           color: "rgba(255,137,204,0.5)",
           fontFamily: "Poppins, sans-serif",
