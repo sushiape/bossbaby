@@ -13,6 +13,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src",
+    "test": "node --test src/**/*.test.ts",
     "typecheck": "tsc --noEmit",
     "vercel-build": "vite build"
   },

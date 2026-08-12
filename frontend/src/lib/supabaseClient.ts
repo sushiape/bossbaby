@@ -1,20 +1,25 @@
 import { createClient, type Session } from "@supabase/supabase-js";
+import { resolveSupabaseConfig } from "./supabaseConfig";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const config = resolveSupabaseConfig(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY,
+);
 
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
-export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey, {
+export const isSupabaseConfigured = config !== null;
+export const supabase = config
+  ? createClient(config.url, config.anonKey, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
     })
   : null;
 
 export function requireSupabaseConfig(): { url: string; anonKey: string } {
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("You Pick backend is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.");
+  if (!config) {
+    throw new Error(
+      "You Pick backend is not configured. Add a valid HTTP(S) VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.",
+    );
   }
-  return { url: supabaseUrl, anonKey: supabaseAnonKey };
+  return config;
 }
 
 export async function currentSession(): Promise<Session | null> {
