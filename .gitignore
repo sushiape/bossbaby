@@ -2,5 +2,17 @@ User Interviews.pdf
 logos
 node_modules
 dist
+frontend/dist
+frontend/playwright-report
+frontend/test-results
 .env
 .env.*
+!.env.example
+!**/.env.example
+.supabase
+backend/supabase/.temp
+backend/supabase/.branches
+backend/supabase/migrations/*_local_lockdown.sql
+.vercel
+frontend/.vercel
+doc/
