@@ -157,6 +157,14 @@ begin
 end
 $$;
 
+alter table public.suggestions
+  validate constraint suggestions_text_length,
+  validate constraint suggestions_author_name_length;
+
+alter table public.youpick_votes
+  validate constraint youpick_votes_poll_id,
+  validate constraint youpick_votes_valid_selections;
+
 create index if not exists suggestions_newest_idx
   on public.suggestions (created_at desc, id desc);
 
