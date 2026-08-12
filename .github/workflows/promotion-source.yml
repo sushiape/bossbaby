@@ -1,0 +1,26 @@
+name: Promotion Source
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  exact-dev-head:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require dev branch at exact current head
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          PR_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$HEAD_REF" = "dev"
+          git fetch origin dev
+          test "$PR_SHA" = "$(git rev-parse origin/dev)"
