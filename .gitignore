@@ -12,6 +12,7 @@ frontend/test-results
 .supabase
 backend/supabase/.temp
 backend/supabase/.branches
+supabase/.temp
 backend/supabase/migrations/*_local_lockdown.sql
 .vercel
 frontend/.vercel

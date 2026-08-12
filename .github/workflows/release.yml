@@ -46,11 +46,11 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          npx vercel@58.9.4 --cwd frontend pull --yes --environment=production --token="$VERCEL_TOKEN"
-          npx vercel@58.9.4 --cwd frontend build --prod --token="$VERCEL_TOKEN"
+          npx vercel@58.9.4 pull --yes --environment=production --token="$VERCEL_TOKEN"
+          npx vercel@58.9.4 build --prod --token="$VERCEL_TOKEN"
       - name: Deploy Vercel frontend
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: npx vercel@58.9.4 --cwd frontend deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        run: npx vercel@58.9.4 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
