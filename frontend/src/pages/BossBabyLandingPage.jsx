@@ -272,16 +272,16 @@ function useCountdown(targetDate) {
 
 function CountdownUnit({ value, label }) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex min-w-0 flex-1 flex-col items-center sm:flex-none">
       <span
-        className="font-extrabold tabular-nums"
-        style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", color: "#fff", lineHeight: 1 }}
+        className="text-2xl font-extrabold tabular-nums sm:text-[clamp(2rem,6vw,3.5rem)]"
+        style={{ color: "#fff", lineHeight: 1 }}
       >
         {String(value).padStart(2, "0")}
       </span>
       <span
-        className="uppercase tracking-widest mt-1"
-        style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.5)", fontWeight: 600 }}
+        className="mt-1 whitespace-nowrap text-[0.55rem] uppercase tracking-[0.14em] sm:text-[0.65rem] sm:tracking-widest"
+        style={{ color: "rgba(255,255,255,0.5)", fontWeight: 600 }}
       >
         {label}
       </span>
@@ -418,7 +418,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             {/* Countdown */}
             <motion.div
               variants={fadeUp}
-              className="inline-flex items-center gap-6 sm:gap-10 px-8 py-6 rounded-2xl"
+              className="flex w-full max-w-full items-center gap-1 rounded-2xl px-2 py-5 sm:inline-flex sm:w-auto sm:gap-10 sm:px-8 sm:py-6"
               style={{
                 background: "rgba(255,255,255,0.05)",
                 border: "1px solid rgba(255,255,255,0.1)",
@@ -426,11 +426,11 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               }}
             >
               <CountdownUnit value={countdown.days} label="days" />
-              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: "2rem", fontWeight: 200, lineHeight: 1 }}>:</span>
+              <span className="shrink-0 text-xl sm:text-[2rem]" style={{ color: "rgba(255,255,255,0.25)", fontWeight: 200, lineHeight: 1 }}>:</span>
               <CountdownUnit value={countdown.hours} label="hours" />
-              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: "2rem", fontWeight: 200, lineHeight: 1 }}>:</span>
+              <span className="shrink-0 text-xl sm:text-[2rem]" style={{ color: "rgba(255,255,255,0.25)", fontWeight: 200, lineHeight: 1 }}>:</span>
               <CountdownUnit value={countdown.minutes} label="min" />
-              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: "2rem", fontWeight: 200, lineHeight: 1 }}>:</span>
+              <span className="shrink-0 text-xl sm:text-[2rem]" style={{ color: "rgba(255,255,255,0.25)", fontWeight: 200, lineHeight: 1 }}>:</span>
               <CountdownUnit value={countdown.seconds} label="sec" />
             </motion.div>
           </motion.div>
