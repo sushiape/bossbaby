@@ -6,6 +6,8 @@ export type WaitlistStatus = "idle" | "submitting" | "success" | "error";
 export function useWaitlistForm() {
   const [status, setStatus] = useState<WaitlistStatus>("idle");
 
+  const resetStatus = () => setStatus("idle");
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatus("submitting");
@@ -19,5 +21,5 @@ export function useWaitlistForm() {
     }
   };
 
-  return { status, handleSubmit };
+  return { status, handleSubmit, resetStatus };
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Header from "../shared/components/Header";
 import Footer from "../shared/components/Footer";
@@ -56,6 +56,78 @@ const drinks = [
       "When everything feels like a bit too much. A calming blend to help you slow down, reset, and feel like yourself again.",
   },
 ];
+
+const moodQuiz = [
+  {
+    key: "goal",
+    question: "What do you want more of today?",
+    options: [
+      { label: "Get-up-and-go energy", value: "power" },
+      { label: "Clear, locked-in focus", value: "energy" },
+      { label: "A fresh, radiant feeling", value: "glow" },
+      { label: "A calmer headspace", value: "calm" },
+    ],
+  },
+  {
+    key: "moment",
+    question: "When do you need your reset most?",
+    options: [
+      { label: "First thing in the morning", value: "power" },
+      { label: "During the 3pm slump", value: "energy" },
+      { label: "Before I go out", value: "glow" },
+      { label: "When the day winds down", value: "calm" },
+    ],
+  },
+  {
+    key: "ritual",
+    question: "Which ritual sounds most like you?",
+    options: [
+      { label: "Workout, shower, go", value: "power" },
+      { label: "Coffee, laptop, deep work", value: "energy" },
+      { label: "Skincare and getting ready", value: "glow" },
+      { label: "Tea, music, switch off", value: "calm" },
+    ],
+  },
+];
+
+const moodResults = {
+  power: {
+    name: "Power up, Babe.",
+    eyebrow: "Your mood match: Power",
+    description: "Your answers point to a bold, get-up-and-go ritual for ambitious days.",
+    color: "#ff6b6b",
+  },
+  energy: {
+    name: "Lock in, Babe.",
+    eyebrow: "Your mood match: Energy",
+    description: "Your answers point to a sharp little ritual for busy, tab-filled days.",
+    color: "#ff8a00",
+  },
+  glow: {
+    name: "Glow up, Babe.",
+    eyebrow: "Your mood match: Glow",
+    description: "Your answers point to a bright ritual that belongs beside your skincare favorites.",
+    color: "#ff2d83",
+  },
+  calm: {
+    name: "Just chill, Babe.",
+    eyebrow: "Your mood match: Calm",
+    description: "Your answers point to a softer ritual for slowing down and making space.",
+    color: "#8b6fcf",
+  },
+};
+
+function getMoodResult(answers) {
+  const scores = { power: 0, energy: 0, glow: 0, calm: 0 };
+  Object.values(answers).forEach((answer) => {
+    if (answer in scores) scores[answer] += 1;
+  });
+
+  return Object.keys(scores).reduce(
+    (best, mood) => (scores[mood] > scores[best] ? mood : best),
+    answers.goal || "power"
+  );
+}
 
 const howItWorks = [
   {
@@ -291,8 +363,22 @@ function CountdownUnit({ value, label }) {
 
 // ── Main component ──────────────────────────────────────────────────────────
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
-  const { status, handleSubmit } = useWaitlistForm();
+  const {
+    status: quizStatus,
+    handleSubmit: handleQuizSubmit,
+    resetStatus: resetQuizStatus,
+  } = useWaitlistForm();
+  const {
+    status: waitlistStatus,
+    handleSubmit: handleWaitlistSubmit,
+  } = useWaitlistForm();
+  const [quizStep, setQuizStep] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizOpen, setQuizOpen] = useState(false);
+  const quizOpenedRef = useRef(false);
   const countdown = useCountdown("2026-10-01T00:00:00");
+  const moodResultKey = getMoodResult(quizAnswers);
+  const moodResult = moodResults[moodResultKey];
 
   // Scroll to hero section after animations complete
   React.useEffect(() => {
@@ -303,6 +389,49 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (quizOpenedRef.current) return;
+      quizOpenedRef.current = true;
+      setQuizOpen(true);
+    }, 10000);
+
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!quizOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setQuizOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [quizOpen]);
+
+  const answerQuizQuestion = (key, value) => {
+    setQuizAnswers((current) => ({ ...current, [key]: value }));
+    setQuizStep((current) => current + 1);
+    resetQuizStatus();
+  };
+
+  const resetQuiz = () => {
+    setQuizAnswers({});
+    setQuizStep(0);
+    resetQuizStatus();
+  };
+
+  const openQuiz = () => {
+    quizOpenedRef.current = true;
+    setQuizOpen(true);
+  };
   return (
     <div
       className="min-h-screen"
@@ -326,7 +455,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </motion.h1>
 
         <motion.p
-          className="text-xl sm:text-2xl text-black/80 mb-16"
+          className="text-xl sm:text-2xl text-black/80 mb-10"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.25, ease: "easeOut" }}
@@ -335,48 +464,231 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </motion.p>
 
         <motion.div
+          className="flex flex-col items-center gap-3"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.45, ease: "easeOut" }}
         >
-          <p className="text-base text-white mb-4 font-medium">
-            Be first to know when we launch.
-          </p>
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4 items-center max-w-2xl mx-auto"
+          <button
+            type="button"
+            onClick={openQuiz}
+            className="rounded-full bg-black px-7 py-4 text-base font-extrabold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-white/60"
           >
-            <div className="flex gap-3 justify-center flex-wrap">
+            FIND YOUR BOSSBABY MOOD
+          </button>
+          <p className="text-sm font-medium text-white/90">Three quick questions. One mood match.</p>
+
+          <div className="my-3 flex w-full max-w-md items-center gap-3" aria-hidden="true">
+            <span className="h-px flex-1 bg-white/45" />
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-white/80">or</span>
+            <span className="h-px flex-1 bg-white/45" />
+          </div>
+
+          <p className="text-base font-semibold text-white">Be first to know when we launch.</p>
+          <form
+            onSubmit={handleWaitlistSubmit}
+            className="flex w-full max-w-2xl flex-col items-center gap-3"
+            aria-live="polite"
+          >
+            <div className="flex w-full flex-col justify-center gap-3 sm:flex-row">
               <input
                 type="email"
                 name="email_address"
                 placeholder="enter your email"
+                autoComplete="email"
                 required
-                className="px-4 py-3 rounded-lg border border-white bg-white text-black/80 text-base"
-                style={{ width: "300px", maxWidth: "80vw" }}
+                className="min-w-0 flex-1 rounded-2xl border border-white bg-white px-5 py-4 text-base text-black/80 shadow-sm outline-none transition placeholder:text-black/35 focus:ring-4 focus:ring-white/50"
               />
               <button
                 type="submit"
-                disabled={status === "submitting"}
-                className="px-6 py-3 rounded-lg border border-white bg-white font-bold text-base hover:bg-pink-100 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
-                style={{ color: "#FF64BE" }}
+                disabled={waitlistStatus === "submitting"}
+                className="rounded-2xl border border-white bg-white px-7 py-4 text-base font-extrabold text-[#FF64BE] shadow-sm transition hover:-translate-y-0.5 hover:bg-pink-50 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {status === "submitting" ? "SENDING..." : "JOIN WAITLIST"}
+                {waitlistStatus === "submitting" ? "SENDING..." : "JOIN WAITLIST"}
               </button>
             </div>
-            {status === "success" && (
-              <p className="text-sm text-green-100 mt-1">
+            {waitlistStatus === "success" && (
+              <p className="text-sm font-semibold text-white">
                 You&apos;re on the waitlist ✨ We&apos;ll email you when Bossbaby launches.
               </p>
             )}
-            {status === "error" && (
-              <p className="text-sm text-red-100 mt-1">
+            {waitlistStatus === "error" && (
+              <p className="text-sm font-semibold text-red-100">
                 Something went wrong. Please try again in a moment.
               </p>
             )}
           </form>
         </motion.div>
       </section>
+
+      {quizOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-[#2a111f]/65 p-3 backdrop-blur-md sm:p-5"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mood-quiz-title"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setQuizOpen(false);
+          }}
+        >
+          <motion.div
+            className="relative my-auto max-h-[calc(100vh-1.5rem)] w-full max-w-2xl overflow-y-auto rounded-[32px] border border-white/80 p-6 text-left shadow-[0_30px_90px_rgba(70,15,48,0.35)] sm:max-h-[calc(100vh-2.5rem)] sm:p-9"
+            style={{
+              background: "linear-gradient(145deg, #FFD6E9 0%, #FFE8F2 58%, #FFFFFF 100%)",
+            }}
+            initial={{ opacity: 0, y: 24, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+          >
+            <div
+              className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-white/45 blur-2xl"
+              aria-hidden="true"
+            />
+            <div
+              className="pointer-events-none absolute -bottom-24 -left-16 h-52 w-52 rounded-full bg-[#FF89CC]/20 blur-3xl"
+              aria-hidden="true"
+            />
+
+            <button
+              type="button"
+              onClick={() => setQuizOpen(false)}
+              autoFocus
+              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/80 bg-white/65 text-xl font-bold text-black/60 shadow-sm backdrop-blur-md transition hover:rotate-3 hover:bg-white hover:text-black focus:outline-none focus:ring-4 focus:ring-white/80"
+              aria-label="Close mood quiz"
+            >
+              ×
+            </button>
+
+            <div className="relative mb-8 flex items-center gap-3 pr-12">
+              <span className="text-2xl font-extrabold tracking-[-0.04em] text-black">bossbaby</span>
+              <span className="rounded-full bg-black px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-white">
+                mood finder
+              </span>
+            </div>
+
+            {quizStep < moodQuiz.length ? (
+              <div className="relative">
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <p id="mood-quiz-title" className="text-xs font-extrabold uppercase tracking-[0.18em] text-black/45">
+                    Find your perfect match
+                  </p>
+                  <p className="rounded-full bg-white/65 px-3 py-1 text-xs font-extrabold text-black/55 shadow-sm">
+                    0{quizStep + 1} / 0{moodQuiz.length}
+                  </p>
+                </div>
+
+                <div
+                  className="mb-8 h-2 overflow-hidden rounded-full bg-white/65 shadow-inner"
+                  aria-hidden="true"
+                >
+                  <div
+                    className="h-full rounded-full shadow-sm transition-all duration-300"
+                    style={{
+                      width: `${((quizStep + 1) / moodQuiz.length) * 100}%`,
+                      backgroundColor: brand.pink,
+                    }}
+                  />
+                </div>
+
+                <fieldset>
+                  <legend className="mb-6 max-w-lg text-3xl font-extrabold leading-[1.08] tracking-[-0.025em] text-black sm:text-4xl">
+                    {moodQuiz[quizStep].question}
+                  </legend>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {moodQuiz[quizStep].options.map((option) => (
+                      <button
+                        key={option.label}
+                        type="button"
+                        onClick={() => answerQuizQuestion(moodQuiz[quizStep].key, option.value)}
+                        className="group flex min-h-[72px] items-center justify-between gap-4 rounded-[20px] border border-white/90 bg-white/70 px-5 py-4 text-left text-sm font-extrabold text-black shadow-[0_8px_24px_rgba(163,79,126,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-white hover:bg-white hover:shadow-[0_14px_30px_rgba(163,79,126,0.14)] focus:outline-none focus:ring-4 focus:ring-white/80"
+                      >
+                        <span>{option.label}</span>
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FF89CC] text-base text-white transition group-hover:translate-x-0.5">
+                          →
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+
+                {quizStep > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setQuizStep((current) => current - 1)}
+                    className="mt-6 rounded-full border border-black/10 bg-white/45 px-4 py-2 text-sm font-bold text-black/55 transition hover:bg-white hover:text-black"
+                  >
+                    Back
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div aria-live="polite" className="relative">
+                <p
+                  id="mood-quiz-title"
+                  className="mb-4 inline-block rounded-full px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-white shadow-sm"
+                  style={{ backgroundColor: moodResult.color }}
+                >
+                  {moodResult.eyebrow}
+                </p>
+                <h2 className="mb-3 text-4xl font-extrabold leading-none tracking-[-0.035em] text-black sm:text-5xl">
+                  {moodResult.name}
+                </h2>
+                <p className="mb-7 max-w-lg leading-relaxed text-black/60">
+                  {moodResult.description}
+                </p>
+
+                {quizStatus === "success" ? (
+                  <div className="rounded-[22px] border border-white/90 bg-white/70 p-5 text-green-800 shadow-sm backdrop-blur-md">
+                    <p className="font-extrabold">You&apos;re on the waitlist.</p>
+                    <p className="mt-1 text-sm">Your {moodResultKey} match is saved. Watch your inbox for launch news.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleQuizSubmit} className="space-y-3 rounded-[24px] border border-white/90 bg-white/55 p-4 shadow-sm backdrop-blur-md sm:p-5">
+                    <input type="hidden" name="mood_result" value={moodResultKey} />
+                    <input type="hidden" name="quiz_goal" value={quizAnswers.goal || ""} />
+                    <input type="hidden" name="quiz_moment" value={quizAnswers.moment || ""} />
+                    <input type="hidden" name="quiz_ritual" value={quizAnswers.ritual || ""} />
+                    <label htmlFor="quiz-email" className="block text-sm font-bold text-black">
+                      Save your result and get your launch invite
+                    </label>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <input
+                        id="quiz-email"
+                        type="email"
+                        name="email_address"
+                        placeholder="you@example.com"
+                        autoComplete="email"
+                        required
+                        className="min-w-0 flex-1 rounded-2xl border border-white bg-white px-4 py-3 text-base text-black shadow-sm outline-none transition placeholder:text-black/30 focus:border-[#FF89CC] focus:ring-4 focus:ring-[#FF89CC]/15"
+                      />
+                      <button
+                        type="submit"
+                        disabled={quizStatus === "submitting"}
+                        className="rounded-2xl bg-black px-6 py-3 text-base font-extrabold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-70"
+                      >
+                        {quizStatus === "submitting" ? "SENDING..." : "JOIN WAITLIST"}
+                      </button>
+                    </div>
+                    {quizStatus === "error" && (
+                      <p className="text-sm font-medium text-red-600">
+                        Something went wrong. Please try again in a moment.
+                      </p>
+                    )}
+                  </form>
+                )}
+
+                <button
+                  type="button"
+                  onClick={resetQuiz}
+                  className="mt-5 rounded-full border border-black/10 bg-white/45 px-4 py-2 text-sm font-bold text-black/55 transition hover:bg-white hover:text-black"
+                >
+                  Retake quiz
+                </button>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      )}
 
       {/* ── 1b. Launch date ── */}
       <section
