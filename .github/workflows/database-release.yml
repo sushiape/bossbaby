@@ -1,0 +1,112 @@
+name: Database Migration Release
+
+on:
+  workflow_call:
+    inputs:
+      deploy:
+        description: Apply validated migrations to production.
+        required: false
+        default: false
+        type: boolean
+      expected_sha:
+        description: Commit to validate and release.
+        required: false
+        default: ""
+        type: string
+      allow_historical_main:
+        description: Allow an ordered dispatcher to release an earlier main commit.
+        required: false
+        default: false
+        type: boolean
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Apply validated migrations to production.
+        required: true
+        default: true
+        type: boolean
+
+concurrency:
+  group: ${{ inputs.deploy && 'production-release-unit' || format('database-validation-{0}', github.run_id) }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.expected_sha || github.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.114.0
+      - name: Enforce immutable production migrations
+        run: bash .github/scripts/check-migration-immutability.sh
+      - name: Start clean local Postgres
+        run: supabase db start --workdir backend
+      - name: Rebuild from migrations without seed data
+        run: supabase db reset --workdir backend --local --no-seed
+      - name: Stop local Supabase
+        if: always()
+        run: supabase stop --workdir backend --no-backup
+
+  deploy:
+    name: Deploy production
+    if: inputs.deploy
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: Production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.expected_sha || github.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.114.0
+      - name: Verify deployable main revision
+        env:
+          ALLOW_HISTORICAL_MAIN: ${{ inputs.allow_historical_main }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          if [[ "$ALLOW_HISTORICAL_MAIN" == "true" ]]; then
+            git merge-base --is-ancestor HEAD origin/main
+          else
+            test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          fi
+      - name: Link production Supabase project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: supabase --workdir backend link --project-ref "$SUPABASE_PROJECT_REF"
+      - name: Preview pending migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase --workdir backend db push --dry-run
+      - name: Apply pending migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase --workdir backend db push
+      - name: Verify remote migration history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          supabase --workdir backend migration list --linked
+          supabase --workdir backend db push --dry-run
