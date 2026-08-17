@@ -26,6 +26,13 @@ interface RouteDefinition {
   navigationLabel?: string;
 }
 
+export interface NavigationDefinition {
+  id: PageId | "app";
+  path: string;
+  navigationLabel: string;
+  documentNavigation?: boolean;
+}
+
 export const routes: RouteDefinition[] = [
   { id: "landing", path: "/", component: lazy(() => import("../pages/BossBabyLandingPage")) },
   { id: "products", path: "/products", navigationLabel: "Drinks", component: lazy(() => import("../pages/BossBabyProductsPage")) },
@@ -41,7 +48,16 @@ export const routes: RouteDefinition[] = [
   { id: "accessibility", path: "/accessibility", component: lazy(() => import("../pages/BossBabyAccessibilityPage")) },
 ];
 
-export const navigationRoutes = routes.filter((route) => route.navigationLabel);
+const appNavigation: NavigationDefinition = {
+  id: "app",
+  path: "/app",
+  navigationLabel: "App",
+  documentNavigation: true,
+};
+
+export const navigationRoutes: NavigationDefinition[] = routes
+  .filter((route): route is RouteDefinition & { navigationLabel: string } => Boolean(route.navigationLabel))
+  .flatMap((route) => route.id === "about" ? [appNavigation, route] : [route]);
 export const legalRoutes = routes.filter((route) =>
   (["impressum", "privacy", "terms", "accessibility"] as PageId[]).includes(route.id)
 );
