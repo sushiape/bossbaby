@@ -16,7 +16,7 @@ export const supabase = config
 export function requireSupabaseConfig(): { url: string; anonKey: string } {
   if (!config) {
     throw new Error(
-      "You Pick backend is not configured. Add a valid HTTP(S) VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.",
+      "Supabase backend is not configured. Add a valid HTTP(S) VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.",
     );
   }
   return config;

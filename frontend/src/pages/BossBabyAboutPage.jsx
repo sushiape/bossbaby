@@ -329,6 +329,8 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
                 type="email"
                 name="email_address"
                 placeholder="enter your email"
+                aria-label="Email address"
+                autoComplete="email"
                 required
                 className="px-5 py-3.5 rounded-xl border border-gray-700 bg-white text-black text-sm"
                 style={{ minWidth: "260px", maxWidth: "80vw" }}
@@ -345,16 +347,18 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
               </button>
             </motion.form>
 
-            {status === "success" && (
-              <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
-                You&apos;re on the list. We&apos;ll be in touch.
-              </p>
-            )}
-            {status === "error" && (
-              <p className="mt-4 text-sm text-red-400">
-                Something went wrong. Please try again.
-              </p>
-            )}
+            <div aria-live="polite">
+              {status === "success" && (
+                <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  You&apos;re on the list. We&apos;ll be in touch.
+                </p>
+              )}
+              {status === "error" && (
+                <p className="mt-4 text-sm text-red-400">
+                  Something went wrong. Please try again.
+                </p>
+              )}
+            </div>
           </motion.div>
         </Container>
       </section>

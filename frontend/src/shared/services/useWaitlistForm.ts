@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { submitWaitlist } from "./formspree";
+import { createWaitlistSubscription } from "./waitlistApi";
 
 export type WaitlistStatus = "idle" | "submitting" | "success" | "error";
 
@@ -10,8 +10,13 @@ export function useWaitlistForm() {
     event.preventDefault();
     setStatus("submitting");
     const form = event.currentTarget;
+    const email = new FormData(form).get("email_address");
+    if (typeof email !== "string") {
+      setStatus("error");
+      return;
+    }
     try {
-      await submitWaitlist(new FormData(form));
+      await createWaitlistSubscription(email);
       setStatus("success");
       form.reset();
     } catch {
