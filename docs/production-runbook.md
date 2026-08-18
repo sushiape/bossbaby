@@ -4,9 +4,8 @@
 
 The workflow files must reach GitHub before their checks can be made mandatory. Bootstrap in this order:
 
-1. Have a repository administrator enable auto-merge and allow GitHub Actions to create and approve pull requests.
-2. Restrict the `Production` environment to deployments from `main` only, with no administrator bypass. No separate reviewer approval is required.
-3. Confirm the `Production` environment contains all required secret names:
+1. Restrict the `Production` environment to deployments from `main` only, with no administrator bypass. No separate reviewer approval is required.
+2. Confirm the `Production` environment contains all required secret names:
    - `SUPABASE_ACCESS_TOKEN`
    - `SUPABASE_PROJECT_REF`
    - `SUPABASE_DB_PASSWORD`
@@ -14,11 +13,11 @@ The workflow files must reach GitHub before their checks can be made mandatory. 
    - `VERCEL_PROJECT_ID`
    - `VERCEL_TOKEN`
 
-4. Confirm Supabase native Git deployment is disabled. Root `vercel.json` disables every Vercel Git deployment once this change reaches Vercel.
-5. Open the CI/CD implementation as a feature PR into `dev`, let `Feature CI` complete, obtain one approval, and merge it.
-6. Let `Promote Dev` create the Promotion PR and publish its stable check names. Its own gate still prevents merge before full CI passes.
-7. Protect `dev`: require pull requests, the observed `Feature CI / Gate` check, one approval, conversation resolution, and no force pushes or administrator bypass.
-8. Protect `main`: require pull requests, the observed `Promote Dev / Gate` check, conversation resolution, and no force pushes or administrator bypass.
+3. Confirm Supabase native Git deployment is disabled. Root `vercel.json` disables every Vercel Git deployment once this change reaches Vercel.
+4. Open the CI/CD implementation as a feature PR into `dev`, let `Feature CI` complete, obtain one approval, and merge it.
+5. Manually open the first `dev` → `main` Promotion PR so `Promote Dev` publishes its stable check names.
+6. Protect `dev`: require pull requests, the observed `Feature CI / Gate` check, one approval, conversation resolution, and no force pushes or administrator bypass.
+7. Protect `main`: require pull requests, the observed `Promote Dev / Gate` check, conversation resolution, and no force pushes or administrator bypass.
 
 Do not add required checks before their first GitHub run; an incorrect or unpublished check name can lock a protected branch.
 
@@ -36,13 +35,13 @@ The PR requires one human approval. Feature PRs may use squash merge.
 
 ### Promotion
 
-Every update to `dev` starts `Promote Dev`. It creates or updates one `dev` → `main` Promotion PR, verifies that its head is the exact current `dev` SHA, runs all three validations, and enables a regular merge commit only after the `Promote Dev / Gate` check passes.
+When the integrated `dev` state is ready for production, a maintainer manually opens a `dev` → `main` Promotion PR. `Promote Dev` verifies that its head is the exact current `dev` SHA and runs all three validations. The maintainer merges it with a regular merge commit only after the `Promote Dev / Gate` check passes.
 
-After merge, the workflow explicitly dispatches `Production Release` with the previous and new `main` SHAs. This explicit handoff is required because GitHub suppresses most workflow events created by `GITHUB_TOKEN`.
+The resulting push to `main` starts `Production Release` automatically with the previous and new `main` SHAs from the push event.
 
 ### Production
 
-`Production Release` accepts dispatches only from `github-actions[bot]`, validates the ordered `main` range, and detects runtime changes. It first validates every affected unit in parallel and requires the Production Validation Gate to pass. It then invokes affected deployment modes in this order:
+`Production Release` runs only for pushes to `main`, validates the ordered push range, and detects runtime changes. It first validates every affected unit in parallel and requires the Production Validation Gate to pass. It then invokes affected deployment modes in this order:
 
 1. Database migrations
 2. Edge Functions

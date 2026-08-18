@@ -24,12 +24,12 @@ flowchart TD
     F --> G
     G --> H["Merge feature into dev"]
 
-    H --> I["Create or update dev → main Promotion PR"]
+    H --> I["Maintainer opens dev → main Promotion PR when ready"]
     I --> J["Verify exact current dev SHA"]
     J --> K["Run complete validation suite"]
     K --> L["Promote Dev Gate"]
-    L --> M["Auto-merge with regular merge commit"]
-    M --> N["Dispatch Production Release with before/after SHAs"]
+    L --> M["Maintainer merges with regular merge commit"]
+    M --> N["Main push starts Production Release"]
 
     N --> O["Detect deployment changes"]
     O -->|"migration change"| P["Validate database"]
@@ -55,8 +55,8 @@ Skipped units do not create dependencies: a frontend-only promotion runs only th
 | Workflow | Trigger | Responsibility |
 |---|---|---|
 | [`feature-ci.yml`](../.github/workflows/feature-ci.yml) | PR into `dev` | Detect relevant units, call their validation modes, expose stable `Feature CI / Gate` |
-| [`promote-dev.yml`](../.github/workflows/promote-dev.yml) | Update to `dev` | Maintain Promotion PR, run complete CI, merge exact `dev`, dispatch production |
-| [`production-release.yml`](../.github/workflows/production-release.yml) | Bot-only explicit dispatch | Detect production changes and invoke affected units in dependency order |
+| [`promote-dev.yml`](../.github/workflows/promote-dev.yml) | Manually opened PR from `dev` to `main` | Verify exact current `dev` and run the complete promotion suite |
+| [`production-release.yml`](../.github/workflows/production-release.yml) | Push to `main` | Detect production changes and invoke affected units in dependency order |
 | [`database-release.yml`](../.github/workflows/database-release.yml) | Reusable call or manual recovery | Enforce immutable history, rebuild locally, push migrations, verify remote history |
 | [`edge-functions-release.yml`](../.github/workflows/edge-functions-release.yml) | Reusable call or manual recovery | Run Deno checks/tests, deploy all local functions, smoke-test safe read endpoint |
 | [`webapp-release.yml`](../.github/workflows/webapp-release.yml) | Reusable call or manual recovery | Run frontend gates, build with Vercel, deploy the prebuilt artifact, smoke-test routes |
@@ -75,6 +75,7 @@ Documentation, test-only, lint-only, and Actions-only changes can be validated b
 
 - Production commits come only from an exact-current-`dev` Promotion PR.
 - Feature PRs require relevant CI and one approval; promotion repeats the complete suite.
+- A maintainer decides when the integrated `dev` state is ready, then manually opens and merges the Promotion PR after its gate passes.
 - Production revalidates all selected units in parallel against the exact release commit before any deployment starts.
 - Migrations already present on `main` cannot be edited or deleted.
 - Production dispatchers queue and never cancel an active release.
@@ -86,4 +87,4 @@ Documentation, test-only, lint-only, and Actions-only changes can be validated b
 
 ## Bootstrap status
 
-The repository currently has no branch protection and auto-merge is disabled. Workflow files must be published and their check names observed before enabling the rules described in the [production runbook](production-runbook.md). Applying those rules earlier could make `dev` and `main` unmergeable.
+The repository currently has no branch protection. Workflow files must be published and their check names observed before enabling the rules described in the [production runbook](production-runbook.md). Applying those rules earlier could make `dev` and `main` unmergeable.
