@@ -1,0 +1,3 @@
+# Reserve the App Namespace for the restricted webapp
+
+BossBaby reserves `/app` and every descendant path exclusively for the separately deployed `bossbabyremix` webapp, with Vercel forwarding prefix-stripped requests while preserving the public `hibossbaby.com/app...` URL. The website uses a document navigation rather than its React router because the boundary spans independently built applications; this requires `bossbabyremix` to generate browser-facing URLs beneath `/app` while accepting upstream paths without that prefix, and lets nested app routes refresh without falling into the public website's SPA fallback.

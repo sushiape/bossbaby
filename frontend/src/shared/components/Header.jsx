@@ -13,11 +13,13 @@ export default function Header({ currentPage, setCurrentPage }) {
           ? "bg-black text-white"
           : "text-gray-700 hover:bg-[#FF89CC] hover:text-white"
       }`}
-      onClick={(event) => {
-        event.preventDefault();
-        setCurrentPage(route.id);
-        if (mobile) setMobileOpen(false);
-      }}
+      onClick={route.documentNavigation
+        ? undefined
+        : (event) => {
+            event.preventDefault();
+            setCurrentPage(route.id);
+            if (mobile) setMobileOpen(false);
+          }}
     >
       {route.navigationLabel}
     </a>

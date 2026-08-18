@@ -1,0 +1,115 @@
+name: Webapp Release
+
+on:
+  workflow_call:
+    inputs:
+      deploy:
+        description: Deploy the validated webapp to Vercel production.
+        required: false
+        default: false
+        type: boolean
+      expected_sha:
+        description: Commit to validate and release.
+        required: false
+        default: ""
+        type: string
+      allow_historical_main:
+        description: Allow an ordered dispatcher to release an earlier main commit.
+        required: false
+        default: false
+        type: boolean
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy the validated webapp to Vercel production.
+        required: true
+        default: true
+        type: boolean
+
+concurrency:
+  group: ${{ inputs.deploy && 'production-release-unit' || format('webapp-validation-{0}', github.run_id) }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.expected_sha || github.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - name: Build validation artifact
+        if: ${{ !inputs.deploy }}
+        run: npm run build
+
+  deploy:
+    name: Deploy production
+    if: inputs.deploy
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: Production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.expected_sha || github.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Verify deployable main revision
+        env:
+          ALLOW_HISTORICAL_MAIN: ${{ inputs.allow_historical_main }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          if [[ "$ALLOW_HISTORICAL_MAIN" == "true" ]]; then
+            git merge-base --is-ancestor HEAD origin/main
+          else
+            test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          fi
+      - name: Build validated Vercel production artifact
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npx --yes vercel@59.1.3 pull --yes --environment=production --token="$VERCEL_TOKEN"
+          npx --yes vercel@59.1.3 build --prod --token="$VERCEL_TOKEN"
+      - name: Deploy validated artifact
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: npx --yes vercel@59.1.3 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+      - name: Smoke-test production routes
+        run: |
+          set -euo pipefail
+          for route in / /app; do
+            passed=false
+            for attempt in {1..12}; do
+              if curl --fail --silent --show-error --location "https://hibossbaby.com${route}" >/dev/null; then
+                passed=true
+                break
+              fi
+              sleep 5
+            done
+            if [[ "$passed" != "true" ]]; then
+              echo "Webapp smoke test failed for ${route}." >&2
+              exit 1
+            fi
+          done
