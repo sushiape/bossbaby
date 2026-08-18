@@ -157,3 +157,39 @@
   - Repository implementation and documentation are complete and verified.
   - GitHub governance was not mutated because the connected account has `WRITE`, not `ADMIN`, permission and required checks do not exist remotely yet.
   - The exact safe bootstrap sequence is documented in `docs/production-runbook.md`.
+
+## Session: 2026-08-18
+
+### Phase 10: Diagnose first production execution
+- **Status:** complete
+- Actions taken:
+  - Inspected PR #10, the successful `Promote Dev` run, promotion PR #11, and failed Production Release run `32119036908`.
+  - Confirmed promotion validation was parallel and promotion deployment skips were intentional.
+  - Confirmed production selected all units, then failed at Supabase linking because the called workflow received empty secret values.
+  - Confirmed the `Production` environment admitted the `main` deployment and still contains all six expected secret names.
+  - Verified current GitHub reusable-workflow secret guidance and identified the missing secret declarations.
+
+### Phase 11: Correct production release workflow
+- **Status:** complete
+- Actions taken:
+  - Preserved `Production` environment secrets and main-only protection.
+  - Added independent validation and deployment modes to every unit workflow.
+  - Declared the Supabase and Vercel secret contracts consumed by reusable workflows.
+  - Added explicit non-empty credential checks before any production mutation.
+  - Changed Production Release to run selected validations in parallel behind a validation gate, followed by ordered database, Edge Function, and webapp deployments.
+  - Updated ADR 0013, the pipeline report, and the production runbook.
+
+### Phase 12: Verify and hand off recovery
+- **Status:** complete locally
+- Validation:
+  - Actionlint 1.7.12 passes all workflow files.
+  - Shell syntax and whitespace checks pass.
+  - Frontend lint, type-check, 4 tests, and production build pass.
+  - Deno 2.9.5 format, lint, type-check, and 9 Edge Function tests pass.
+  - The failed release range selects database, Edge Functions, and webapp for validation and deployment.
+  - The workflow-only corrective range selects all validations and no application deployment.
+  - Mermaid CLI 11.12.0 renders the updated pipeline graph successfully.
+- Recovery handoff:
+  - Publish the correction through a feature PR into `dev`.
+  - Let automated promotion merge it into `main`; the workflow-only range will not deploy application units.
+  - On corrected `main`, manually run Database Migration Release, Edge Function Release, and Webapp Release with validation and deployment enabled, in that order, to recover the failed cross-cutting release.

@@ -120,3 +120,16 @@
 - Change-detection fixtures correctly distinguished webapp runtime, Edge test-only, and database migration changes.
 - Migration immutability accepted unchanged production history and rejected a modified production migration.
 - Live read-only smoke checks passed for the production Edge Function, homepage, and `/app`.
+- The 2026-08-18 correction passes Actionlint 1.7.12, shell syntax, whitespace, frontend lint/type-check/4 tests/build, Deno format/lint/type-check/9 tests, change-classification fixtures, and Mermaid 11.12.0 rendering.
+
+## Production incident: 2026-08-18
+- PR #10 merged into `dev`; `Promote Dev` validated database, Edge Functions, and webapp concurrently, merged promotion PR #11 into `main`, and dispatched Production Release.
+- The deployment rows shown as skipped in `Promote Dev` were intentional because all three calls used `deploy: false`.
+- Production Release run `32119036908` selected all three release units. Database validation passed, but database deployment failed while linking Supabase because `SUPABASE_ACCESS_TOKEN` and `SUPABASE_PROJECT_REF` evaluated to empty strings.
+- The `Production` environment contained all six expected secret names, the deployment was admitted for `main`, and the same secrets predated successful legacy release runs. The failure is therefore in the new reusable-workflow secret contract rather than change detection or the environment branch policy.
+- GitHub documents that reusable workflows declare consumed secrets under `on.workflow_call.secrets`; secrets are not automatically passed merely because the called file references the `secrets` context. A called deployment job may remain attached to an environment and use that environment's secrets.
+- Edge Functions and Webapp were skipped after the database failure by the dispatcher's fail-closed dependency conditions.
+- The initial dispatcher serialized each complete validate-and-deploy reusable workflow. This preserves deployment order but unnecessarily serializes production validation. The correction must run selected validations in parallel, then run selected deployments in database → Edge Functions → webapp order.
+- The correction declares each reusable workflow's secret contract, retains the deployment job's `Production` environment, and checks every required value before the first remote mutation.
+- The correction adds separate validation and deployment modes. Production calls selected validation modes concurrently, gates their exact results, then calls deploy-only modes in dependency order.
+- The old failed Actions run must not be rerun because it remains bound to the faulty workflow revision. The corrective promotion is workflow-only and intentionally deploys no application unit, so recovery requires current-`main` manual unit runs in database → Edge Functions → webapp order.

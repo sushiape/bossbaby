@@ -50,41 +50,108 @@ jobs:
           "${{ inputs.after_sha }}"
           production
 
-  database:
-    name: Database
+  database-validation:
+    name: Database validation
     if: needs.changes.outputs.database == 'true'
     needs: changes
     uses: ./.github/workflows/database-release.yml
     with:
+      validate: true
+      deploy: false
+      expected_sha: ${{ inputs.after_sha }}
+
+  edge-functions-validation:
+    name: Edge Functions validation
+    if: needs.changes.outputs.edge_functions == 'true'
+    needs: changes
+    uses: ./.github/workflows/edge-functions-release.yml
+    with:
+      validate: true
+      deploy: false
+      expected_sha: ${{ inputs.after_sha }}
+
+  webapp-validation:
+    name: Webapp validation
+    if: needs.changes.outputs.webapp == 'true'
+    needs: changes
+    uses: ./.github/workflows/webapp-release.yml
+    with:
+      validate: true
+      deploy: false
+      expected_sha: ${{ inputs.after_sha }}
+
+  validation-gate:
+    name: Production validation gate
+    if: always()
+    needs: [changes, database-validation, edge-functions-validation, webapp-validation]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every selected production validation
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          DATABASE_SELECTED: ${{ needs.changes.outputs.database }}
+          DATABASE_RESULT: ${{ needs.database-validation.result }}
+          EDGE_SELECTED: ${{ needs.changes.outputs.edge_functions }}
+          EDGE_RESULT: ${{ needs.edge-functions-validation.result }}
+          WEBAPP_SELECTED: ${{ needs.changes.outputs.webapp }}
+          WEBAPP_RESULT: ${{ needs.webapp-validation.result }}
+        run: |
+          set -euo pipefail
+          test "$CHANGES_RESULT" = "success"
+          require_expected_result() {
+            local selected="$1"
+            local result="$2"
+            if [[ "$selected" == "true" ]]; then
+              test "$result" = "success"
+            else
+              test "$result" = "skipped"
+            fi
+          }
+          require_expected_result "$DATABASE_SELECTED" "$DATABASE_RESULT"
+          require_expected_result "$EDGE_SELECTED" "$EDGE_RESULT"
+          require_expected_result "$WEBAPP_SELECTED" "$WEBAPP_RESULT"
+
+  database:
+    name: Database deployment
+    if: >-
+      always() &&
+      needs.changes.outputs.database == 'true' &&
+      needs.validation-gate.result == 'success'
+    needs: [changes, validation-gate]
+    uses: ./.github/workflows/database-release.yml
+    with:
+      validate: false
       deploy: true
       expected_sha: ${{ inputs.after_sha }}
       allow_historical_main: true
 
   edge-functions:
-    name: Edge Functions
+    name: Edge Functions deployment
     if: >-
       always() &&
-      needs.changes.result == 'success' &&
       needs.changes.outputs.edge_functions == 'true' &&
+      needs.validation-gate.result == 'success' &&
       (needs.database.result == 'success' || needs.database.result == 'skipped')
-    needs: [changes, database]
+    needs: [changes, validation-gate, database]
     uses: ./.github/workflows/edge-functions-release.yml
     with:
+      validate: false
       deploy: true
       expected_sha: ${{ inputs.after_sha }}
       allow_historical_main: true
 
   webapp:
-    name: Webapp
+    name: Webapp deployment
     if: >-
       always() &&
-      needs.changes.result == 'success' &&
       needs.changes.outputs.webapp == 'true' &&
+      needs.validation-gate.result == 'success' &&
       (needs.database.result == 'success' || needs.database.result == 'skipped') &&
       (needs.edge-functions.result == 'success' || needs.edge-functions.result == 'skipped')
-    needs: [changes, database, edge-functions]
+    needs: [changes, validation-gate, database, edge-functions]
     uses: ./.github/workflows/webapp-release.yml
     with:
+      validate: false
       deploy: true
       expected_sha: ${{ inputs.after_sha }}
       allow_historical_main: true
@@ -92,18 +159,20 @@ jobs:
   gate:
     name: Gate
     if: always()
-    needs: [changes, database, edge-functions, webapp]
+    needs: [changes, validation-gate, database, edge-functions, webapp]
     runs-on: ubuntu-latest
     steps:
       - name: Require every selected production release
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
+          VALIDATION_RESULT: ${{ needs.validation-gate.result }}
           DATABASE_RESULT: ${{ needs.database.result }}
           EDGE_RESULT: ${{ needs.edge-functions.result }}
           WEBAPP_RESULT: ${{ needs.webapp.result }}
         run: |
           set -euo pipefail
           test "$CHANGES_RESULT" = "success"
+          test "$VALIDATION_RESULT" = "success"
           for result in "$DATABASE_RESULT" "$EDGE_RESULT" "$WEBAPP_RESULT"; do
             test "$result" = "success" || test "$result" = "skipped"
           done

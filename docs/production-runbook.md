@@ -42,13 +42,13 @@ After merge, the workflow explicitly dispatches `Production Release` with the pr
 
 ### Production
 
-`Production Release` accepts dispatches only from `github-actions[bot]`, validates the ordered `main` range, and detects runtime changes. It invokes affected release workflows in this order:
+`Production Release` accepts dispatches only from `github-actions[bot]`, validates the ordered `main` range, and detects runtime changes. It first validates every affected unit in parallel and requires the Production Validation Gate to pass. It then invokes affected deployment modes in this order:
 
 1. Database migrations
 2. Edge Functions
 3. Vercel webapp
 
-A unit with no deployment change is skipped. Documentation, tests, lint configuration, and workflow-only changes never cause an application deployment. Production dispatchers queue with cancellation disabled, so promotions release in commit order.
+A unit with no deployment change is skipped. Documentation, tests, lint configuration, and workflow-only changes never cause an application deployment. Each deploy mode reads its declared credentials from the main-only `Production` environment and fails before mutation when a required secret is unavailable. Production dispatchers queue with cancellation disabled, so promotions release in commit order.
 
 ## Failure and recovery
 
@@ -58,6 +58,7 @@ A unit with no deployment change is skipped. Documentation, tests, lint configur
 - Direct manual runs of a unit release workflow may deploy only the current `main` commit.
 - The `Production` environment's `main`-only deployment policy prevents feature-branch workflow edits from receiving production secrets.
 - A historical failed Actions run may be rerun when its commit remains compatible and reachable from `main`.
+- Do not rerun an old release when the failure came from its workflow definition: GitHub reuses that run's workflow revision. Merge the workflow correction through `dev`, then manually run the affected unit workflows against current `main` in database → Edge Functions → webapp order.
 - Never run `db reset`, seed, destructive integration, or E2E commands against linked production Supabase.
 
 ## Automated smoke checks
