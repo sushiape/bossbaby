@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import Header from "../shared/components/Header";
 import Footer from "../shared/components/Footer";
 import { useWaitlistForm } from "../shared/services/useWaitlistForm";
+import { MoodQuizDialog } from "./BossBabyLandingPage/MoodQuizDialog";
+import { useMoodQuiz } from "./BossBabyLandingPage/useMoodQuiz";
 
 const brand = {
   pink: "#FF89CC",
@@ -292,6 +294,7 @@ function CountdownUnit({ value, label }) {
 // ── Main component ──────────────────────────────────────────────────────────
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
   const { status, handleSubmit } = useWaitlistForm();
+  const moodQuiz = useMoodQuiz();
   const countdown = useCountdown("2026-10-01T00:00:00");
 
   // Scroll to hero section after animations complete
@@ -335,10 +338,21 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </motion.p>
 
         <motion.div
+          className="flex flex-col items-center"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.45, ease: "easeOut" }}
         >
+          <button
+            type="button"
+            onClick={moodQuiz.open}
+            className="mb-3 rounded-full bg-black px-7 py-4 text-base font-extrabold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-white/60"
+          >
+            FIND YOUR BOSSBABY MOOD
+          </button>
+          <p className="mb-8 text-sm font-medium text-white/90">
+            Three quick questions. One mood match.
+          </p>
           <p className="text-base text-white mb-4 font-medium">
             Be first to know when we launch.
           </p>
@@ -377,6 +391,16 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </form>
         </motion.div>
       </section>
+
+      <MoodQuizDialog
+        isOpen={moodQuiz.isOpen}
+        step={moodQuiz.step}
+        resultKey={moodQuiz.resultKey}
+        onAnswer={moodQuiz.answer}
+        onBack={moodQuiz.back}
+        onClose={moodQuiz.close}
+        onReset={moodQuiz.reset}
+      />
 
       {/* ── 1b. Launch date ── */}
       <section
