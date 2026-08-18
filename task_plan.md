@@ -4,7 +4,7 @@
 First document the repository's existing CI/CD pipeline, then use a decision-by-decision interview to design independently deployable Vercel webapp and Supabase backend/database delivery paths. Capture resolved domain language and only qualifying architectural decisions; do not implement until the user confirms shared understanding.
 
 ## Current Phase
-Complete locally; GitHub admin bootstrap remains external
+Complete locally; corrective feature PR and production recovery remain external
 
 ## Phases
 
@@ -58,6 +58,25 @@ Complete locally; GitHub admin bootstrap remains external
 - [x] Document the remaining bootstrap sequence for required checks
 - **Status:** complete
 
+### Phase 10: Diagnose the first split production release
+- [x] Trace the promotion and production runs after PR #10
+- [x] Distinguish intentional validation-only skips from failure-dependent skips
+- [x] Identify missing reusable-workflow secret contracts
+- **Status:** complete
+
+### Phase 11: Correct the production release workflow
+- [x] Keep all credentials in the main-only `Production` environment
+- [x] Run selected production validations in parallel
+- [x] Run only selected deployments in database → Edge Functions → webapp order
+- [x] Fail clearly when a required production secret is unavailable
+- **Status:** complete
+
+### Phase 12: Verify and hand off recovery
+- [x] Lint workflows and exercise validation/deployment selection fixtures
+- [x] Update operational documentation and the incident record
+- [x] Review the diff and identify the safe recovery sequence for the failed release
+- **Status:** complete
+
 ## Key Questions
 1. What events trigger the pipeline, and which stages/jobs run for each event?
 2. What quality gates, build artifacts, environments, secrets, and deployment targets are used?
@@ -95,6 +114,8 @@ Complete locally; GitHub admin bootstrap remains external
 | Use a narrow per-unit deployment change map and a broader validation map | Migrations deploy only for new migration files; functions deploy for runtime or relevant function configuration; webapp deploys for runtime, assets, build dependencies/configuration, or Vercel configuration; test/lint/docs/workflow-only changes never deploy. |
 | Apply branch protection rules to administrators | Emergency fixes follow the same reviewed feature-to-`dev` and automated promotion path; there is no routine direct-push bypass. |
 | Supersede ADR 0007 with ADR 0013 | The split release topology is hard to reverse, surprising relative to the existing workflow, and resolves a real independence-versus-ordering trade-off. |
+| Parallelize production validation but keep deployments ordered | Only production mutations have cross-unit ordering constraints; static and local validation can run concurrently against the same merged `main` commit. |
+| Keep credentials as `Production` environment secrets and declare each reusable-workflow secret contract | Repository-level secrets would weaken the main-only environment boundary; called workflows must explicitly declare the credentials their deployment jobs consume. |
 
 ## Errors Encountered
 | Error | Attempt | Resolution |
@@ -111,6 +132,7 @@ Complete locally; GitHub admin bootstrap remains external
 | Security-hardening documentation patch used an inexact runbook bullet anchor | 1 | Reapplied the update against the exact manual-recovery wording. |
 | Final whitespace scan found an intentional Markdown hard-break | 1 | Replaced trailing spaces with a blank paragraph separator and reran validation. |
 | Final multi-file planning update used a progress-section anchor that did not apply | 1 | Split completion updates by file and reapplied them to exact sections. |
+| Corrective completion update used an out-of-order `findings.md` anchor | 1 | Located the actual section order and split the update into exact-file patches. |
 
 ## Notes
 - Preserve unrelated user changes.

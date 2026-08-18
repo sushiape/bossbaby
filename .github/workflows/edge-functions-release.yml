@@ -3,6 +3,11 @@ name: Edge Function Release
 on:
   workflow_call:
     inputs:
+      validate:
+        description: Validate the Edge Function graph before returning.
+        required: false
+        default: true
+        type: boolean
       deploy:
         description: Deploy validated Edge Functions to production.
         required: false
@@ -18,8 +23,18 @@ on:
         required: false
         default: false
         type: boolean
+    secrets:
+      SUPABASE_ACCESS_TOKEN:
+        required: false
+      SUPABASE_PROJECT_REF:
+        required: false
   workflow_dispatch:
     inputs:
+      validate:
+        description: Validate the Edge Function graph before deployment.
+        required: true
+        default: true
+        type: boolean
       deploy:
         description: Deploy validated Edge Functions to production.
         required: true
@@ -36,6 +51,7 @@ permissions:
 jobs:
   validate:
     name: Validate
+    if: inputs.validate
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -56,7 +72,10 @@ jobs:
 
   deploy:
     name: Deploy production
-    if: inputs.deploy
+    if: >-
+      always() &&
+      inputs.deploy &&
+      (!inputs.validate || needs.validate.result == 'success')
     needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -83,6 +102,18 @@ jobs:
           else
             test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
           fi
+      - name: Require production Supabase secrets
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          for secret_name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_REF; do
+            if [[ -z "${!secret_name:-}" ]]; then
+              echo "Required Production environment secret is unavailable: ${secret_name}" >&2
+              exit 1
+            fi
+          done
       - name: Deploy all Edge Functions
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

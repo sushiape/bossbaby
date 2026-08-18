@@ -6,7 +6,7 @@
 
 ## Outcome
 
-BossBaby now has three independently deployable release units: Supabase database migrations, Supabase Edge Functions, and the Vercel webapp. Each unit owns its validation and production deployment in a reusable workflow. A Production Release Dispatcher deploys only changed units and preserves database → Edge Functions → webapp ordering for cross-cutting promotions.
+BossBaby now has three independently deployable release units: Supabase database migrations, Supabase Edge Functions, and the Vercel webapp. Each unit owns its validation and production deployment in a reusable workflow. A Production Release Dispatcher validates changed units in parallel, then deploys only those units while preserving database → Edge Functions → webapp ordering for cross-cutting promotions.
 
 This implements [ADR 0013](adr/0013-split-production-releases-by-change-boundary.md), which supersedes the always-coupled release in ADR 0007.
 
@@ -32,15 +32,20 @@ flowchart TD
     M --> N["Dispatch Production Release with before/after SHAs"]
 
     N --> O["Detect deployment changes"]
-    O -->|"migration change"| P["Validate + deploy database + smoke"]
-    O -->|"function change"| Q["Validate + deploy Edge Functions + smoke"]
-    O -->|"webapp change"| R["Validate + deploy Vercel artifact + smoke"]
-    P --> Q
-    Q --> R
+    O -->|"migration change"| P["Validate database"]
+    O -->|"function change"| Q["Validate Edge Functions"]
+    O -->|"webapp change"| R["Validate webapp"]
+    P --> S["Production validation gate"]
+    Q --> S
+    R --> S
+    S --> T["Deploy database + smoke when selected"]
+    T --> U["Deploy Edge Functions + smoke when selected"]
+    U --> V["Deploy Vercel artifact + smoke when selected"]
 
-    P -. "failure" .-> X["Stop downstream; repair forward"]
-    Q -. "failure" .-> X
-    R -. "failure" .-> X
+    S -. "failure" .-> X["Stop deployment; repair forward"]
+    T -. "failure" .-> X
+    U -. "failure" .-> X
+    V -. "failure" .-> X
 ```
 
 Skipped units do not create dependencies: a frontend-only promotion calls only Webapp Release, and a migration-only promotion calls only Database Migration Release.
@@ -70,11 +75,11 @@ Documentation, test-only, lint-only, and Actions-only changes can be validated b
 
 - Production commits come only from an exact-current-`dev` Promotion PR.
 - Feature PRs require relevant CI and one approval; promotion repeats the complete suite.
-- Production revalidates the exact release commit.
+- Production revalidates all selected units in parallel against the exact release commit before any deployment starts.
 - Migrations already present on `main` cannot be edited or deleted.
 - Production dispatchers queue and never cancel an active release.
 - Manual unit deployments reject any revision other than current `main`.
-- The existing `Production` environment is retained; each job references only its required secret names.
+- The existing `Production` environment is retained; each reusable workflow declares only its required secret names and deployment fails clearly before mutation if any credential is unavailable.
 - The `Production` environment must allow deployments from `main` only, preventing feature-branch workflow edits from receiving production secrets.
 - Vercel and Supabase native Git deployment remain disabled, so GitHub Actions is the sole production owner.
 - Database changes are forward-only and must remain compatible with separately released clients and functions.
