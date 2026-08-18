@@ -62,13 +62,25 @@ jobs:
         with:
           deno-version: v2.9.5
       - name: Check formatting
-        run: deno fmt --config backend/supabase/deno.json --check backend/supabase/functions
+        run: >-
+          deno fmt --config backend/supabase/deno.json --check
+          backend/supabase/functions
+          backend/supabase/tests
       - name: Lint
-        run: deno lint --config backend/supabase/deno.json backend/supabase/functions
+        run: >-
+          deno lint --config backend/supabase/deno.json
+          backend/supabase/functions
+          backend/supabase/tests
       - name: Type-check function graph
-        run: deno check --config backend/supabase/deno.json backend/supabase/functions/you-pick/index.ts
+        run: >-
+          deno check --config backend/supabase/deno.json
+          backend/supabase/functions/you-pick/index.ts
+          backend/supabase/functions/waitlist/index.ts
       - name: Run unit tests
-        run: deno test --config backend/supabase/deno.json --allow-env backend/supabase/functions
+        run: >-
+          deno test --config backend/supabase/deno.json --allow-env
+          backend/supabase/functions
+          backend/supabase/tests
 
   deploy:
     name: Deploy production
