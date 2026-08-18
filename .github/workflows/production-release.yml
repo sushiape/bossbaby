@@ -1,0 +1,109 @@
+name: Production Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      before_sha:
+        description: Main commit immediately before the promotion merge.
+        required: true
+        type: string
+      after_sha:
+        description: Promotion merge commit to release.
+        required: true
+        type: string
+
+concurrency:
+  group: production-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Detect production changes
+    runs-on: ubuntu-latest
+    outputs:
+      database: ${{ steps.changes.outputs.deploy_database }}
+      edge_functions: ${{ steps.changes.outputs.deploy_edge_functions }}
+      webapp: ${{ steps.changes.outputs.deploy_webapp }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.after_sha }}
+      - name: Authorize automated promotion handoff
+        run: test "${{ github.actor }}" = "github-actions[bot]"
+      - name: Verify ordered main range
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          git cat-file -e "${{ inputs.before_sha }}^{commit}"
+          git cat-file -e "${{ inputs.after_sha }}^{commit}"
+          git merge-base --is-ancestor "${{ inputs.before_sha }}" "${{ inputs.after_sha }}"
+          git merge-base --is-ancestor "${{ inputs.after_sha }}" origin/main
+      - id: changes
+        name: Classify deployment scope
+        run: >-
+          bash .github/scripts/detect-changes.sh
+          "${{ inputs.before_sha }}"
+          "${{ inputs.after_sha }}"
+          production
+
+  database:
+    name: Database
+    if: needs.changes.outputs.database == 'true'
+    needs: changes
+    uses: ./.github/workflows/database-release.yml
+    with:
+      deploy: true
+      expected_sha: ${{ inputs.after_sha }}
+      allow_historical_main: true
+
+  edge-functions:
+    name: Edge Functions
+    if: >-
+      always() &&
+      needs.changes.result == 'success' &&
+      needs.changes.outputs.edge_functions == 'true' &&
+      (needs.database.result == 'success' || needs.database.result == 'skipped')
+    needs: [changes, database]
+    uses: ./.github/workflows/edge-functions-release.yml
+    with:
+      deploy: true
+      expected_sha: ${{ inputs.after_sha }}
+      allow_historical_main: true
+
+  webapp:
+    name: Webapp
+    if: >-
+      always() &&
+      needs.changes.result == 'success' &&
+      needs.changes.outputs.webapp == 'true' &&
+      (needs.database.result == 'success' || needs.database.result == 'skipped') &&
+      (needs.edge-functions.result == 'success' || needs.edge-functions.result == 'skipped')
+    needs: [changes, database, edge-functions]
+    uses: ./.github/workflows/webapp-release.yml
+    with:
+      deploy: true
+      expected_sha: ${{ inputs.after_sha }}
+      allow_historical_main: true
+
+  gate:
+    name: Gate
+    if: always()
+    needs: [changes, database, edge-functions, webapp]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every selected production release
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          DATABASE_RESULT: ${{ needs.database.result }}
+          EDGE_RESULT: ${{ needs.edge-functions.result }}
+          WEBAPP_RESULT: ${{ needs.webapp.result }}
+        run: |
+          set -euo pipefail
+          test "$CHANGES_RESULT" = "success"
+          for result in "$DATABASE_RESULT" "$EDGE_RESULT" "$WEBAPP_RESULT"; do
+            test "$result" = "success" || test "$result" = "skipped"
+          done

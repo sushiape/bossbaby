@@ -1,53 +1,77 @@
 # Production release runbook
 
-## Bootstrap gate
+## Bootstrap order
 
-Do not enable `.github/workflows/release.yml` until all checks pass:
+The workflow files must reach GitHub before their checks can be made mandatory. Bootstrap in this order:
 
-1. Merge a normal `main` → `dev` synchronization PR. Never force-push `dev`.
-2. Confirm administrators can manage rulesets, Actions workflow permissions, environments, and auto-merge.
-3. Allow GitHub Actions to create/update pull requests.
-4. Verify Vercel project, production domain, project ID, and org/team ID.
-5. Verify hosted Supabase project ref and database access.
-6. Pull authoritative hosted schema and reconcile `supabase_migrations.schema_migrations`; first migration check must be a no-op against known production state.
-7. Back up and verify existing production data.
-8. Set `ALLOWED_ORIGINS` on `you-pick` to exact local and verified production origins.
-9. Add protected `production` environment secrets listed in README.
-10. Disable Vercel and Supabase native Git production deployment.
-11. Let workflows publish stable check names, then configure `dev` and `main` rulesets.
+1. Have a repository administrator enable auto-merge and allow GitHub Actions to create and approve pull requests.
+2. Restrict the `Production` environment to deployments from `main` only, with no administrator bypass. No separate reviewer approval is required.
+3. Confirm the `Production` environment contains all required secret names:
+   - `SUPABASE_ACCESS_TOKEN`
+   - `SUPABASE_PROJECT_REF`
+   - `SUPABASE_DB_PASSWORD`
+   - `VERCEL_ORG_ID`
+   - `VERCEL_PROJECT_ID`
+   - `VERCEL_TOKEN`
 
-## Release order
+4. Confirm Supabase native Git deployment is disabled. Root `vercel.json` disables every Vercel Git deployment once this change reaches Vercel.
+5. Open the CI/CD implementation as a feature PR into `dev`, let `Feature CI` complete, obtain one approval, and merge it.
+6. Let `Promote Dev` create the Promotion PR and publish its stable check names. Its own gate still prevents merge before full CI passes.
+7. Protect `dev`: require pull requests, the observed `Feature CI / Gate` check, one approval, conversation resolution, and no force pushes or administrator bypass.
+8. Protect `main`: require pull requests, the observed `Promote Dev / Gate` check, conversation resolution, and no force pushes or administrator bypass.
 
-`release.yml` is sole production owner:
+Do not add required checks before their first GitHub run; an incorrect or unpublished check name can lock a protected branch.
 
-1. Apply reviewed schema/security migrations.
-2. Deploy `you-pick` Edge Function with platform JWT verification disabled; handler performs route-level optional/required auth.
-3. Build and deploy `frontend/` to Vercel.
+## Delivery flow
 
-Failure at step 1 or 2 blocks Vercel. Never run `db reset`, seed, integration, or E2E commands against hosted Supabase.
+### Feature pull requests
 
-## Initial service cutover
+Feature branches enter `dev` only through a pull request. `Feature CI` detects affected units and invokes their reusable workflows in validation-only mode:
 
-Foundation migration keeps legacy direct grants only for an old deployed frontend. Deploy service-compatible frontend and verify public reads, anonymous writes, aggregate results, and owner deletion before applying direct-access lockdown as a separate reviewed release.
+- Database: existing production migrations are immutable, and a clean local Postgres database must rebuild from all migrations without seed data.
+- Edge Functions: Deno formatting, linting, type-checking, and unit tests must pass.
+- Webapp: clean install, lint, TypeScript checking, unit tests, and a production build must pass.
 
-Lockdown SQL remains staged in `backend/supabase/lockdown/` so the service-switch release cannot apply it accidentally. After production verification, move that SQL unchanged into `backend/supabase/migrations/` in a separate reviewed PR. After it runs:
+The PR requires one human approval. Feature PRs may use squash merge.
 
-- anonymous/authenticated Data API table requests fail;
-- service-secret Edge Function access continues;
-- raw votes and participant IDs remain unavailable to browsers.
+### Promotion
 
-If initial cutover fails, repair forward. Audited temporary grant restoration is described in migration comments and must be manually approved; never automate reverse database migration.
+Every update to `dev` starts `Promote Dev`. It creates or updates one `dev` → `main` Promotion PR, verifies that its head is the exact current `dev` SHA, runs all three validations, and enables a regular merge commit only after the `Promote Dev / Gate` check passes.
 
-## Smoke checks
+After merge, the workflow explicitly dispatches `Production Release` with the previous and new `main` SHAs. This explicit handoff is required because GitHub suppresses most workflow events created by `GITHUB_TOKEN`.
 
-After each production stage, use synthetic test participants only:
+### Production
 
-- public suggestions return display fields without `user_id`;
-- public vote results return counts/total only;
-- invalid bearer token returns `401`;
-- anonymous participant can create suggestion and vote;
-- same participant can replace vote without increasing total participant count;
-- owner deletes own suggestion;
-- second participant gets `404` deleting it;
-- direct table requests fail after lockdown;
-- website static routes work if backend is unavailable.
+`Production Release` accepts dispatches only from `github-actions[bot]`, validates the ordered `main` range, and detects runtime changes. It invokes affected release workflows in this order:
+
+1. Database migrations
+2. Edge Functions
+3. Vercel webapp
+
+A unit with no deployment change is skipped. Documentation, tests, lint configuration, and workflow-only changes never cause an application deployment. Production dispatchers queue with cancellation disabled, so promotions release in commit order.
+
+## Failure and recovery
+
+- A failed database release blocks affected Edge Function and webapp releases.
+- A failed Edge Function release blocks an affected webapp release.
+- Successful migrations are never rolled back automatically. Add a reviewed corrective migration and repair forward.
+- Direct manual runs of a unit release workflow may deploy only the current `main` commit.
+- The `Production` environment's `main`-only deployment policy prevents feature-branch workflow edits from receiving production secrets.
+- A historical failed Actions run may be rerun when its commit remains compatible and reachable from `main`.
+- Never run `db reset`, seed, destructive integration, or E2E commands against linked production Supabase.
+
+## Automated smoke checks
+
+Each production unit verifies its remote result:
+
+- Database lists linked migration history and confirms a second `db push --dry-run` succeeds.
+- Edge Functions retry a safe read-only request to `you-pick/suggestions`.
+- Webapp retries `https://hibossbaby.com/` and `https://hibossbaby.com/app`.
+
+A smoke failure marks the unit failed and blocks downstream work without rollback.
+
+## Service-boundary cutovers
+
+Breaking backend changes still use expand-contract releases from ADR 0009. Add the compatible backend path first, switch the webapp in a later compatible release, verify production, and remove the old path only in a final release.
+
+Lockdown SQL remains staged in `backend/supabase/lockdown/` until its own reviewed migration release. Use synthetic participants for deeper manual verification of anonymous writes, vote replacement, ownership isolation, aggregate-only results, and direct-table lockdown.

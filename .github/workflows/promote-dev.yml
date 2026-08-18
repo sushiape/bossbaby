@@ -1,0 +1,160 @@
+name: Promote Dev
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dev-promotion
+  cancel-in-progress: true
+
+jobs:
+  promotion-pr:
+    name: Maintain promotion PR
+    runs-on: ubuntu-latest
+    outputs:
+      main_before: ${{ steps.pr.outputs.main_before }}
+      pr_number: ${{ steps.pr.outputs.pr_number }}
+    steps:
+      - id: pr
+        name: Create or locate exact dev-to-main PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "${{ github.ref }}" = "refs/heads/dev"
+          main_before="$(gh api "repos/$GH_REPO/git/ref/heads/main" --jq .object.sha)"
+          pr_number="$(gh pr list --repo "$GH_REPO" --base main --head dev --state open --json number --jq '.[0].number // empty')"
+          if [[ -z "$pr_number" ]]; then
+            pr_url="$(gh pr create \
+              --repo "$GH_REPO" \
+              --base main \
+              --head dev \
+              --title "Promote dev to production" \
+              --body "Automated promotion of reviewed dev history. Full CI must pass before merge.")"
+            pr_number="${pr_url##*/}"
+          else
+            gh pr edit "$pr_number" \
+              --repo "$GH_REPO" \
+              --title "Promote dev to production" \
+              --body "Automated promotion of reviewed dev history. Full CI must pass before merge."
+          fi
+          echo "main_before=$main_before" >> "$GITHUB_OUTPUT"
+          echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
+
+  source:
+    name: Exact dev source
+    needs: promotion-pr
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: dev
+      - name: Require the current remote dev head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ needs.promotion-pr.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin dev
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/dev)"
+          test "$(gh pr view "$PR_NUMBER" --repo "$GH_REPO" --json headRefName --jq .headRefName)" = "dev"
+          test "$(gh pr view "$PR_NUMBER" --repo "$GH_REPO" --json headRefOid --jq .headRefOid)" = "$(git rev-parse origin/dev)"
+
+  database:
+    name: Database
+    needs: promotion-pr
+    uses: ./.github/workflows/database-release.yml
+    with:
+      deploy: false
+      expected_sha: ${{ github.sha }}
+
+  edge-functions:
+    name: Edge Functions
+    needs: promotion-pr
+    uses: ./.github/workflows/edge-functions-release.yml
+    with:
+      deploy: false
+      expected_sha: ${{ github.sha }}
+
+  webapp:
+    name: Webapp
+    needs: promotion-pr
+    uses: ./.github/workflows/webapp-release.yml
+    with:
+      deploy: false
+      expected_sha: ${{ github.sha }}
+
+  gate:
+    name: Gate
+    if: always()
+    needs: [promotion-pr, source, database, edge-functions, webapp]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require exact source and full CI
+        env:
+          PR_RESULT: ${{ needs.promotion-pr.result }}
+          SOURCE_RESULT: ${{ needs.source.result }}
+          DATABASE_RESULT: ${{ needs.database.result }}
+          EDGE_RESULT: ${{ needs.edge-functions.result }}
+          WEBAPP_RESULT: ${{ needs.webapp.result }}
+        run: |
+          set -euo pipefail
+          for result in "$PR_RESULT" "$SOURCE_RESULT" "$DATABASE_RESULT" "$EDGE_RESULT" "$WEBAPP_RESULT"; do
+            test "$result" = "success"
+          done
+
+  merge-and-dispatch:
+    name: Merge and dispatch production
+    needs: [promotion-pr, gate]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge and wait for merge commit
+        id: merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ needs.promotion-pr.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+          gh pr merge "$PR_NUMBER" --repo "$GH_REPO" --auto --merge
+          for attempt in {1..24}; do
+            state="$(gh pr view "$PR_NUMBER" --repo "$GH_REPO" --json state --jq .state)"
+            if [[ "$state" == "MERGED" ]]; then
+              merge_sha="$(gh pr view "$PR_NUMBER" --repo "$GH_REPO" --json mergeCommit --jq .mergeCommit.oid)"
+              echo "merge_sha=$merge_sha" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Promotion PR did not merge within two minutes." >&2
+          exit 1
+      - name: Dispatch production release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BEFORE_SHA: ${{ needs.promotion-pr.outputs.main_before }}
+          AFTER_SHA: ${{ steps.merge.outputs.merge_sha }}
+        run: |
+          set -euo pipefail
+          for attempt in {1..12}; do
+            if gh workflow run production-release.yml \
+              --repo "$GH_REPO" \
+              --ref main \
+              -f before_sha="$BEFORE_SHA" \
+              -f after_sha="$AFTER_SHA"; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Production workflow could not be dispatched." >&2
+          exit 1
