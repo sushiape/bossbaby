@@ -344,33 +344,34 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           </p>
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 items-center max-w-2xl mx-auto"
+            className="flex w-full max-w-2xl flex-col items-center gap-3 mx-auto"
+            aria-live="polite"
           >
-            <div className="flex gap-3 justify-center flex-wrap">
+            <div className="flex w-full flex-col justify-center gap-3 sm:flex-row">
               <input
                 type="email"
                 name="email_address"
                 placeholder="enter your email"
+                aria-label="Email address"
+                autoComplete="email"
                 required
-                className="px-4 py-3 rounded-lg border border-white bg-white text-black/80 text-base"
-                style={{ width: "300px", maxWidth: "80vw" }}
+                className="min-w-0 flex-1 rounded-2xl border border-white bg-white px-5 py-4 text-base text-black/80 shadow-sm outline-none transition placeholder:text-black/35 focus:ring-4 focus:ring-white/50"
               />
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="px-6 py-3 rounded-lg border border-white bg-white font-bold text-base hover:bg-pink-100 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
-                style={{ color: "#FF64BE" }}
+                className="rounded-2xl border border-white bg-white px-7 py-4 text-base font-extrabold text-[#FF64BE] shadow-sm transition hover:-translate-y-0.5 hover:bg-pink-50 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {status === "submitting" ? "SENDING..." : "JOIN WAITLIST"}
               </button>
             </div>
             {status === "success" && (
-              <p className="text-sm text-green-100 mt-1">
+              <p className="text-sm font-semibold text-white">
                 You&apos;re on the waitlist ✨ We&apos;ll email you when Bossbaby launches.
               </p>
             )}
             {status === "error" && (
-              <p className="text-sm text-red-100 mt-1">
+              <p className="text-sm font-semibold text-red-100">
                 Something went wrong. Please try again in a moment.
               </p>
             )}

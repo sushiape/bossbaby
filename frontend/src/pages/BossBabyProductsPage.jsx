@@ -199,7 +199,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
           </h3>
           <p className="mb-4">Join the waitlist</p>
 
-          {/* Same Formspree form as landing page */}
+          {/* Same waitlist service as the landing page */}
           <form
             onSubmit={handleSubmit}
             className="flex flex-col gap-4 items-center max-w-2xl mx-auto mt-4"
@@ -208,8 +208,10 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
             <div className="flex gap-2 justify-center flex-wrap">
               <input
                 type="email"
-                name="email_address"          // important for Formspree mapping
+                name="email_address"
                 placeholder="enter your email"
+                aria-label="Email address"
+                autoComplete="email"
                 required
                 className="px-4 py-4 rounded-2xl border border-white bg-white text-base min-w-[280px] max-w-[80vw] text-black"
                 style={{ fontSize: "15px" }}

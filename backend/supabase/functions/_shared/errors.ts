@@ -21,6 +21,6 @@ export class ApiError extends Error {
 
 export function toApiError(error: unknown): ApiError {
   if (error instanceof ApiError) return error;
-  console.error("Unhandled you-pick error", error);
+  console.error("Unhandled Edge Function error", error);
   return new ApiError(500, "INTERNAL_ERROR", "The service could not complete the request.");
 }

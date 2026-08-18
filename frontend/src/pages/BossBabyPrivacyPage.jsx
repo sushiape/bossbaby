@@ -29,8 +29,8 @@ export default function BossBabyPrivacyPage({ currentPage, setCurrentPage }) {
             </div>
 
             <div>
-              <h2 className="font-bold mb-2 text-lg">3. Dienstleister – Formspree</h2>
-              <p>Die Verarbeitung von Wartelisten-Anmeldungen erfolgt über den Drittanbieter <strong>Formspree, Inc.</strong> (USA). Formspree verarbeitet eingegebene E-Mail-Adressen in unserem Auftrag. Weitere Informationen findest du in der <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70" style={{ color: "#FF89CC" }}>Datenschutzerklärung von Formspree</a>.</p>
+              <h2 className="font-bold mb-2 text-lg">3. Dienstleister – Supabase</h2>
+              <p>Die Verarbeitung und Speicherung von Wartelisten-Anmeldungen erfolgt über <strong>Supabase, Inc.</strong> als technischen Dienstleister. Dabei wird ausschließlich die von dir eingegebene E-Mail-Adresse übertragen. Weitere Informationen findest du in der <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70" style={{ color: "#FF89CC" }}>Datenschutzerklärung von Supabase</a>.</p>
             </div>
 
             <div>
@@ -67,7 +67,7 @@ export default function BossBabyPrivacyPage({ currentPage, setCurrentPage }) {
               <p>Unsere Website verwendet keine Tracking-Cookies oder Analyse-Tools von Drittanbietern. Es werden keine Nutzungsprofile erstellt.</p>
             </div>
 
-            <p className="text-sm text-gray-400 pt-4">Stand: Mai 2026</p>
+            <p className="text-sm text-gray-400 pt-4">Stand: August 2026</p>
           </div>
         </div>
       </section>
