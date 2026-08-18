@@ -111,37 +111,131 @@ jobs:
           require_expected_result "$EDGE_SELECTED" "$EDGE_RESULT"
           require_expected_result "$WEBAPP_SELECTED" "$WEBAPP_RESULT"
 
+  # Keep automated deployment jobs in this workflow so each job can bind directly to the
+  # Production environment. Environment secrets do not cross a reusable-workflow call boundary.
   database:
-    name: Database deployment
+    name: Database deployment / Deploy production
     if: >-
       always() &&
       needs.changes.outputs.database == 'true' &&
       needs.validation-gate.result == 'success'
     needs: [changes, validation-gate]
-    uses: ./.github/workflows/database-release.yml
-    with:
-      validate: false
-      deploy: true
-      expected_sha: ${{ inputs.after_sha }}
-      allow_historical_main: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: Production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.after_sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.114.0
+      - name: Verify deployable main revision
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor HEAD origin/main
+      - name: Require production Supabase secrets
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for secret_name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_REF SUPABASE_DB_PASSWORD; do
+            if [[ -z "${!secret_name:-}" ]]; then
+              echo "Required Production environment secret is unavailable: ${secret_name}" >&2
+              exit 1
+            fi
+          done
+      - name: Link production Supabase project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: supabase --workdir backend link --project-ref "$SUPABASE_PROJECT_REF"
+      - name: Preview pending migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase --workdir backend db push --dry-run
+      - name: Apply pending migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase --workdir backend db push
+      - name: Verify remote migration history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          supabase --workdir backend migration list --linked
+          supabase --workdir backend db push --dry-run
 
   edge-functions:
-    name: Edge Functions deployment
+    name: Edge Functions deployment / Deploy production
     if: >-
       always() &&
       needs.changes.outputs.edge_functions == 'true' &&
       needs.validation-gate.result == 'success' &&
       (needs.database.result == 'success' || needs.database.result == 'skipped')
     needs: [changes, validation-gate, database]
-    uses: ./.github/workflows/edge-functions-release.yml
-    with:
-      validate: false
-      deploy: true
-      expected_sha: ${{ inputs.after_sha }}
-      allow_historical_main: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: Production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.after_sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.114.0
+      - name: Verify deployable main revision
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor HEAD origin/main
+      - name: Require production Supabase secrets
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          for secret_name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_REF; do
+            if [[ -z "${!secret_name:-}" ]]; then
+              echo "Required Production environment secret is unavailable: ${secret_name}" >&2
+              exit 1
+            fi
+          done
+      - name: Deploy all Edge Functions
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: supabase --workdir backend functions deploy --project-ref "$SUPABASE_PROJECT_REF"
+      - name: Smoke-test You Pick read endpoint
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          endpoint="https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/you-pick/suggestions?limit=1"
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error "$endpoint" >/dev/null; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Edge Function smoke test failed after 12 attempts." >&2
+          exit 1
 
   webapp:
-    name: Webapp deployment
+    name: Webapp deployment / Deploy production
     if: >-
       always() &&
       needs.changes.outputs.webapp == 'true' &&
@@ -149,12 +243,68 @@ jobs:
       (needs.database.result == 'success' || needs.database.result == 'skipped') &&
       (needs.edge-functions.result == 'success' || needs.edge-functions.result == 'skipped')
     needs: [changes, validation-gate, database, edge-functions]
-    uses: ./.github/workflows/webapp-release.yml
-    with:
-      validate: false
-      deploy: true
-      expected_sha: ${{ inputs.after_sha }}
-      allow_historical_main: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: Production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.after_sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Verify deployable main revision
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor HEAD origin/main
+      - name: Require production Vercel secrets
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          for secret_name in VERCEL_ORG_ID VERCEL_PROJECT_ID VERCEL_TOKEN; do
+            if [[ -z "${!secret_name:-}" ]]; then
+              echo "Required Production environment secret is unavailable: ${secret_name}" >&2
+              exit 1
+            fi
+          done
+      - name: Build validated Vercel production artifact
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npx --yes vercel@59.1.3 pull --yes --environment=production --token="$VERCEL_TOKEN"
+          npx --yes vercel@59.1.3 build --prod --token="$VERCEL_TOKEN"
+      - name: Deploy validated artifact
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: npx --yes vercel@59.1.3 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+      - name: Smoke-test production routes
+        run: |
+          set -euo pipefail
+          for route in / /app; do
+            passed=false
+            for attempt in {1..12}; do
+              if curl --fail --silent --show-error --location "https://hibossbaby.com${route}" >/dev/null; then
+                passed=true
+                break
+              fi
+              sleep 5
+            done
+            if [[ "$passed" != "true" ]]; then
+              echo "Webapp smoke test failed for ${route}." >&2
+              exit 1
+            fi
+          done
 
   gate:
     name: Gate
