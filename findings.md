@@ -133,3 +133,20 @@
 - The correction declares each reusable workflow's secret contract, retains the deployment job's `Production` environment, and checks every required value before the first remote mutation.
 - The correction adds separate validation and deployment modes. Production calls selected validation modes concurrently, gates their exact results, then calls deploy-only modes in dependency order.
 - The old failed Actions run must not be rerun because it remains bound to the faulty workflow revision. The corrective promotion is workflow-only and intentionally deploys no application unit, so recovery requires current-`main` manual unit runs in database → Edge Functions → webapp order.
+
+## Manual promotion policy: 2026-08-18
+- The user wants `dev` to remain a shared integration branch for multiple feature branches and conflict resolution.
+- A `dev` push must not create or auto-merge a production Promotion PR.
+- The user will manually create and merge `dev` → `main` after the integrated state is ready.
+- GitHub Actions should validate only an exact-current-`dev` Promotion PR, while a successful merge to `main` should automatically dispatch the change-aware production release.
+- GitHub documents that `pull_request.branches` filters the PR base branch; the workflow must separately verify `github.head_ref == 'dev'` and the exact remote `dev` SHA.
+- GitHub documents that a `push` workflow can be filtered to `main`; its event supplies the previous and resulting revisions needed for change detection, while manual recovery can retain explicit SHA inputs.
+- The source guard should verify the exact `dev` head SHA, while the full promotion suite should test GitHub's synthetic PR merge commit so conflicts or interactions with current `main` are covered before merge. Production should validate and deploy the exact resulting `main` push SHA.
+- `promote-dev.yml` currently owns PR creation, auto-merge, and explicit production dispatch; all three behaviors must be removed while retaining exact-source and full-suite validation.
+- `production-release.yml` currently accepts bot-only explicit SHA inputs; it must instead derive the release range from a filtered `main` push.
+- ADR 0005 records the superseded automatic-promotion decision. A new ADR should supersede it rather than rewriting that history.
+- The production runbook and CI/CD report currently instruct administrators to enable auto-merge and describe automatic PR creation, so both need coordinated updates.
+- The implemented promotion workflow now has read-only permissions, runs on PRs targeting `main`, rejects any head other than exact current `dev`, and validates the synthetic merge commit.
+- The implemented production workflow now runs on `main` pushes and uses `github.event.before` → `github.sha` as its change range.
+- Manual unit workflow dispatch remains available for ordered recovery; the aggregate production dispatcher is no longer manually dispatched.
+- After commit `e52f1749` reached `dev`, GitHub showed no open `dev` → `main` PR and no workflow run for that commit, confirming the old automatic promotion behavior did not fire.
