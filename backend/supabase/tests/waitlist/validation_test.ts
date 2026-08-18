@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
-import { ApiError } from "../_shared/errors.ts";
-import { validateSubscription } from "./validation.ts";
+import { ApiError } from "../../functions/_shared/errors.ts";
+import { validateSubscription } from "../../functions/waitlist/validation.ts";
 
 function assertValidationError(fn: () => unknown): void {
   assert.throws(

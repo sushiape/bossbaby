@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
-import type { WaitlistSubscriptionRepository } from "./types.ts";
-import { handleWaitlistRequest } from "./route.ts";
+import { handleWaitlistRequest } from "../../functions/waitlist/route.ts";
+import type { WaitlistSubscriptionRepository } from "../../functions/waitlist/types.ts";
 
 Deno.test("waitlist route accepts normalized subscriptions without exposing existence", async () => {
   const saved: string[] = [];
