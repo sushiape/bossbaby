@@ -6,7 +6,7 @@
 
 ## Outcome
 
-BossBaby now has three independently deployable release units: Supabase database migrations, Supabase Edge Functions, and the Vercel webapp. Each unit owns its validation and production deployment in a reusable workflow. A Production Release Dispatcher validates changed units in parallel, then deploys only those units while preserving database → Edge Functions → webapp ordering for cross-cutting promotions.
+BossBaby now has three independently deployable release units: Supabase database migrations, Supabase Edge Functions, and the Vercel webapp. Each unit owns validation and manual fallback deployment in a reusable workflow. A Production Release Dispatcher validates changed units in parallel, then runs environment-bound production jobs for only those units while preserving database → Edge Functions → webapp ordering for cross-cutting promotions.
 
 This implements [ADR 0013](adr/0013-split-production-releases-by-change-boundary.md), which supersedes the always-coupled release in ADR 0007.
 
@@ -48,7 +48,7 @@ flowchart TD
     V -. "failure" .-> X
 ```
 
-Skipped units do not create dependencies: a frontend-only promotion calls only Webapp Release, and a migration-only promotion calls only Database Migration Release.
+Skipped units do not create dependencies: a frontend-only promotion runs only the webapp deployment, and a migration-only promotion runs only the database deployment.
 
 ## Workflows
 
@@ -79,7 +79,7 @@ Documentation, test-only, lint-only, and Actions-only changes can be validated b
 - Migrations already present on `main` cannot be edited or deleted.
 - Production dispatchers queue and never cancel an active release.
 - Manual unit deployments reject any revision other than current `main`.
-- The existing `Production` environment is retained; each reusable workflow declares only its required secret names and deployment fails clearly before mutation if any credential is unavailable.
+- The existing `Production` environment is retained. Automated deployment jobs bind to it directly so environment secrets remain available; manual unit workflows use the same environment. Every deployment fails clearly before mutation if a required credential is unavailable.
 - The `Production` environment must allow deployments from `main` only, preventing feature-branch workflow edits from receiving production secrets.
 - Vercel and Supabase native Git deployment remain disabled, so GitHub Actions is the sole production owner.
 - Database changes are forward-only and must remain compatible with separately released clients and functions.
