@@ -22,7 +22,7 @@ export default function BossBabyTermsPage({ currentPage, setCurrentPage }) {
 
             <div>
               <h2 className="font-bold mb-2 text-lg">2. Anbieter</h2>
-              <p>Gabrielle Fu<br />Bossbaby<br />Connollystraße 3<br />80809 München<br />Deutschland</p>
+              <p>Gabrielle Fu<br />Bossbaby<br />TUM Incubator<br />Lichtenbergstraße 6<br />85748 Garching<br />Deutschland</p>
               <p className="mt-2">E-Mail: <a href="mailto:bossbabiezzy@gmail.com" className="underline hover:opacity-70" style={{ color: "#FF89CC" }}>bossbabiezzy@gmail.com</a></p>
             </div>
 
