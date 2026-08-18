@@ -4,7 +4,7 @@
 First document the repository's existing CI/CD pipeline, then use a decision-by-decision interview to design independently deployable Vercel webapp and Supabase backend/database delivery paths. Capture resolved domain language and only qualifying architectural decisions; do not implement until the user confirms shared understanding.
 
 ## Current Phase
-Complete locally; corrective feature PR and production recovery remain external
+Phase 13 in progress: replace automatic promotion with user-created `dev` → `main` PRs
 
 ## Phases
 
@@ -77,6 +77,13 @@ Complete locally; corrective feature PR and production recovery remain external
 - [x] Review the diff and identify the safe recovery sequence for the failed release
 - **Status:** complete
 
+### Phase 13: Make promotion user-controlled
+- [x] Replace push-triggered PR creation and auto-merge with validation of manually opened `dev` → `main` PRs
+- [x] Trigger production automatically from the resulting `main` push
+- [x] Update delivery documentation and ADRs to match the new policy
+- [x] Validate workflows, commit to `dev`, and stop before creating the promotion PR
+- **Status:** complete
+
 ## Key Questions
 1. What events trigger the pipeline, and which stages/jobs run for each event?
 2. What quality gates, build artifacts, environments, secrets, and deployment targets are used?
@@ -91,7 +98,7 @@ Complete locally; corrective feature PR and production recovery remain external
 | Implement each release unit as a separate GitHub Actions workflow | Separate workflows provide independent triggers, permissions, concurrency, visibility, and reruns. |
 | Use `feature branch → dev → main → production` as the delivery sequence | Automated tests must pass before `dev` is promoted to `main`; deployments start only from the resulting `main` update. |
 | Require feature-to-`dev` pull requests with relevant CI and one approval | Changes should be validated before they can destabilize the shared development branch; the complete suite runs again on promotion to `main`. |
-| Automatically maintain and auto-merge the `dev`-to-`main` Promotion PR after full CI passes | Human review occurs on feature PRs; promotion then carries only reviewed `dev` history and should not require duplicate approval. |
+| Superseded: automatically maintain and auto-merge the `dev`-to-`main` Promotion PR | ADR 0014 replaces this with maintainer-controlled promotion so `dev` can serve as a deliberate integration branch. |
 | For a cross-cutting promotion, deploy database migrations, then Edge Functions, then the webapp | Ordered deployment avoids races; promotions that affect only one release unit deploy only that unit. |
 | Use a Production Release Dispatcher to invoke the three reusable deployment workflows | A lightweight dispatcher can detect changed units and guarantee their order; each release workflow remains independently callable for recovery. |
 | Make each release-unit workflow own both validation and deployment | PR CI invokes affected workflows in validation-only mode; the production dispatcher invokes them in deployment mode, where validation must pass before deployment. |
@@ -106,16 +113,17 @@ Complete locally; corrective feature PR and production recovery remain external
 | Restrict manual production dispatch to the current `main` commit | Manual dispatch is for recovery or redeployment, not for bypassing review with arbitrary branches or incompatible old revisions. |
 | Start production deployment immediately after promotion reaches `main` | Human approval occurs on the feature PR and CI gates promotion; no duplicate production approval is required. |
 | Reuse the existing GitHub `Production` environment | Existing secrets are write-only and cannot be copied; each workflow references only the secret names required by its release unit. |
-| Configure GitHub governance as part of implementation | Enable auto-merge; protect `dev` and `main`; require feature PR CI and one approval; require an exact-current-`dev` Promotion PR with full CI; block direct pushes. |
+| Configure GitHub governance as part of implementation | Protect `dev` and `main`; require feature PR CI and one approval; require an exact-current-`dev` Promotion PR with full CI; block direct pushes. Promotion remains manually controlled. |
 | Merge the Promotion PR with a regular merge commit | This preserves exact reviewed `dev` history in `main`, makes promotion boundaries visible, and supports reliable production change detection. |
 | Disable all Vercel native Git deployments, including previews | GitHub Actions remains the sole webapp deployment owner; previews require a future isolated non-production backend to avoid production-data interaction. |
 | Require post-deployment smoke checks for each release unit | Verify remote migration state, a safe read-only Edge Function request, and production web routes; smoke failures block downstream units without rollback. |
 | Keep Supabase native Git deployment disabled | GitHub Actions remains the sole owner of database and Edge Function releases, preventing duplicated or racing deployment paths. |
 | Use a narrow per-unit deployment change map and a broader validation map | Migrations deploy only for new migration files; functions deploy for runtime or relevant function configuration; webapp deploys for runtime, assets, build dependencies/configuration, or Vercel configuration; test/lint/docs/workflow-only changes never deploy. |
-| Apply branch protection rules to administrators | Emergency fixes follow the same reviewed feature-to-`dev` and automated promotion path; there is no routine direct-push bypass. |
+| Apply branch protection rules to administrators | Emergency fixes follow the same reviewed feature-to-`dev` and manual promotion path; there is no routine direct-push bypass. |
 | Supersede ADR 0007 with ADR 0013 | The split release topology is hard to reverse, surprising relative to the existing workflow, and resolves a real independence-versus-ordering trade-off. |
 | Parallelize production validation but keep deployments ordered | Only production mutations have cross-unit ordering constraints; static and local validation can run concurrently against the same merged `main` commit. |
 | Keep credentials as `Production` environment secrets and declare each reusable-workflow secret contract | Repository-level secrets would weaken the main-only environment boundary; called workflows must explicitly declare the credentials their deployment jobs consume. |
+| Require the user to create and merge each `dev`-to-`main` Promotion PR | `dev` is a shared integration branch where multiple features can accumulate and conflicts can be resolved before an intentional production promotion. |
 
 ## Errors Encountered
 | Error | Attempt | Resolution |
@@ -133,6 +141,9 @@ Complete locally; corrective feature PR and production recovery remain external
 | Final whitespace scan found an intentional Markdown hard-break | 1 | Replaced trailing spaces with a blank paragraph separator and reran validation. |
 | Final multi-file planning update used a progress-section anchor that did not apply | 1 | Split completion updates by file and reapplied them to exact sections. |
 | Corrective completion update used an out-of-order `findings.md` anchor | 1 | Located the actual section order and split the update into exact-file patches. |
+| `apply_patch` rejected delete-and-add operations for `promote-dev.yml` in one patch | 1 | Split replacement into separate delete and add patch calls before updating the second workflow. |
+| Mermaid CLI reported a relative SVG name, but the attempted repository cleanup path did not exist | 1 | Treat the Markdown output directory as the likely location, locate the generated asset explicitly, and avoid repeating the incorrect move. |
+| A double-quoted `rg` pattern contained backticks, causing zsh to attempt command substitution | 1 | Avoid backticks in shell search patterns and use single-quoted arguments for all subsequent literal searches. |
 
 ## Notes
 - Preserve unrelated user changes.

@@ -65,6 +65,24 @@
 | 2026-08-13 | GitHub Actions permission settings API returned HTTP 403 | 1 | Limited the report to accessible repository settings and workflow/run evidence. |
 | 2026-08-13 | Shell verification loop shadowed zsh's special `path` array, causing `git: command not found` at the end of that shell | 1 | Changed the loop variable name and reran the pending check in a new shell. |
 
+## Session: 2026-08-18 — Manual promotion control
+
+### Phase 13: Make promotion user-controlled
+- **Status:** in progress
+- Confirmed the desired delivery policy: feature branches integrate on long-lived `dev`; the user manually creates and merges `dev` → `main` only when the combined state is ready.
+- Identified the current mismatch: `promote-dev.yml` creates and auto-merges a promotion PR after every push to `dev`.
+- Planned to validate manually created promotion PRs and trigger production from the subsequent `main` push.
+- First combined replacement patch was rejected because it targeted `promote-dev.yml` with delete and add operations in one patch; switched to separate patch operations.
+- Replaced push-triggered promotion creation/auto-merge with exact-current-`dev` validation on manually opened pull requests targeting `main`.
+- Changed Production Release to trigger from `main` pushes and derive its ordered release range from the push event.
+- Added ADR 0014 to supersede automatic promotion, marked ADR 0005 superseded, and updated the runbook and pipeline report.
+- Actionlint 1.7.12, YAML parsing, shell syntax, whitespace, frontend tests, type-check, lint, and production build all pass.
+- Mermaid CLI rendered the updated pipeline successfully; its relative SVG output required a follow-up location check before cleanup confirmation.
+- A literal search pattern used unsafe double-quoted backticks and caused harmless zsh command substitution; subsequent searches use single-quoted patterns.
+- Committed the policy change as `e52f1749` and pushed it to `dev`.
+- Verified that the push created neither an automatic Promotion PR nor an automatic promotion workflow run.
+- **Status:** complete; the maintainer must manually open the next `dev` → `main` PR.
+
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
