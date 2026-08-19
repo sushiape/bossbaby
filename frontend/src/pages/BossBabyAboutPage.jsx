@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import Header from "../shared/components/Header";
 import Footer from "../shared/components/Footer";
-import { useWaitlistForm } from "../shared/services/useWaitlistForm";
+import { WaitlistForm } from "../shared/components/WaitlistForm";
 import ourStoryImage from "../assets/our-story.jpg";
 
 const brand = {
@@ -52,8 +52,6 @@ const affiliations = [
 
 
 export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
-  const { status, handleSubmit } = useWaitlistForm();
-
   return (
     <div
       className="min-h-screen"
@@ -320,45 +318,23 @@ export default function BossBabyAboutPage({ currentPage, setCurrentPage }) {
               Launching October 1, 2026. Join the waitlist and get early access.
             </motion.p>
 
-            <motion.form
-              variants={fadeUp}
-              onSubmit={handleSubmit}
-              className="flex gap-3 justify-center flex-wrap"
-            >
-              <input
-                type="email"
-                name="email_address"
-                placeholder="enter your email"
-                aria-label="Email address"
-                autoComplete="email"
-                required
-                className="px-5 py-3.5 rounded-xl border border-gray-700 bg-white text-black text-sm"
-                style={{ minWidth: "260px", maxWidth: "80vw" }}
+            <motion.div variants={fadeUp}>
+              <WaitlistForm
+                idleLabel="JOIN WAITLIST"
+                submittingLabel="Sending..."
+                successMessage="You're on the list. We'll be in touch."
+                errorMessage="Something went wrong. Please try again."
+                formClassName="flex gap-3 justify-center flex-wrap"
+                fieldsClassName="contents"
+                inputClassName="px-5 py-3.5 rounded-xl border border-gray-700 bg-white text-black text-sm"
+                inputStyle={{ minWidth: "260px", maxWidth: "80vw" }}
+                buttonClassName="px-6 py-3.5 rounded-xl font-bold text-sm transition-colors disabled:opacity-60 hover:bg-[#ff6abf]"
+                buttonStyle={{ backgroundColor: brand.pink, color: "#fff", border: "none" }}
+                successClassName="mt-4 text-sm"
+                successStyle={{ color: "rgba(255,255,255,0.7)" }}
+                errorClassName="mt-4 text-sm text-red-400"
               />
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="px-6 py-3.5 rounded-xl font-bold text-sm transition-colors disabled:opacity-60"
-                style={{ backgroundColor: brand.pink, color: "#fff", border: "none" }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ff6abf"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = brand.pink; }}
-              >
-                {status === "submitting" ? "Sending..." : "JOIN WAITLIST"}
-              </button>
-            </motion.form>
-
-            <div aria-live="polite">
-              {status === "success" && (
-                <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
-                  You&apos;re on the list. We&apos;ll be in touch.
-                </p>
-              )}
-              {status === "error" && (
-                <p className="mt-4 text-sm text-red-400">
-                  Something went wrong. Please try again.
-                </p>
-              )}
-            </div>
+            </motion.div>
           </motion.div>
         </Container>
       </section>
