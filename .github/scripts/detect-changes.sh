@@ -4,7 +4,6 @@ set -euo pipefail
 
 base_sha="${1:?base SHA is required}"
 head_sha="${2:?head SHA is required}"
-mode="${3:-feature}"
 
 if [[ "$base_sha" =~ ^0+$ ]]; then
   base_sha="$(git rev-list --max-parents=0 "$head_sha" | tail -1)"
@@ -83,12 +82,6 @@ while IFS= read -r changed_file; do
       ;;
   esac
 done < <(git diff --name-only "$base_sha" "$head_sha")
-
-if [[ "$mode" == "promotion" ]]; then
-  validate_database=true
-  validate_edge_functions=true
-  validate_webapp=true
-fi
 
 emit() {
   local name="$1"

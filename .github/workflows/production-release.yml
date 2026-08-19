@@ -41,7 +41,6 @@ jobs:
           bash .github/scripts/detect-changes.sh
           "${{ github.event.before }}"
           "${{ github.sha }}"
-          production
 
   database-validation:
     name: Database validation
