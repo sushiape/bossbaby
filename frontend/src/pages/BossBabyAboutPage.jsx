@@ -37,6 +37,8 @@ const affiliations = [
   { name: "Growth Alliance Accelerator", logo: "https://framerusercontent.com/images/NSMdvir5eKfM69KzEdpQZYBBFNY.svg" },
   { name: "Federal Ministry of Agriculture, Food and Regional Identity", logo: "https://www.bmleh.de/SiteGlobals/Frontend/Images/logo.svg?__blob=normal&v=8" },
   { name: "Federal Ministry of Economic Affairs and Energy", logo: "https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Bilder/Logos/bmwe-social-preview-logo.jpg?__blob=normal&v=1", logoHeight: 23, logoMaxWidth: 84 },
+  { name: "EXIST", logo: "/exist-logo-full.svg", logoHeight: 18, logoMaxWidth: 104 },
+  { name: "Co-funded by the European Union", logo: "/eu-cofunded-logo.png", logoHeight: 18, logoMaxWidth: 82 },
   { name: "Rentenbank", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rentenbank_logo.svg" },
   { name: "TechQuartier", logo: "https://framerusercontent.com/images/ofOJUgFa83WGUnL2bf4V8anqOeQ.svg" },
   { name: "TUM", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Logo_of_the_Technical_University_of_Munich.svg" },
