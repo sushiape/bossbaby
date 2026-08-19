@@ -26,7 +26,6 @@ jobs:
           bash .github/scripts/detect-changes.sh
           "${{ github.event.pull_request.base.sha }}"
           "${{ github.event.pull_request.head.sha }}"
-          feature
 
   database:
     name: Database

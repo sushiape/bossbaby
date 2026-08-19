@@ -16,6 +16,10 @@ jobs:
   source:
     name: Exact dev source
     runs-on: ubuntu-latest
+    outputs:
+      database: ${{ steps.changes.outputs.validate_database }}
+      edge_functions: ${{ steps.changes.outputs.validate_edge_functions }}
+      webapp: ${{ steps.changes.outputs.validate_webapp }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -31,9 +35,16 @@ jobs:
           git fetch --no-tags origin dev
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
           test "$EXPECTED_HEAD_SHA" = "$(git rev-parse origin/dev)"
+      - id: changes
+        name: Classify validation scope
+        run: >-
+          bash .github/scripts/detect-changes.sh
+          "${{ github.event.pull_request.base.sha }}"
+          "${{ github.event.pull_request.head.sha }}"
 
   database:
     name: Database
+    if: needs.source.outputs.database == 'true'
     needs: source
     uses: ./.github/workflows/database-release.yml
     with:
@@ -42,6 +53,7 @@ jobs:
 
   edge-functions:
     name: Edge Functions
+    if: needs.source.outputs.edge_functions == 'true'
     needs: source
     uses: ./.github/workflows/edge-functions-release.yml
     with:
@@ -50,6 +62,7 @@ jobs:
 
   webapp:
     name: Webapp
+    if: needs.source.outputs.webapp == 'true'
     needs: source
     uses: ./.github/workflows/webapp-release.yml
     with:
@@ -62,14 +75,27 @@ jobs:
     needs: [source, database, edge-functions, webapp]
     runs-on: ubuntu-latest
     steps:
-      - name: Require exact source and full CI
+      - name: Require exact source and every selected validation
         env:
           SOURCE_RESULT: ${{ needs.source.result }}
+          DATABASE_SELECTED: ${{ needs.source.outputs.database }}
           DATABASE_RESULT: ${{ needs.database.result }}
+          EDGE_SELECTED: ${{ needs.source.outputs.edge_functions }}
           EDGE_RESULT: ${{ needs.edge-functions.result }}
+          WEBAPP_SELECTED: ${{ needs.source.outputs.webapp }}
           WEBAPP_RESULT: ${{ needs.webapp.result }}
         run: |
           set -euo pipefail
-          for result in "$SOURCE_RESULT" "$DATABASE_RESULT" "$EDGE_RESULT" "$WEBAPP_RESULT"; do
-            test "$result" = "success"
-          done
+          test "$SOURCE_RESULT" = "success"
+          require_expected_result() {
+            local selected="$1"
+            local result="$2"
+            if [[ "$selected" == "true" ]]; then
+              test "$result" = "success"
+            else
+              test "$result" = "skipped"
+            fi
+          }
+          require_expected_result "$DATABASE_SELECTED" "$DATABASE_RESULT"
+          require_expected_result "$EDGE_SELECTED" "$EDGE_RESULT"
+          require_expected_result "$WEBAPP_SELECTED" "$WEBAPP_RESULT"
