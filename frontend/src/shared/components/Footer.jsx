@@ -62,9 +62,16 @@ export default function Footer({ setCurrentPage }) {
             </a>
           </div>
 
-          <p className="order-3 text-center sm:order-1 sm:text-left" style={{ color: '#6e6e73', fontSize: '12px' }}>
-            © 2026 with 🩷 by bossbaby
-          </p>
+          <div className="order-3 flex flex-wrap items-center justify-center gap-3 sm:order-1 sm:justify-start">
+            <p className="text-center sm:text-left" style={{ color: '#6e6e73', fontSize: '12px' }}>
+              © 2026 with 🩷 by bossbaby
+            </p>
+            <div className="flex items-center gap-3 opacity-70">
+              <img src="/exist-logo-full.svg" alt="EXIST" style={{ height: '16px', width: 'auto' }} />
+              <img src="/bmwe-logo.svg" alt="Federal Ministry of Economic Affairs and Energy" style={{ height: '16px', width: 'auto' }} />
+              <img src="/eu-cofunded-logo.png" alt="Co-funded by the European Union" style={{ height: '16px', width: 'auto' }} />
+            </div>
+          </div>
 
           {setCurrentPage && (
             <div className="order-2 flex flex-col items-center gap-1 text-center sm:order-2 sm:flex-1 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-4 sm:gap-y-2">

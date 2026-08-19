@@ -46,3 +46,7 @@ _Avoid_: Developer Sign-In, developer authorization
 **Authorized Developer**:
 An authenticated person whose identity is present in the server-controlled developer allowlist and may therefore use the Restricted App before launch.
 _Avoid_: User, code holder
+
+**Affiliation**:
+An entry in the `affiliations` list (About page, Landing page marquee) — covers both organizational partners (e.g. TUM Venture Labs) and government funding bodies (e.g. BMWE, EXIST, EU co-funding) under one shared display pattern. The list does not distinguish the two categories today; a logo's presence there means "shown in the affiliation strip," not necessarily "funded by" or "partnered with" in a legal sense.
+_Avoid_: Partner, sponsor (implies a distinction the current data model doesn't make)
