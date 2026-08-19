@@ -5,6 +5,7 @@ dist
 frontend/dist
 frontend/playwright-report
 frontend/test-results
+.playwright-mcp
 .env
 .env.*
 !.env.example

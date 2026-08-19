@@ -161,6 +161,18 @@ const affiliations = [
     logoMaxWidth: 88,
   },
   {
+    name: "EXIST",
+    logo: "/exist-logo-full.svg",
+    logoHeight: 18,
+    logoMaxWidth: 104,
+  },
+  {
+    name: "Co-funded by the European Union",
+    logo: "/eu-cofunded-logo.png",
+    logoHeight: 18,
+    logoMaxWidth: 82,
+  },
+  {
     name: "Rentenbank",
     logo: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rentenbank_logo.svg",
   },
