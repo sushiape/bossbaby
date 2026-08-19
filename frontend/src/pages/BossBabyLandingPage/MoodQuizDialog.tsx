@@ -1,5 +1,6 @@
 import { useEffect, useRef, type KeyboardEvent, type MouseEvent } from "react";
 import { motion } from "framer-motion";
+import { WaitlistForm } from "../../shared/components/WaitlistForm";
 import {
   moodQuizQuestions,
   moodResults,
@@ -181,6 +182,25 @@ export function MoodQuizDialog({
             <p className="mb-7 text-xs font-semibold text-black/45">
               If your answers split evenly, what you want today leads your match.
             </p>
+
+            <div className="mb-7 rounded-[20px] border border-white/90 bg-white/50 p-5 shadow-[0_8px_24px_rgba(163,79,126,0.08)]">
+              <p className="mb-3 text-sm font-extrabold text-black">
+                Get notified when we launch
+              </p>
+              <WaitlistForm
+                idleLabel="Join Waitlist"
+                submittingLabel="Sending..."
+                successMessage="You're on the list! We'll email you when Bossbaby launches."
+                errorMessage="Something went wrong. Please try again in a moment."
+                formClassName="flex w-full flex-col gap-3"
+                fieldsClassName="flex flex-col gap-3 sm:flex-row"
+                inputClassName="min-w-0 flex-1 rounded-2xl border border-white bg-white px-5 py-3.5 text-sm text-black/80 shadow-sm outline-none transition placeholder:text-black/35 focus:ring-4 focus:ring-white/50"
+                buttonClassName="rounded-2xl bg-black px-6 py-3.5 text-sm font-extrabold text-white transition hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-70"
+                successClassName="text-sm font-semibold text-black/70"
+                errorClassName="text-sm font-semibold text-red-500"
+              />
+            </div>
+
             <div className="flex flex-wrap gap-3">
               <button
                 type="button"

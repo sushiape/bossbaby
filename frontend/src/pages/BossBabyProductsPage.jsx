@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../shared/components/Header";
 import Footer from "../shared/components/Footer";
-import { useWaitlistForm } from "../shared/services/useWaitlistForm";
+import { WaitlistForm } from "../shared/components/WaitlistForm";
 import { ChevronRight } from "lucide-react";
 
 const brand = {
@@ -51,9 +51,6 @@ const moods = [
 ];
 
 export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
-  // Match landing page behavior
-  const { status, handleSubmit } = useWaitlistForm();
-
   return (
     <div
       className="min-h-screen"
@@ -200,45 +197,20 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
           <p className="mb-4">Join the waitlist</p>
 
           {/* Same waitlist service as the landing page */}
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4 items-center max-w-2xl mx-auto mt-4"
-            aria-live="polite"
-          >
-            <div className="flex gap-2 justify-center flex-wrap">
-              <input
-                type="email"
-                name="email_address"
-                placeholder="enter your email"
-                aria-label="Email address"
-                autoComplete="email"
-                required
-                className="px-4 py-4 rounded-2xl border border-white bg-white text-base min-w-[280px] max-w-[80vw] text-black"
-                style={{ fontSize: "15px" }}
-              />
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="px-4 py-4 rounded-2xl border border-black bg-black text-white font-extrabold text-base hover:opacity-95 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed"
-                style={{ fontWeight: 800, fontSize: "15px" }}
-              >
-                {status === "submitting" ? "SENDING..." : "GO"}
-              </button>
-            </div>
-
-            {status === "success" && (
-              <p className="text-sm text-green-100 mt-1">
-                You&apos;re on the waitlist ✨ We&apos;ll email you when Bossbaby
-                launches.
-              </p>
-            )}
-
-            {status === "error" && (
-              <p className="text-sm text-red-100 mt-1">
-                Something went wrong. Please try again in a moment.
-              </p>
-            )}
-          </form>
+          <WaitlistForm
+            idleLabel="GO"
+            submittingLabel="SENDING..."
+            successMessage="You're on the waitlist ✨ We'll email you when Bossbaby launches."
+            errorMessage="Something went wrong. Please try again in a moment."
+            formClassName="flex flex-col gap-4 items-center max-w-2xl mx-auto mt-4"
+            fieldsClassName="flex gap-2 justify-center flex-wrap"
+            inputClassName="px-4 py-4 rounded-2xl border border-white bg-white text-base min-w-[280px] max-w-[80vw] text-black"
+            inputStyle={{ fontSize: "15px" }}
+            buttonClassName="px-4 py-4 rounded-2xl border border-black bg-black text-white font-extrabold text-base hover:opacity-95 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed"
+            buttonStyle={{ fontWeight: 800, fontSize: "15px" }}
+            successClassName="text-sm text-green-100 mt-1"
+            errorClassName="text-sm text-red-100 mt-1"
+          />
         </Container>
       </section>
 
