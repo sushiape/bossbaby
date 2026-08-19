@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Header from "../shared/components/Header";
 import Footer from "../shared/components/Footer";
-import { useWaitlistForm } from "../shared/services/useWaitlistForm";
+import { WaitlistForm } from "../shared/components/WaitlistForm";
 import { MoodQuizDialog } from "./BossBabyLandingPage/MoodQuizDialog";
 import { useMoodQuiz } from "./BossBabyLandingPage/useMoodQuiz";
 
@@ -293,7 +293,6 @@ function CountdownUnit({ value, label }) {
 
 // ── Main component ──────────────────────────────────────────────────────────
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
-  const { status, handleSubmit } = useWaitlistForm();
   const moodQuiz = useMoodQuiz();
   const countdown = useCountdown("2026-10-01T00:00:00");
 
@@ -356,40 +355,18 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
           <p className="text-base text-white mb-4 font-medium">
             Be first to know when we launch.
           </p>
-          <form
-            onSubmit={handleSubmit}
-            className="flex w-full max-w-2xl flex-col items-center gap-3 mx-auto"
-            aria-live="polite"
-          >
-            <div className="flex w-full flex-col justify-center gap-3 sm:flex-row">
-              <input
-                type="email"
-                name="email_address"
-                placeholder="enter your email"
-                aria-label="Email address"
-                autoComplete="email"
-                required
-                className="min-w-0 flex-1 rounded-2xl border border-white bg-white px-5 py-4 text-base text-black/80 shadow-sm outline-none transition placeholder:text-black/35 focus:ring-4 focus:ring-white/50"
-              />
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="rounded-2xl border border-white bg-white px-7 py-4 text-base font-extrabold text-[#FF64BE] shadow-sm transition hover:-translate-y-0.5 hover:bg-pink-50 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {status === "submitting" ? "SENDING..." : "JOIN WAITLIST"}
-              </button>
-            </div>
-            {status === "success" && (
-              <p className="text-sm font-semibold text-white">
-                You&apos;re on the waitlist ✨ We&apos;ll email you when Bossbaby launches.
-              </p>
-            )}
-            {status === "error" && (
-              <p className="text-sm font-semibold text-red-100">
-                Something went wrong. Please try again in a moment.
-              </p>
-            )}
-          </form>
+          <WaitlistForm
+            idleLabel="JOIN WAITLIST"
+            submittingLabel="SENDING..."
+            successMessage="You're on the waitlist ✨ We'll email you when Bossbaby launches."
+            errorMessage="Something went wrong. Please try again in a moment."
+            formClassName="flex w-full max-w-2xl flex-col items-center gap-3 mx-auto"
+            fieldsClassName="flex w-full flex-col justify-center gap-3 sm:flex-row"
+            inputClassName="min-w-0 flex-1 rounded-2xl border border-white bg-white px-5 py-4 text-base text-black/80 shadow-sm outline-none transition placeholder:text-black/35 focus:ring-4 focus:ring-white/50"
+            buttonClassName="rounded-2xl border border-white bg-white px-7 py-4 text-base font-extrabold text-[#FF64BE] shadow-sm transition hover:-translate-y-0.5 hover:bg-pink-50 disabled:cursor-not-allowed disabled:opacity-70"
+            successClassName="text-sm font-semibold text-white"
+            errorClassName="text-sm font-semibold text-red-100"
+          />
         </motion.div>
       </section>
 
