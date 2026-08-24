@@ -103,7 +103,8 @@ export default function WaitlistSubscriptions({ access }: WaitlistSubscriptionsP
                 {canManage && (
                   <td className="px-3 py-2 text-right">
                     {pendingRemoval === subscription.id ? (
-                      <span className="inline-flex gap-2">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="text-black/60">Delete permanently?</span>
                         <button
                           type="button"
                           onClick={() => void handleRemove(subscription.id)}
