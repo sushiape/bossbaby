@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { availableTabs, landingTab } from "../model/access";
 import type { StaffAccess, WorkspaceTab } from "../model/types";
+import { STAFF_THEME } from "../model/theme";
 import MyAccess from "./MyAccess";
 
 interface StaffWorkspaceProps {
@@ -19,8 +20,11 @@ export default function StaffWorkspace({ access, onSignOut }: StaffWorkspaceProp
   const activeTab = tabs.includes(tab) ? tab : tabs[0];
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="border-b border-black/10">
+    <div className="min-h-screen" style={{ backgroundColor: STAFF_THEME.background }}>
+      <header
+        className="bg-white border-b"
+        style={{ borderColor: STAFF_THEME.border }}
+      >
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center gap-6">
           <span className="text-sm font-semibold text-black">
             Bossbaby <span className="text-[#FF4FA3]">Staff</span>
@@ -32,11 +36,14 @@ export default function StaffWorkspace({ access, onSignOut }: StaffWorkspaceProp
                 type="button"
                 onClick={() => setTab(candidate)}
                 aria-current={activeTab === candidate ? "page" : undefined}
-                className={`text-sm px-3 py-1.5 rounded ${
-                  activeTab === candidate
-                    ? "bg-black text-white"
-                    : "text-black/60 hover:text-black"
+                className={`text-sm px-3 py-1.5 rounded transition-colors ${
+                  activeTab === candidate ? "text-white" : "text-black/60 hover:text-black"
                 }`}
+                style={
+                  activeTab === candidate
+                    ? { backgroundColor: STAFF_THEME.accent }
+                    : undefined
+                }
               >
                 {TAB_LABELS[candidate]}
               </button>
@@ -48,7 +55,10 @@ export default function StaffWorkspace({ access, onSignOut }: StaffWorkspaceProp
       <main className="max-w-5xl mx-auto px-6 py-8">
         {activeTab === "access" && <MyAccess access={access} onSignOut={onSignOut} />}
         {activeTab === "waitlist" && (
-          <section>
+          <section
+            className="bg-white border rounded-lg p-6"
+            style={{ borderColor: STAFF_THEME.border }}
+          >
             <h2 className="text-lg font-semibold text-black">Waitlist</h2>
             <p className="mt-2 text-sm text-black/60">
               Subscription management and communications arrive in a later step of the

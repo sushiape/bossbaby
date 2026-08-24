@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { STAFF_THEME } from "../model/theme";
 
 interface StaffSignInProps {
   onSignIn: (email: string, password: string) => Promise<void>;
@@ -48,10 +49,14 @@ export default function StaffSignIn({ onSignIn, onRecover }: StaffSignInProps) {
   }
 
   return (
-    <main className="min-h-screen bg-white flex items-center justify-center px-4">
+    <main
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ backgroundColor: STAFF_THEME.background }}
+    >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm border border-black/10 rounded-lg p-8"
+        className="w-full max-w-sm bg-white border rounded-lg p-8 shadow-sm"
+        style={{ borderColor: STAFF_THEME.border }}
       >
         <h1 className="text-xl font-semibold text-black">Staff sign-in</h1>
         <p className="mt-1 text-sm text-black/60">Bossbaby Staff Workspace.</p>
@@ -88,7 +93,8 @@ export default function StaffSignIn({ onSignIn, onRecover }: StaffSignInProps) {
         <button
           type="submit"
           disabled={busy}
-          className="mt-6 w-full bg-black text-white text-sm font-medium rounded px-4 py-2 disabled:opacity-50"
+          className="mt-6 w-full text-white text-sm font-medium rounded px-4 py-2 disabled:opacity-50 hover:brightness-105 transition"
+          style={{ backgroundColor: STAFF_THEME.accent }}
         >
           {busy ? "Signing in…" : "Sign in"}
         </button>

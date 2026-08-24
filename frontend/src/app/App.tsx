@@ -28,7 +28,7 @@ export default function App() {
   if (route.standalone) {
     const StandaloneComponent = RouteComponent as unknown as ComponentType;
     return (
-      <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <Suspense fallback={<div className="min-h-screen bg-[#FFD2E9]" />}>
         <StandaloneComponent />
       </Suspense>
     );

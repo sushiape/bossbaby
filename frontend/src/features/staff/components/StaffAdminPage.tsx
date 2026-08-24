@@ -1,4 +1,5 @@
 import { useStaffSession } from "../hooks/useStaffSession";
+import { STAFF_THEME } from "../model/theme";
 import AccessDenied from "./AccessDenied";
 import SetNewPassword from "./SetNewPassword";
 import StaffSignIn from "./StaffSignIn";
@@ -14,7 +15,10 @@ export default function StaffAdminPage() {
 
   if (status === "unconfigured") {
     return (
-      <main className="min-h-screen bg-white flex items-center justify-center px-4">
+      <main
+        className="min-h-screen flex items-center justify-center px-4"
+        style={{ backgroundColor: STAFF_THEME.background }}
+      >
         <p className="text-sm text-black/70">The Supabase backend is not configured.</p>
       </main>
     );
@@ -22,7 +26,10 @@ export default function StaffAdminPage() {
 
   if (status === "loading") {
     return (
-      <main className="min-h-screen bg-white flex items-center justify-center px-4">
+      <main
+        className="min-h-screen flex items-center justify-center px-4"
+        style={{ backgroundColor: STAFF_THEME.background }}
+      >
         <p className="text-sm text-black/50">Loading…</p>
       </main>
     );
