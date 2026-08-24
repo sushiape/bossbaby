@@ -95,7 +95,8 @@ If the upstream is unavailable, `bossbaby` does not substitute a local page. The
 
 - Developer Login uses Supabase email/password authentication and offers no developer sign-up action.
 - Developer identities are provisioned manually in the shared Supabase project's dashboard.
-- The server authorizes the authenticated Supabase user UUID against `restricted_app_developers`; merely existing in `auth.users` never grants access.
+- The server authorizes the authenticated Supabase user UUID against the staff capability registry; merely existing in `auth.users` never grants access.
+- **Deprecation in progress.** `restricted_app_developers` and `is_restricted_app_developer()` are deprecated and scheduled for removal. They continue to work unchanged for now: the function reads the capability registry *union* the legacy allowlist, so identities provisioned either way remain authorized. Every call additionally emits a `WARNING` into the Postgres logs. The Restricted App should migrate to `has_staff_capability('restricted_app.access')` before the removal release.
 - The allowlist is server-controlled and inaccessible to browser roles.
 - An authorized developer session lasts 12 hours and the allowlist is rechecked for every protected request.
 - The verified developer session is also the identity used inside the Restricted App, so an Authorized Developer does not log in twice.
@@ -108,16 +109,25 @@ If the upstream is unavailable, `bossbaby` does not substitute a local page. The
 3. In the Supabase SQL Editor, enable that exact identity:
 
 ```sql
-insert into public.restricted_app_developers (user_id, label, enabled)
-select id, 'Bossbaby developer', true
+insert into public.staff_capability_grants (user_id, capability)
+select id, 'restricted_app.access'
 from auth.users
 where lower(email) = lower('developer@example.com')
-on conflict (user_id) do update
-set enabled = true,
-    updated_at = now();
+on conflict (user_id, capability) do nothing;
 ```
 
-Replace `developer@example.com` with the account created in step 2. The statement must affect one row; a zero-row result means the email does not match a Supabase identity. Disable access by setting `enabled = false` for that UUID rather than deleting the auth identity unless account deletion is separately intended.
+Replace `developer@example.com` with the account created in step 2. The statement must affect one row; a zero-row result means the email does not match a Supabase identity.
+
+Revoke access by deleting that row:
+
+```sql
+delete from public.staff_capability_grants
+where user_id = '<uuid>' and capability = 'restricted_app.access';
+```
+
+Absence of a grant is revocation; there is no `enabled` flag in the registry. Deleting a grant does not delete the auth identity.
+
+> Do not insert into `public.restricted_app_developers`. It is deprecated and new rows there will stop being read when it is removed.
 
 ## Local development contract
 

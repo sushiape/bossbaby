@@ -51,3 +51,10 @@ entrypoint = "./functions/you-pick/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/waitlist/index.ts"
+
+# verify_jwt stays false so the unauthenticated CORS preflight reaches the
+# function. Staff authorization is enforced inside it, on the verified JWT.
+[functions.staff]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/staff/index.ts"

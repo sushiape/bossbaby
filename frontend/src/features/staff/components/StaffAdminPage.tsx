@@ -1,0 +1,44 @@
+import { useStaffSession } from "../hooks/useStaffSession";
+import AccessDenied from "./AccessDenied";
+import SetNewPassword from "./SetNewPassword";
+import StaffSignIn from "./StaffSignIn";
+import StaffWorkspace from "./StaffWorkspace";
+
+/**
+ * The /admin route. Unlisted in public navigation, but the URL is not a security
+ * control — every capability is enforced by the staff Edge Function.
+ */
+export default function StaffAdminPage() {
+  const { status, access, error, signIn, signOut, requestPasswordRecovery, completePasswordRecovery } =
+    useStaffSession();
+
+  if (status === "unconfigured") {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center px-4">
+        <p className="text-sm text-black/70">The Supabase backend is not configured.</p>
+      </main>
+    );
+  }
+
+  if (status === "loading") {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center px-4">
+        <p className="text-sm text-black/50">Loading…</p>
+      </main>
+    );
+  }
+
+  if (status === "recovery") {
+    return <SetNewPassword onSetPassword={completePasswordRecovery} />;
+  }
+
+  if (status === "signed-out") {
+    return <StaffSignIn onSignIn={signIn} onRecover={requestPasswordRecovery} />;
+  }
+
+  if (status === "denied" || !access) {
+    return <AccessDenied message={error} onSignOut={signOut} />;
+  }
+
+  return <StaffWorkspace access={access} onSignOut={signOut} />;
+}
