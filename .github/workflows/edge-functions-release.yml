@@ -76,6 +76,7 @@ jobs:
           deno check --config backend/supabase/deno.json
           backend/supabase/functions/you-pick/index.ts
           backend/supabase/functions/waitlist/index.ts
+          backend/supabase/functions/staff/index.ts
       - name: Run unit tests
         run: >-
           deno test --config backend/supabase/deno.json --allow-env
