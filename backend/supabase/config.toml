@@ -32,7 +32,14 @@ file_size_limit = "50MiB"
 [auth]
 enabled = true
 site_url = "http://localhost:3000"
-additional_redirect_urls = ["http://127.0.0.1:3000"]
+# Staff password recovery returns to /admin. Without these entries Supabase
+# silently falls back to site_url, dropping the recovering staff member on the
+# public homepage with a token the page cannot consume.
+additional_redirect_urls = [
+  "http://127.0.0.1:3000",
+  "http://localhost:3000/admin",
+  "http://127.0.0.1:3000/admin",
+]
 jwt_expiry = 3600
 enable_signup = true
 enable_anonymous_sign_ins = true

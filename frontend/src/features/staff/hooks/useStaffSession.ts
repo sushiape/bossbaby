@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { fetchAccess, StaffApiError } from "../api/staffApi";
 import { isStaffBackendConfigured, requireStaffSupabase, staffSupabase } from "../api/staffClient";
+import { isRecoveryUrl } from "../model/recovery";
 import type { StaffAccess } from "../model/types";
 
 export type StaffSessionStatus =
@@ -63,6 +64,19 @@ export function useStaffSession() {
     let active = true;
     const isActive = () => active;
 
+    // A recovery link lands here with type=recovery in the URL fragment, and
+    // detectSessionInUrl signs the identity in as it consumes it. Reading the
+    // fragment directly is what separates "arrived to set a password" from an
+    // ordinary visit: the PASSWORD_RECOVERY event can fire before this listener
+    // attaches, and without this the staff member is dropped into the workspace
+    // with their old password still in place.
+    if (isRecoveryUrl(window.location.hash)) {
+      setState({ status: "recovery", access: null, error: null });
+      return () => {
+        active = false;
+      };
+    }
+
     void staffSupabase.auth.getSession().then(({ data }) => resolve(data.session, isActive));
 
     const { data: subscription } = staffSupabase.auth.onAuthStateChange((event, session) => {
@@ -102,6 +116,7 @@ export function useStaffSession() {
     const client = requireStaffSupabase();
     const { error } = await client.auth.updateUser({ password });
     if (error) throw new Error(error.message);
+    window.history.replaceState(null, "", window.location.pathname);
     const { data } = await client.auth.getSession();
     setState({ status: "loading", access: null, error: null });
     await resolve(data.session, () => true);
