@@ -1,5 +1,5 @@
 import { currentStaffSession, requireStaffConfig } from "./staffClient";
-import type { StaffAccess } from "../model/types";
+import type { ImportSummary, StaffAccess, SubscriptionPage } from "../model/types";
 
 interface ErrorPayload {
   error?: { code?: string; message?: string; details?: Record<string, string> };
@@ -56,4 +56,26 @@ export async function staffRequest<T>(path: string, options: RequestInit = {}): 
 export async function fetchAccess(): Promise<StaffAccess> {
   const { access } = await staffRequest<{ access: StaffAccess }>("/me");
   return access;
+}
+
+export async function fetchSubscriptions(
+  params: { search?: string; cursor?: string | null; limit?: number } = {},
+): Promise<SubscriptionPage> {
+  const query = new URLSearchParams();
+  if (params.search) query.set("search", params.search);
+  if (params.cursor) query.set("cursor", params.cursor);
+  if (params.limit) query.set("limit", String(params.limit));
+  const suffix = query.toString() ? `?${query}` : "";
+  return staffRequest<SubscriptionPage>(`/waitlist/subscriptions${suffix}`);
+}
+
+export async function importSubscriptions(emails: string): Promise<ImportSummary> {
+  return staffRequest<ImportSummary>("/waitlist/subscriptions", {
+    method: "POST",
+    body: JSON.stringify({ emails, consent_affirmed: true }),
+  });
+}
+
+export async function removeSubscription(id: string): Promise<void> {
+  await staffRequest(`/waitlist/subscriptions/${encodeURIComponent(id)}`, { method: "DELETE" });
 }

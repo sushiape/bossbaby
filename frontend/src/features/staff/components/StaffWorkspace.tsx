@@ -3,6 +3,7 @@ import { availableTabs, landingTab } from "../model/access";
 import type { StaffAccess, WorkspaceTab } from "../model/types";
 import { STAFF_THEME } from "../model/theme";
 import MyAccess from "./MyAccess";
+import WaitlistSubscriptions from "./WaitlistSubscriptions";
 
 interface StaffWorkspaceProps {
   access: StaffAccess;
@@ -54,18 +55,7 @@ export default function StaffWorkspace({ access, onSignOut }: StaffWorkspaceProp
 
       <main className="max-w-5xl mx-auto px-6 py-8">
         {activeTab === "access" && <MyAccess access={access} onSignOut={onSignOut} />}
-        {activeTab === "waitlist" && (
-          <section
-            className="bg-white border rounded-lg p-6"
-            style={{ borderColor: STAFF_THEME.border }}
-          >
-            <h2 className="text-lg font-semibold text-black">Waitlist</h2>
-            <p className="mt-2 text-sm text-black/60">
-              Subscription management and communications arrive in a later step of the
-              delivery order.
-            </p>
-          </section>
-        )}
+        {activeTab === "waitlist" && <WaitlistSubscriptions access={access} />}
       </main>
     </div>
   );

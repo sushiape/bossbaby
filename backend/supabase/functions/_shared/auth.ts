@@ -77,8 +77,17 @@ export async function staffIdentity(
   request: Request,
   admin: SupabaseClient,
 ): Promise<StaffIdentity> {
-  const user = await participant(request, true);
-  if (!user) throw new ApiError(401, "AUTHENTICATION_REQUIRED", "Staff identity is required.");
+  let user: User | null;
+  try {
+    user = await participant(request, true);
+  } catch (error) {
+    // participant() speaks for the public site; restate it for this surface.
+    if (error instanceof ApiError && error.status === 401) {
+      throw new ApiError(401, error.code, "Staff sign-in is required.");
+    }
+    throw error;
+  }
+  if (!user) throw new ApiError(401, "AUTHENTICATION_REQUIRED", "Staff sign-in is required.");
 
   const { data, error } = await admin
     .from("staff_capability_grants")

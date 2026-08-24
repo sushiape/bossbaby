@@ -11,3 +11,28 @@ export interface StaffAccess {
 }
 
 export type WorkspaceTab = "waitlist" | "access";
+
+export interface WaitlistSubscription {
+  id: string;
+  email: string;
+  source: string;
+  createdAt: string;
+}
+
+export interface SubscriptionPage {
+  subscriptions: WaitlistSubscription[];
+  total: number;
+  nextCursor: string | null;
+}
+
+export interface RejectedImportLine {
+  line: number;
+  value: string;
+  reason: string;
+}
+
+export interface ImportSummary {
+  added: number;
+  skippedDuplicate: number;
+  rejected: RejectedImportLine[];
+}
