@@ -30,6 +30,8 @@ on:
         required: false
       SUPABASE_DB_PASSWORD:
         required: false
+      LEGACY_FORMSPREE_EMAILS:
+        required: false
   workflow_dispatch:
     inputs:
       validate:
@@ -137,6 +139,28 @@ jobs:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: supabase --workdir backend db push
+      # BBDEV-25, one-time transfer of the Formspree signups.
+      #
+      # Deliberately not a migration: these are real subscriber addresses, and a
+      # migration is committed to git forever. They arrive from a GitHub secret
+      # instead, so nothing personal is ever committed. The script is idempotent,
+      # so leaving this step in place is harmless once the transfer has happened;
+      # with no secret configured it does nothing at all.
+      - name: Transfer legacy waitlist signups
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          LEGACY_FORMSPREE_EMAILS: ${{ secrets.LEGACY_FORMSPREE_EMAILS }}
+        run: |
+          if [ -z "${LEGACY_FORMSPREE_EMAILS:-}" ]; then
+            echo "No legacy signup list configured; nothing to transfer."
+            exit 0
+          fi
+          # The renderer inlines the list and reports counts only, so the
+          # addresses themselves never reach the build log.
+          python3 backend/supabase/operations/render_legacy_transfer.py > /tmp/transfer.sql
+          supabase --workdir backend db query --linked -f /tmp/transfer.sql
+          rm -f /tmp/transfer.sql
       - name: Verify remote migration history
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

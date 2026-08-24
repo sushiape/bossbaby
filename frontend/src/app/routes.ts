@@ -12,7 +12,8 @@ export type PageId =
   | "impressum"
   | "privacy"
   | "terms"
-  | "accessibility";
+  | "accessibility"
+  | "admin";
 
 export interface RoutePageProps {
   currentPage: PageId;
@@ -24,6 +25,8 @@ interface RouteDefinition {
   path: string;
   component: ComponentType<RoutePageProps>;
   navigationLabel?: string;
+  /** Staff-only routes render standalone: no public header, footer, or nav props. */
+  standalone?: boolean;
 }
 
 export interface NavigationDefinition {
@@ -46,6 +49,10 @@ export const routes: RouteDefinition[] = [
   { id: "privacy", path: "/privacy", component: lazy(() => import("../pages/BossBabyPrivacyPage")) },
   { id: "terms", path: "/terms", component: lazy(() => import("../pages/BossBabyTermsPage")) },
   { id: "accessibility", path: "/accessibility", component: lazy(() => import("../pages/BossBabyAccessibilityPage")) },
+  // Unlisted: the Staff Workspace. Never given a navigationLabel, and excluded
+  // from the sitemap. The unlisted URL is not a security control — the staff
+  // Edge Function enforces every capability on the verified JWT.
+  { id: "admin", path: "/admin", standalone: true, component: lazy(() => import("../features/staff/components/StaffAdminPage")) },
 ];
 
 const appNavigation: NavigationDefinition = {
