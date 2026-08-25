@@ -21,8 +21,8 @@
       "destination": "/redirect.html"
     },
     {
-      "source": "/app/(.+)",
-      "destination": "https://bossbabyremix.vercel.app/$1"
+      "source": "/app/:path*",
+      "destination": "https://bossbabyremix.vercel.app/:path*"
     },
     {
       "source": "/(.*)",
