@@ -2,20 +2,19 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { getRouteByPath, navigationRoutes, routes } from "./routes.ts";
 
-test("places the App document navigation between Bossbabes and About", () => {
+test("places App between Bossbabes and About", () => {
   assert.deepEqual(
     navigationRoutes.map(({ navigationLabel }) => navigationLabel),
     ["Drinks", "AI machine", "Bossbabes", "App", "About"],
   );
-  assert.deepEqual(
-    navigationRoutes.find(({ id }) => id === "app"),
-    {
-      id: "app",
-      path: "/app",
-      navigationLabel: "App",
-      documentNavigation: true,
-    },
-  );
+});
+
+test("/app is a real page that keeps the public header", () => {
+  const app = getRouteByPath("/app");
+  assert.ok(app, "/app must resolve to a route");
+  assert.equal(app?.navigationLabel, "App");
+  // standalone would strip the public header -- the opposite of what /app needs.
+  assert.equal(app?.standalone, undefined);
 });
 
 test("the Staff Workspace is reachable at /admin but never listed in navigation", () => {
