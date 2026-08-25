@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { fetchAccess, StaffApiError } from "../api/staffApi";
 import { isStaffBackendConfigured, requireStaffSupabase, staffSupabase } from "../api/staffClient";
-import { isRecoveryUrl } from "../model/recovery";
+import { isPasswordSetupUrl } from "../model/passwordSetup";
 import type { StaffAccess } from "../model/types";
 
 export type StaffSessionStatus =
@@ -10,7 +10,7 @@ export type StaffSessionStatus =
   | "signed-out"
   | "denied"
   | "authorized"
-  | "recovery"
+  | "password-setup"
   | "unconfigured";
 
 export interface StaffSessionState {
@@ -64,14 +64,14 @@ export function useStaffSession() {
     let active = true;
     const isActive = () => active;
 
-    // A recovery link lands here with type=recovery in the URL fragment, and
+    // An invite or reset link lands here with its type in the URL fragment, and
     // detectSessionInUrl signs the identity in as it consumes it. Reading the
     // fragment directly is what separates "arrived to set a password" from an
     // ordinary visit: the PASSWORD_RECOVERY event can fire before this listener
-    // attaches, and without this the staff member is dropped into the workspace
-    // with their old password still in place.
-    if (isRecoveryUrl(window.location.hash)) {
-      setState({ status: "recovery", access: null, error: null });
+    // attaches — and never fires at all for an invite — so without this the
+    // Staff Member is dropped into the workspace with no password set.
+    if (isPasswordSetupUrl(window.location.hash)) {
+      setState({ status: "password-setup", access: null, error: null });
       return () => {
         active = false;
       };
@@ -85,7 +85,7 @@ export function useStaffSession() {
       // Re-resolving there would remount the workspace and lose the open tab.
       if (event === "TOKEN_REFRESHED" || event === "INITIAL_SESSION") return;
       if (event === "PASSWORD_RECOVERY") {
-        setState({ status: "recovery", access: null, error: null });
+        setState({ status: "password-setup", access: null, error: null });
         return;
       }
       setState((current) => ({ ...current, status: "loading" }));
@@ -112,7 +112,7 @@ export function useStaffSession() {
     if (error) throw new Error(error.message);
   }, []);
 
-  const completePasswordRecovery = useCallback(async (password: string) => {
+  const completePasswordSetup = useCallback(async (password: string) => {
     const client = requireStaffSupabase();
     const { error } = await client.auth.updateUser({ password });
     if (error) throw new Error(error.message);
@@ -128,5 +128,5 @@ export function useStaffSession() {
     setState({ status: "signed-out", access: null, error: null });
   }, []);
 
-  return { ...state, signIn, signOut, requestPasswordRecovery, completePasswordRecovery };
+  return { ...state, signIn, signOut, requestPasswordRecovery, completePasswordSetup };
 }

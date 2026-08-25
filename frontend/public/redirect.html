@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Redirecting…</title>
+  </head>
+  <body>
+    <!--
+      Where Supabase-generated auth links land. Emails triggered from the
+      Supabase dashboard carry no destination of their own, so they fall back to
+      the project's Site URL, which points here. This page reads the link's type
+      and forwards it to the page that handles it.
+
+      Deliberately plain HTML outside the React app: the URL fragment is the
+      credential, and the staff client is the only client that may consume one
+      (see ADR-0002). Nothing here parses, stores, or sends it — the fragment is
+      copied onto the destination untouched and this page loads no Supabase SDK.
+
+      Match loosely: an unrecognised password-setup type must still reach the
+      workspace rather than the homepage, where it would leave no trace of what
+      went wrong. Anything else — no fragment, someone typing the URL — is an
+      ordinary visitor who should just see the site.
+    -->
+    <script>
+      (function () {
+        var hash = window.location.hash;
+        var type = new URLSearchParams(hash.replace(/^#/, "")).get("type");
+        var passwordSetup = type === "invite" || type === "recovery" || type === "signup";
+        window.location.replace(passwordSetup ? "/admin" + hash : "/");
+      })();
+    </script>
+  </body>
+</html>

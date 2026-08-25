@@ -347,17 +347,20 @@ functional table layout.
 ## 8. Provider configuration (operational, not code)
 
 None of this is code. It is done once, by hand, and steps 8 and 9 of the delivery
-order cannot be verified until it is finished.
+order cannot be verified until it is finished. The outbound half is finished and
+verified; the inbound half is not. Section 8.6 is the current status of record.
 
 ### 8.1 Sending and reply identity
 
 - Sending identity: `Bossbaby <newsletter@hibossbaby.com>`.
 - Sending does not require a mailbox. Only DNS authorization is needed for the
   outbound direction.
-- Replies are handled by adding `newsletter@hibossbaby.com` as a Namecheap email
-  forwarding rule pointing at the existing public contact inbox already named in
-  [BossBabyPrivacyPage.jsx](frontend/src/pages/BossBabyPrivacyPage.jsx). Adding a
-  forwarding rule does not alter MX records.
+- Replies were to be handled by adding `newsletter@hibossbaby.com` as a Namecheap
+  email forwarding rule pointing at the existing public contact inbox already
+  named in [BossBabyPrivacyPage.jsx](frontend/src/pages/BossBabyPrivacyPage.jsx).
+  **This is not in place**: the apex MX records are gone and inbound mail is
+  delivered nowhere (see 8.3). The address must not be used as a reply-to until
+  an inbound path is restored.
 
 ### 8.2 Where DNS actually lives
 
@@ -366,57 +369,69 @@ domain is registered at Namecheap and delegated to Namecheap nameservers; Vercel
 lists it as a third-party domain and holds zero records for it. All records below
 are edited in the Namecheap dashboard. `vercel dns` cannot be used.
 
-Verified state as of 2026-08-24:
+Verified against the authoritative nameservers on 2026-08-25:
 
 | record | current value |
 | --- | --- |
 | NS | `dns1.registrar-servers.com`, `dns2.registrar-servers.com` |
 | A | `216.198.79.1` |
-| MX | five `eforward{1..5}.registrar-servers.com` hosts — Namecheap Email Forwarding |
-| SPF (TXT) | `v=spf1 include:spf.efwd.registrar-servers.com ~all` |
-| DMARC | none |
+| DKIM (TXT) | `resend._domainkey` — Resend's public key, verified |
+| SPF (TXT) | `send.hibossbaby.com` → `v=spf1 include:amazonses.com ~all`, verified |
+| SPF (MX) | `send.hibossbaby.com` → `feedback-smtp.us-east-1.amazonses.com`, priority 10, verified |
+| DMARC | `_dmarc` → `v=DMARC1; p=none; rua=mailto:bossbabiezzy@gmail.com` |
+| MX (apex) | **none** |
+| SPF (apex) | **none** |
 
-### 8.3 Required record changes
+### 8.3 Record changes as they were actually made
 
-**DKIM — add.** Resend generates domain-specific values when the sending domain
-is created. They live on their own `_domainkey` hostname and cannot collide with
-anything present today. The exact values are not knowable in advance and must be
-copied from Resend.
+The apex SPF merge this section previously prescribed did not happen and was not
+needed. Resend scopes its own records to a `send.hibossbaby.com` subdomain, so
+sending authorization never touches the apex and cannot collide with whatever a
+forwarding provider publishes there. That is strictly better than merging two
+`include` mechanisms into one apex record: there is no shared record to get
+wrong, and the RFC 7208 duplicate-SPF hazard does not arise at all.
 
-**SPF — edit the existing record, never add a second one.** A domain that
-publishes two SPF records is a permanent `permerror` under RFC 7208. Receiving
-servers do not fall back to whichever record looks better; the check simply
-fails. Because the current record authorizes Namecheap's forwarding servers, a
-duplicate would degrade the inbound forwarding that already works today — not
-merely the newsletter. The single record becomes:
+**DKIM, SPF, and the bounce MX — added and verified.** All three live under
+Resend's own hostnames. Sending is enabled and confirmed working end to end:
+Supabase transactional mail delivered through Resend on 2026-08-25.
 
-```
-v=spf1 include:spf.efwd.registrar-servers.com include:_spf.resend.com ~all
-```
+**DMARC — added** at `p=none`, reporting to `bossbabiezzy@gmail.com`. Reports
+observe without affecting delivery; a stricter policy is a later decision.
 
-One record, both `include` mechanisms, `~all` preserved.
+**Apex MX and apex SPF — absent.** Both were recorded as present on 2026-08-24
+and both are now gone, confirmed against `dns1` and `dns2` directly rather than
+through a cache. These were Namecheap Email Forwarding's records. Whether they
+were removed deliberately or lost while Resend's records were added is not
+recoverable from DNS, and nothing in this repository records the change.
 
-**DMARC — add.** Nothing exists at `_dmarc.hibossbaby.com`, so there is nothing
-to merge. Start at `p=none`, which reports without affecting delivery, and only
-consider a stricter policy after the reports confirm the setup is clean.
+The consequence is that **inbound mail to `@hibossbaby.com` is not delivered
+anywhere.** A send to `newsletter@hibossbaby.com` on 2026-08-25 did not arrive.
+Sending is unaffected — it requires no MX record — so this blocks replies, not
+delivery. Section 8.4 step 5 exists to catch exactly this, and it did.
 
-MX records are not touched by any of the above, which is what preserves inbound
-forwarding.
+Resolving it is a live decision, not a documented one: either restore Namecheap
+Email Forwarding, or enable receiving on Resend (currently disabled) and point
+apex MX there. The second keeps one provider but was not considered when this
+section was first written. Until one is chosen, the reply address in section 8.1
+is unreachable and must not be advertised.
 
 ### 8.4 Order of operations
 
-1. Create the Resend account and add `hibossbaby.com` as a sending domain. This
-   generates the DKIM values.
-2. In Namecheap: add the DKIM records, **edit** the existing SPF record as shown,
-   add the DMARC record.
-3. Add the `newsletter@hibossbaby.com` forwarding rule.
-4. Confirm domain verification in Resend.
-5. **Confirm inbound forwarding still works** by sending to an address that was
-   already being forwarded before this change, and separately to
-   `newsletter@hibossbaby.com`.
+1. ~~Create the Resend account and add `hibossbaby.com` as a sending domain.~~
+   Done — the domain is verified and sending is enabled.
+2. ~~In Namecheap: add the records Resend generates.~~ Done — DKIM, the `send`
+   subdomain SPF and bounce MX, and DMARC are published and verified. Resend
+   scopes its records to `send.hibossbaby.com`, so no apex SPF edit was required.
+3. Add an inbound path for `newsletter@hibossbaby.com`. **Outstanding** — no
+   apex MX record exists, so this cannot work until 8.3 is resolved.
+4. ~~Confirm domain verification in Resend.~~ Done.
+5. **Confirm inbound mail arrives** by sending to `newsletter@hibossbaby.com` and
+   to an address that was being forwarded before this change. **Run on
+   2026-08-25 and failed** — the message was delivered nowhere.
 
-Step 5 is the step most often skipped and the one that catches an SPF mistake. It
-must pass before the first real send.
+Step 5 is the step most often skipped and the one that catches a record mistake.
+It caught this one. Sending is unaffected and does not wait on it, but the
+reply-to identity in 8.1 does.
 
 ### 8.5 Provider limits
 
@@ -426,7 +441,21 @@ deliberately not modeled in this system.
 
 ### 8.6 Current status
 
-No Resend account, DNS change, forwarding rule, or data import has been created.
+Verified 2026-08-25 against Resend and the authoritative nameservers.
+
+**Done.** The Resend account exists and `hibossbaby.com` is verified with sending
+enabled. DKIM, SPF, and the bounce MX are in place and verified. DMARC is
+published at `p=none`. Supabase transactional email is routed through Resend on
+the `supabase-smtp-noreply` API key and is confirmed delivering.
+
+**Not done.** No forwarding rule, and no inbound path at all — see 8.3. No
+audience, no contacts, and no broadcast exist in Resend, so there is nothing yet
+to send a Communication to. No API key has been issued for the Edge Function that
+steps 8 and 9 will need; the existing key is scoped to SMTP and must not be
+reused for it.
+
+Nothing in this repository calls Resend. The provider work above unblocks steps 8
+and 9 of the delivery order but does not begin them.
 
 ## 9. Delivery order
 
