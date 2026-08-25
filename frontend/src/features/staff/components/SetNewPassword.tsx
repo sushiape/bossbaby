@@ -6,9 +6,13 @@ interface SetNewPasswordProps {
 }
 
 /**
- * Reached by following a recovery link. Supabase signs the identity in when the
- * link's fragment is consumed, so without this screen the password would never
- * actually change and the Staff Member would be locked out again at expiry.
+ * Password Setup: reached by following either an invite link or a reset link.
+ * Supabase signs the identity in when the link's fragment is consumed, so
+ * without this screen the password is never actually set — an invited Staff
+ * Member would appear to be signed in, then be locked out on their next visit.
+ *
+ * The copy has to read correctly for someone who has never had a password, not
+ * only for someone replacing one.
  */
 export default function SetNewPassword({ onSetPassword }: SetNewPasswordProps) {
   const [password, setPassword] = useState("");
@@ -42,11 +46,11 @@ export default function SetNewPassword({ onSetPassword }: SetNewPasswordProps) {
         className="w-full max-w-sm bg-white border rounded-lg p-8 shadow-sm"
         style={{ borderColor: STAFF_THEME.border }}
       >
-        <h1 className="text-xl font-semibold text-black">Choose a new password</h1>
-        <p className="mt-1 text-sm text-black/60">This replaces the password on your staff account.</p>
+        <h1 className="text-xl font-semibold text-black">Choose your password</h1>
+        <p className="mt-1 text-sm text-black/60">This becomes the password for your staff account. You will use it to sign in from now on.</p>
 
         <label className="block mt-6 text-sm font-medium text-black" htmlFor="new-password">
-          New password
+          Password
         </label>
         <input
           id="new-password"
@@ -60,7 +64,7 @@ export default function SetNewPassword({ onSetPassword }: SetNewPasswordProps) {
         />
 
         <label className="block mt-4 text-sm font-medium text-black" htmlFor="confirm-password">
-          Confirm new password
+          Confirm password
         </label>
         <input
           id="confirm-password"

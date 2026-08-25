@@ -10,7 +10,7 @@ import StaffWorkspace from "./StaffWorkspace";
  * control — every capability is enforced by the staff Edge Function.
  */
 export default function StaffAdminPage() {
-  const { status, access, error, signIn, signOut, requestPasswordRecovery, completePasswordRecovery } =
+  const { status, access, error, signIn, signOut, requestPasswordRecovery, completePasswordSetup } =
     useStaffSession();
 
   if (status === "unconfigured") {
@@ -35,8 +35,8 @@ export default function StaffAdminPage() {
     );
   }
 
-  if (status === "recovery") {
-    return <SetNewPassword onSetPassword={completePasswordRecovery} />;
+  if (status === "password-setup") {
+    return <SetNewPassword onSetPassword={completePasswordSetup} />;
   }
 
   if (status === "signed-out") {

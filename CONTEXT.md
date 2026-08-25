@@ -43,6 +43,10 @@ _Avoid_: App Sign-Up, Entry Code verification, app access
 The identity-verification step through which a Staff Member enters the private staff workspace. It is separate from both Developer Sign-In and App Sign-Up.
 _Avoid_: Admin sign-up, Developer Sign-In
 
+**Password Setup**:
+The step in which a Staff Member establishes the password on their own account, reached by following either an invite link or a reset link. The two entrances differ only in whether a password already existed, so they lead to the same screen.
+_Avoid_: Password recovery, password reset, forgot password
+
 **Staff Workspace**:
 The private, evolving workspace where Staff Members use features permitted by their capabilities. Its first feature area is waitlist management.
 _Avoid_: Admin page, hidden page
