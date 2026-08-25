@@ -3,198 +3,214 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Style A · Single Page — BBDEV-38</title>
+<title>Style A · Full page — BBDEV-38</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700;800&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bb-pink: #FF89CC;
-    --bb-pink-deep: #FF4FA3;
-    --bb-pink-soft: #FFD2E9;
-    --bb-ink: #2a111f;
-    --card: #6d1f3d;
-    --card-deep: #4e1029;
-    --field: rgba(255, 255, 255, 0.10);
-    --field-line: rgba(255, 255, 255, 0.22);
+    --pink: #FF89CC;
+    --pink-deep: #FF4FA3;
+    --bg: #FFD6E9;
+    --bg-soft: #FFE3F2;
+    --text: rgba(0, 0, 0, 0.8);
+    --title: rgba(0, 0, 0, 0.9);
+    --muted: rgba(0, 0, 0, 0.45);
+    --glass: linear-gradient(155deg, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.74) 45%, rgba(255,255,255,0.8) 100%);
+    --glass-line: rgba(255, 255, 255, 0.78);
+    --shadow: 0 2px 8px rgba(133, 89, 109, 0.05), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -10px 18px rgba(255,255,255,0.22);
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     margin: 0;
     font-family: Poppins, system-ui, -apple-system, "Segoe UI", sans-serif;
-    background: #f4e6ee;
-    color: var(--bb-ink);
+    background: var(--bg);
+    color: var(--text);
     -webkit-font-smoothing: antialiased;
-    padding: 40px 20px 64px;
-  }
-  .page-head { max-width: 760px; margin: 0 auto 32px; text-align: center; }
-  .page-head h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; }
-  .page-head p { margin: 0; font-size: 14px; color: rgba(42,17,31,0.6); font-weight: 500; }
-
-  .stage { display: flex; justify-content: center; }
-
-  /* Phone frame */
-  .phone {
-    width: 340px;
-    border-radius: 46px;
-    padding: 12px;
-    background: linear-gradient(160deg, #2c2c30 0%, #1a1a1d 100%);
-    box-shadow: 0 30px 70px rgba(70,15,48,0.35), 0 0 0 2px rgba(255,255,255,0.06) inset;
-    position: relative;
-  }
-  .notch {
-    position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
-    width: 92px; height: 26px; border-radius: 999px; background: #111; z-index: 5;
-  }
-  .screen {
-    border-radius: 36px;
-    background: linear-gradient(168deg, var(--card) 0%, var(--card-deep) 100%);
-    padding: 46px 22px 30px;
-    overflow: hidden;
   }
 
-  .brand { font-size: 26px; font-weight: 800; letter-spacing: -0.04em; color: #fff; line-height: 1; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 20px 90px; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--pink);
+    padding: 64px 20px 72px;
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .hero-inner { max-width: 780px; margin: 0 auto; }
+  /* Specific enough to beat the `.hero p` rule below, since the wordmark is a <p>. */
+  .hero .brand { font-size: 40px; font-weight: 800; letter-spacing: -0.04em; color: #000; line-height: 1; margin: 0 0 10px; max-width: none; }
   .kicker {
-    margin: 6px 0 26px; font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
-    text-transform: uppercase; color: rgba(255,255,255,0.62);
+    display: inline-block; margin: 0 0 22px;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #fff; background: rgba(0,0,0,0.82); border-radius: 999px; padding: 7px 16px;
   }
-
-  .q { margin-bottom: 22px; }
-  .q > legend, .q > .q-title {
-    font-size: 19px; font-weight: 800; letter-spacing: -0.02em; color: #fff;
-    margin: 0 0 12px; padding: 0; line-height: 1.25;
+  .hero h1 {
+    font-size: clamp(30px, 5.4vw, 46px); font-weight: 800; letter-spacing: -0.035em;
+    line-height: 1.08; color: #000; margin: 0 0 14px;
   }
-  fieldset.q { border: 0; padding: 0; margin: 0 0 22px; }
+  .hero p { font-size: 17px; font-weight: 500; color: rgba(0,0,0,0.72); margin: 0 auto; max-width: 46ch; line-height: 1.55; }
 
-  .opts { display: flex; flex-wrap: wrap; gap: 9px; }
+  /* ── Question blocks ── */
+  .q {
+    background: var(--glass);
+    backdrop-filter: blur(26px) saturate(145%);
+    border: 1px solid var(--glass-line);
+    border-radius: 24px;
+    padding: 30px 30px 32px;
+    margin: 0 0 22px;
+    box-shadow: var(--shadow);
+    isolation: isolate;
+  }
+  .q-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+  .num {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
+    color: var(--pink-deep); background: rgba(255,137,204,0.16);
+    border-radius: 999px; padding: 5px 11px; white-space: nowrap; align-self: center;
+  }
+  .q-title {
+    font-size: clamp(21px, 3vw, 27px); font-weight: 800; letter-spacing: -0.025em;
+    color: var(--title); margin: 0 0 20px; padding: 0; line-height: 1.2;
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  }
+  .hint { margin: -12px 0 18px; font-size: 13px; font-weight: 500; color: var(--muted); }
+
+  .opts { display: flex; flex-wrap: wrap; gap: 11px; }
   .opt {
-    font-family: inherit; font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.92);
-    background: var(--field); border: 1px solid var(--field-line);
-    border-radius: 13px; padding: 11px 15px; cursor: pointer;
-    transition: transform .16s ease, background .16s ease, border-color .16s ease;
-    line-height: 1.25; text-align: left;
+    font-family: inherit; font-size: 15px; font-weight: 700; color: var(--title);
+    background: #fff; border: 1.5px solid rgba(0,0,0,0.08);
+    border-radius: 16px; padding: 15px 22px; cursor: pointer;
+    transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
   }
-  .opt:hover { background: rgba(255,255,255,0.17); transform: translateY(-1px); }
+  .opt:hover { transform: translateY(-2px); border-color: rgba(255,137,204,0.55); box-shadow: 0 8px 22px rgba(163,79,126,0.10); }
   .opt[aria-pressed="true"] {
-    background: rgba(255,137,204,0.20);
-    border-color: var(--bb-pink);
-    color: #fff;
-    box-shadow: 0 0 0 1px var(--bb-pink);
+    background: var(--pink); border-color: var(--pink); color: #000;
+    box-shadow: 0 8px 22px rgba(255,137,204,0.4);
   }
-  .opt:focus-visible { outline: 3px solid rgba(255,137,204,0.6); outline-offset: 2px; }
+  .opt:focus-visible { outline: 3px solid rgba(255,79,163,0.55); outline-offset: 3px; }
 
   .field {
-    width: 100%; font-family: inherit; font-size: 13px; font-weight: 500;
-    color: #fff; background: var(--field);
-    border: 1px solid var(--field-line); border-radius: 13px;
-    padding: 14px 16px; transition: border-color .16s ease, background .16s ease;
+    width: 100%; font-family: inherit; font-size: 16px; font-weight: 500; color: var(--title);
+    background: #fff; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 16px;
+    padding: 17px 20px; transition: border-color .16s ease, box-shadow .16s ease;
   }
-  .field::placeholder { color: rgba(255,255,255,0.45); }
-  .field:focus { outline: none; border-color: var(--bb-pink); background: rgba(255,255,255,0.15); }
+  .field::placeholder { color: rgba(0,0,0,0.3); }
+  .field:focus { outline: none; border-color: var(--pink); box-shadow: 0 0 0 4px rgba(255,137,204,0.22); }
 
-  .sub { margin: 0 0 9px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6); }
+  /* ── Final block ── */
+  .final { background: #000; border: 0; }
+  .final .q-title, .final .num { color: #fff; }
+  .final .num { background: rgba(255,137,204,0.2); color: var(--pink); }
+  .final .hint { color: rgba(255,255,255,0.55); }
+  .email-row { display: flex; gap: 12px; }
+  .email-row .field { flex: 1; border-color: transparent; }
 
-  .submit-row { display: flex; justify-content: center; margin-top: 26px; }
   .submit {
-    font-family: inherit; font-size: 13.5px; font-weight: 700; color: #4e1029;
-    background: linear-gradient(135deg, #F7B77E 0%, #EE9A62 100%);
-    border: 0; border-radius: 13px; padding: 12px 26px; cursor: pointer;
-    display: inline-flex; align-items: center; gap: 8px;
-    box-shadow: 0 8px 22px rgba(238,154,98,0.32);
-    transition: transform .16s ease, box-shadow .16s ease;
+    font-family: inherit; font-size: 16px; font-weight: 800; color: #000;
+    background: var(--pink); border: 0; border-radius: 16px; padding: 17px 32px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 9px; white-space: nowrap;
+    box-shadow: 0 10px 26px rgba(255,137,204,0.34);
+    transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
   }
-  .submit:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(238,154,98,0.42); }
-  .submit:focus-visible { outline: 3px solid rgba(255,137,204,0.7); outline-offset: 3px; }
+  .submit:hover { transform: translateY(-2px); background: #fff; box-shadow: 0 14px 32px rgba(255,137,204,0.44); }
+  .submit:focus-visible { outline: 3px solid rgba(255,137,204,0.8); outline-offset: 3px; }
 
-  .done {
-    display: none; text-align: center; padding: 26px 6px 10px;
-  }
+  /* ── Done ── */
+  .done { display: none; width: 100%; text-align: center; padding: 30px 6px 6px; }
   .done.show { display: block; }
-  .done h2 { color: #fff; font-size: 21px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 8px; }
-  .done p { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500; margin: 0 0 18px; line-height: 1.5; }
+  .done h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; color: var(--title); margin: 0 0 10px; }
+  .done p { font-size: 15px; font-weight: 500; color: var(--muted); margin: 0 0 22px; }
   .done pre {
-    text-align: left; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.14);
-    border-radius: 13px; padding: 14px; color: rgba(255,255,255,0.85);
-    font-size: 10.5px; line-height: 1.6; overflow-x: auto; margin: 0 0 16px;
+    text-align: left; background: #fff; border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 18px; padding: 20px; color: var(--title);
+    font-size: 12.5px; line-height: 1.65; overflow-x: auto; margin: 0 auto 22px; max-width: 460px;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   }
   .restart {
-    font-family: inherit; font-size: 12px; font-weight: 700; color: #fff;
-    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.24);
-    border-radius: 999px; padding: 9px 18px; cursor: pointer;
+    font-family: inherit; font-size: 14px; font-weight: 700; color: var(--title);
+    background: #fff; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 999px;
+    padding: 12px 26px; cursor: pointer;
   }
-  .restart:hover { background: rgba(255,255,255,0.22); }
+  .restart:hover { border-color: var(--pink); }
+
+  @media (max-width: 560px) {
+    .hero { padding: 48px 18px 54px; }
+    .q { padding: 24px 20px 26px; border-radius: 20px; }
+    .q-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .opts { flex-direction: column; }
+    .opt { width: 100%; text-align: left; }
+    .email-row { flex-direction: column; }
+    .submit { justify-content: center; }
+  }
 </style>
 </head>
 <body>
-  <div class="page-head">
-    <h1>Style A — everything on one screen</h1>
-    <p>All five questions visible at once. One submit. BBDEV-38</p>
-  </div>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="brand">bossbaby</p>
+      <span class="kicker">Help us build it</span>
+      <h1>Five questions.<br />Then we build your drink.</h1>
+      <p>We&rsquo;re still deciding flavours, sizes and who this is for. Tell us what you&rsquo;d actually buy.</p>
+    </div>
+  </header>
 
-  <div class="stage">
-    <div class="phone">
-      <div class="notch"></div>
-      <div class="screen">
-        <form id="quiz">
-          <div class="brand">bossbaby</div>
-          <p class="kicker">Help us build it</p>
-
-          <fieldset class="q">
-            <legend>I am&hellip;</legend>
-            <div class="opts" data-single="gender">
-              <button type="button" class="opt" aria-pressed="false" value="Female">Female</button>
-              <button type="button" class="opt" aria-pressed="false" value="Male">Male</button>
-              <button type="button" class="opt" aria-pressed="false" value="Diverse">Diverse</button>
-            </div>
-          </fieldset>
-
-          <fieldset class="q">
-            <legend>I would like to buy&hellip;</legend>
-            <div class="opts" data-single="size">
-              <button type="button" class="opt" aria-pressed="false" value="100ml">100ml</button>
-              <button type="button" class="opt" aria-pressed="false" value="250ml">250ml</button>
-              <button type="button" class="opt" aria-pressed="false" value="330ml">330ml</button>
-            </div>
-          </fieldset>
-
-          <div class="q">
-            <p class="q-title">Flavour I love&hellip;</p>
-            <input class="field" id="flavour" type="text" placeholder="Type your answer&hellip;" aria-label="Flavour I love" />
-          </div>
-
-          <fieldset class="q">
-            <legend>Which drink would you look forward to the most?</legend>
-            <div class="opts" data-multi="drinks">
-              <button type="button" class="opt" aria-pressed="false" value="Power up, Babe">Power up,<br />Babe</button>
-              <button type="button" class="opt" aria-pressed="false" value="Glow up, Babe">Glow up,<br />Babe</button>
-              <button type="button" class="opt" aria-pressed="false" value="Just chill, Babe">Just chill,<br />Babe</button>
-            </div>
-          </fieldset>
-
-          <div class="q">
-            <p class="q-title">One last thing</p>
-            <p class="sub">Join our waitlist!</p>
-            <input class="field" id="email" type="email" placeholder="Enter your email address&hellip;" aria-label="Email address" required />
-          </div>
-
-          <div class="submit-row">
-            <button class="submit" type="submit">Submit <span aria-hidden="true">&rarr;</span></button>
-          </div>
-        </form>
-
-        <div class="done" id="done" role="status">
-          <h2>You&rsquo;re on the list ✨</h2>
-          <p>Prototype only — nothing was sent. Captured answers:</p>
-          <pre id="payload"></pre>
-          <button class="restart" type="button" id="restart">Start over</button>
+  <main class="wrap">
+    <form id="quiz">
+      <div class="q" role="group" aria-labelledby="q1-t">
+        <p class="q-title" id="q1-t"><span class="num">01</span>I am&hellip;</p>
+        <div class="opts" data-single="gender">
+          <button type="button" class="opt" aria-pressed="false" value="Female">Female</button>
+          <button type="button" class="opt" aria-pressed="false" value="Male">Male</button>
+          <button type="button" class="opt" aria-pressed="false" value="Diverse">Diverse</button>
         </div>
       </div>
-    </div>
-  </div>
+
+      <div class="q" role="group" aria-labelledby="q2-t">
+        <p class="q-title" id="q2-t"><span class="num">02</span>I would like to buy&hellip;</p>
+        <div class="opts" data-single="size">
+          <button type="button" class="opt" aria-pressed="false" value="100ml">100ml</button>
+          <button type="button" class="opt" aria-pressed="false" value="250ml">250ml</button>
+          <button type="button" class="opt" aria-pressed="false" value="330ml">330ml</button>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-head"><span class="num">03</span><p class="q-title">Flavour I love&hellip;</p></div>
+        <input class="field" id="flavour" type="text" placeholder="Type your answer&hellip;" aria-label="Flavour I love" />
+      </div>
+
+      <div class="q" role="group" aria-labelledby="q4-t">
+        <p class="q-title" id="q4-t"><span class="num">04</span>Which drink would you look forward to the most?</p>
+        <p class="hint">Pick as many as you like.</p>
+        <div class="opts" data-multi="drinks">
+          <button type="button" class="opt" aria-pressed="false" value="Power up, Babe">Power up, Babe</button>
+          <button type="button" class="opt" aria-pressed="false" value="Glow up, Babe">Glow up, Babe</button>
+          <button type="button" class="opt" aria-pressed="false" value="Just chill, Babe">Just chill, Babe</button>
+        </div>
+      </div>
+
+      <div class="q final">
+        <div class="q-head"><span class="num">05</span><p class="q-title">One last thing</p></div>
+        <p class="hint">Join our waitlist &mdash; we&rsquo;ll email you when Bossbaby launches.</p>
+        <div class="email-row">
+          <input class="field" id="email" type="email" placeholder="Enter your email address&hellip;" aria-label="Email address" required />
+          <button class="submit" type="submit">Submit <span aria-hidden="true">&rarr;</span></button>
+        </div>
+      </div>
+    </form>
+
+    <output class="done" id="done">
+      <h2>You&rsquo;re on the list ✨</h2>
+      <p>Prototype only &mdash; nothing was sent. Captured answers:</p>
+      <pre id="payload"></pre>
+      <button class="restart" type="button" id="restart">Start over</button>
+    </output>
+  </main>
 
 <script>
-  const state = { gender: null, size: null, drinks: [], flavour: "", email: "" };
+  const state = { gender: null, size: null, flavour: "", drinks: [], email: "" };
 
   document.querySelectorAll("[data-single]").forEach((group) => {
     const key = group.dataset.single;
@@ -212,8 +228,7 @@
     group.addEventListener("click", (e) => {
       const btn = e.target.closest(".opt");
       if (!btn) return;
-      const on = btn.getAttribute("aria-pressed") === "true";
-      btn.setAttribute("aria-pressed", on ? "false" : "true");
+      btn.setAttribute("aria-pressed", btn.getAttribute("aria-pressed") === "true" ? "false" : "true");
       state[key] = [...group.querySelectorAll('.opt[aria-pressed="true"]')].map((b) => b.value);
     });
   });
@@ -226,12 +241,13 @@
     document.getElementById("payload").textContent = JSON.stringify(state, null, 2);
     form.style.display = "none";
     document.getElementById("done").classList.add("show");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
   document.getElementById("restart").addEventListener("click", () => {
     form.reset();
     document.querySelectorAll(".opt").forEach((b) => b.setAttribute("aria-pressed", "false"));
-    Object.assign(state, { gender: null, size: null, drinks: [], flavour: "", email: "" });
+    Object.assign(state, { gender: null, size: null, flavour: "", drinks: [], email: "" });
     document.getElementById("done").classList.remove("show");
     form.style.display = "";
   });

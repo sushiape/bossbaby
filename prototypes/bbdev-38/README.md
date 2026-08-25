@@ -4,16 +4,19 @@ Two standalone prototypes of the new 5-question survey, for review.
 Not wired into the app: nothing here is imported by `frontend/`, and no
 answers are sent anywhere. Open either file directly in a browser.
 
-- `style-a-single-page.html` — all five questions on one screen, one Submit.
-- `style-b-stepped.html` — one question per screen, progress bar, auto-advance.
+- `style-a-single-page.html` — a full page: all five questions laid out down
+  the page, scrolled through, one Submit at the end.
+- `style-b-stepped.html` — a popup over a blurred page, one question at a
+  time, same shell as the quiz already on the site.
 
 Both carry the same questions (Q1 gender, Q2 size, Q3 free-text flavour,
 Q4 multi-select drink, Q5 email), show "help us build it" instead of
 "mood finder", and print the captured answers on the final screen so you
 can see what a real submission would collect.
 
-Colours are the Bossbaby palette (Poppins, `#FF89CC` pink, deep plum
-`#4e1029`–`#6d1f3d`, amber CTA); the layouts follow the supplied mockups.
+Colours are the site's own palette from `BossBabyLandingPage.jsx`: Poppins,
+`#FF89CC` pink, `#FFD6E9` ground, black text and CTAs. The mockups were
+read as layout patterns, not copied as artwork.
 
 Open questions for BBDEV-38, unchanged by these prototypes:
 - Where Q1–Q4 answers get stored (the waitlist API takes only an email).
