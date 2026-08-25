@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Style A · Single Page — BBDEV-38</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bb-pink: #FF89CC;
+    --bb-pink-deep: #FF4FA3;
+    --bb-pink-soft: #FFD2E9;
+    --bb-ink: #2a111f;
+    --card: #6d1f3d;
+    --card-deep: #4e1029;
+    --field: rgba(255, 255, 255, 0.10);
+    --field-line: rgba(255, 255, 255, 0.22);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Poppins, system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #f4e6ee;
+    color: var(--bb-ink);
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 20px 64px;
+  }
+  .page-head { max-width: 760px; margin: 0 auto 32px; text-align: center; }
+  .page-head h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .page-head p { margin: 0; font-size: 14px; color: rgba(42,17,31,0.6); font-weight: 500; }
+
+  .stage { display: flex; justify-content: center; }
+
+  /* Phone frame */
+  .phone {
+    width: 340px;
+    border-radius: 46px;
+    padding: 12px;
+    background: linear-gradient(160deg, #2c2c30 0%, #1a1a1d 100%);
+    box-shadow: 0 30px 70px rgba(70,15,48,0.35), 0 0 0 2px rgba(255,255,255,0.06) inset;
+    position: relative;
+  }
+  .notch {
+    position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+    width: 92px; height: 26px; border-radius: 999px; background: #111; z-index: 5;
+  }
+  .screen {
+    border-radius: 36px;
+    background: linear-gradient(168deg, var(--card) 0%, var(--card-deep) 100%);
+    padding: 46px 22px 30px;
+    overflow: hidden;
+  }
+
+  .brand { font-size: 26px; font-weight: 800; letter-spacing: -0.04em; color: #fff; line-height: 1; }
+  .kicker {
+    margin: 6px 0 26px; font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(255,255,255,0.62);
+  }
+
+  .q { margin-bottom: 22px; }
+  .q > legend, .q > .q-title {
+    font-size: 19px; font-weight: 800; letter-spacing: -0.02em; color: #fff;
+    margin: 0 0 12px; padding: 0; line-height: 1.25;
+  }
+  fieldset.q { border: 0; padding: 0; margin: 0 0 22px; }
+
+  .opts { display: flex; flex-wrap: wrap; gap: 9px; }
+  .opt {
+    font-family: inherit; font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.92);
+    background: var(--field); border: 1px solid var(--field-line);
+    border-radius: 13px; padding: 11px 15px; cursor: pointer;
+    transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    line-height: 1.25; text-align: left;
+  }
+  .opt:hover { background: rgba(255,255,255,0.17); transform: translateY(-1px); }
+  .opt[aria-pressed="true"] {
+    background: rgba(255,137,204,0.20);
+    border-color: var(--bb-pink);
+    color: #fff;
+    box-shadow: 0 0 0 1px var(--bb-pink);
+  }
+  .opt:focus-visible { outline: 3px solid rgba(255,137,204,0.6); outline-offset: 2px; }
+
+  .field {
+    width: 100%; font-family: inherit; font-size: 13px; font-weight: 500;
+    color: #fff; background: var(--field);
+    border: 1px solid var(--field-line); border-radius: 13px;
+    padding: 14px 16px; transition: border-color .16s ease, background .16s ease;
+  }
+  .field::placeholder { color: rgba(255,255,255,0.45); }
+  .field:focus { outline: none; border-color: var(--bb-pink); background: rgba(255,255,255,0.15); }
+
+  .sub { margin: 0 0 9px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6); }
+
+  .submit-row { display: flex; justify-content: center; margin-top: 26px; }
+  .submit {
+    font-family: inherit; font-size: 13.5px; font-weight: 700; color: #4e1029;
+    background: linear-gradient(135deg, #F7B77E 0%, #EE9A62 100%);
+    border: 0; border-radius: 13px; padding: 12px 26px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 22px rgba(238,154,98,0.32);
+    transition: transform .16s ease, box-shadow .16s ease;
+  }
+  .submit:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(238,154,98,0.42); }
+  .submit:focus-visible { outline: 3px solid rgba(255,137,204,0.7); outline-offset: 3px; }
+
+  .done {
+    display: none; text-align: center; padding: 26px 6px 10px;
+  }
+  .done.show { display: block; }
+  .done h2 { color: #fff; font-size: 21px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 8px; }
+  .done p { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500; margin: 0 0 18px; line-height: 1.5; }
+  .done pre {
+    text-align: left; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 13px; padding: 14px; color: rgba(255,255,255,0.85);
+    font-size: 10.5px; line-height: 1.6; overflow-x: auto; margin: 0 0 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .restart {
+    font-family: inherit; font-size: 12px; font-weight: 700; color: #fff;
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.24);
+    border-radius: 999px; padding: 9px 18px; cursor: pointer;
+  }
+  .restart:hover { background: rgba(255,255,255,0.22); }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>Style A — everything on one screen</h1>
+    <p>All five questions visible at once. One submit. BBDEV-38</p>
+  </div>
+
+  <div class="stage">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <form id="quiz">
+          <div class="brand">bossbaby</div>
+          <p class="kicker">Help us build it</p>
+
+          <fieldset class="q">
+            <legend>I am&hellip;</legend>
+            <div class="opts" data-single="gender">
+              <button type="button" class="opt" aria-pressed="false" value="Female">Female</button>
+              <button type="button" class="opt" aria-pressed="false" value="Male">Male</button>
+              <button type="button" class="opt" aria-pressed="false" value="Diverse">Diverse</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="q">
+            <legend>I would like to buy&hellip;</legend>
+            <div class="opts" data-single="size">
+              <button type="button" class="opt" aria-pressed="false" value="100ml">100ml</button>
+              <button type="button" class="opt" aria-pressed="false" value="250ml">250ml</button>
+              <button type="button" class="opt" aria-pressed="false" value="330ml">330ml</button>
+            </div>
+          </fieldset>
+
+          <div class="q">
+            <p class="q-title">Flavour I love&hellip;</p>
+            <input class="field" id="flavour" type="text" placeholder="Type your answer&hellip;" aria-label="Flavour I love" />
+          </div>
+
+          <fieldset class="q">
+            <legend>Which drink would you look forward to the most?</legend>
+            <div class="opts" data-multi="drinks">
+              <button type="button" class="opt" aria-pressed="false" value="Power up, Babe">Power up,<br />Babe</button>
+              <button type="button" class="opt" aria-pressed="false" value="Glow up, Babe">Glow up,<br />Babe</button>
+              <button type="button" class="opt" aria-pressed="false" value="Just chill, Babe">Just chill,<br />Babe</button>
+            </div>
+          </fieldset>
+
+          <div class="q">
+            <p class="q-title">One last thing</p>
+            <p class="sub">Join our waitlist!</p>
+            <input class="field" id="email" type="email" placeholder="Enter your email address&hellip;" aria-label="Email address" required />
+          </div>
+
+          <div class="submit-row">
+            <button class="submit" type="submit">Submit <span aria-hidden="true">&rarr;</span></button>
+          </div>
+        </form>
+
+        <div class="done" id="done" role="status">
+          <h2>You&rsquo;re on the list ✨</h2>
+          <p>Prototype only — nothing was sent. Captured answers:</p>
+          <pre id="payload"></pre>
+          <button class="restart" type="button" id="restart">Start over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const state = { gender: null, size: null, drinks: [], flavour: "", email: "" };
+
+  document.querySelectorAll("[data-single]").forEach((group) => {
+    const key = group.dataset.single;
+    group.addEventListener("click", (e) => {
+      const btn = e.target.closest(".opt");
+      if (!btn) return;
+      group.querySelectorAll(".opt").forEach((b) => b.setAttribute("aria-pressed", "false"));
+      btn.setAttribute("aria-pressed", "true");
+      state[key] = btn.value;
+    });
+  });
+
+  document.querySelectorAll("[data-multi]").forEach((group) => {
+    const key = group.dataset.multi;
+    group.addEventListener("click", (e) => {
+      const btn = e.target.closest(".opt");
+      if (!btn) return;
+      const on = btn.getAttribute("aria-pressed") === "true";
+      btn.setAttribute("aria-pressed", on ? "false" : "true");
+      state[key] = [...group.querySelectorAll('.opt[aria-pressed="true"]')].map((b) => b.value);
+    });
+  });
+
+  const form = document.getElementById("quiz");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    state.flavour = document.getElementById("flavour").value.trim();
+    state.email = document.getElementById("email").value.trim();
+    document.getElementById("payload").textContent = JSON.stringify(state, null, 2);
+    form.style.display = "none";
+    document.getElementById("done").classList.add("show");
+  });
+
+  document.getElementById("restart").addEventListener("click", () => {
+    form.reset();
+    document.querySelectorAll(".opt").forEach((b) => b.setAttribute("aria-pressed", "false"));
+    Object.assign(state, { gender: null, size: null, drinks: [], flavour: "", email: "" });
+    document.getElementById("done").classList.remove("show");
+    form.style.display = "";
+  });
+</script>
+</body>
+</html>
