@@ -32,10 +32,47 @@
 
   .wrap { max-width: 780px; margin: 0 auto; padding: 0 20px 90px; }
 
+  /* ── Two views: the landing page, and the survey page it navigates to ── */
+  .view { display: none; }
+  .view.active { display: block; animation: viewIn .3s ease both; }
+  @keyframes viewIn { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
+
+  /* ── Landing view (stands in for the real site) ── */
+  .page-hero { background: var(--pink); padding: 70px 20px 80px; text-align: center; }
+  .page-hero .brand-lg { font-size: 44px; font-weight: 800; letter-spacing: -0.04em; color: #000; margin: 0 0 12px; }
+  .page-hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; letter-spacing: -0.035em; color: #000; margin: 0 0 12px; line-height: 1.1; }
+  .page-hero .lede { font-size: 17px; color: rgba(0,0,0,0.7); margin: 0 0 26px; font-weight: 500; }
+  .page-cta {
+    font-family: inherit; font-size: 15px; font-weight: 800; color: #fff; background: #000;
+    border: 0; border-radius: 999px; padding: 16px 30px; cursor: pointer;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+    transition: transform .16s ease, background .16s ease;
+  }
+  .page-cta:hover { background: #222; transform: translateY(-2px); }
+  .page-cta:focus-visible { outline: 3px solid rgba(0,0,0,0.7); outline-offset: 3px; }
+  .page-sub { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.5); margin: 14px 0 0; }
+  .page-band { background: var(--bg); padding: 56px 20px; text-align: center; }
+  .page-band h2 { font-size: 27px; font-weight: 800; color: var(--title); letter-spacing: -0.03em; margin: 0 0 10px; }
+  .page-band p { color: var(--muted); font-weight: 500; margin: 0; }
+  .page-dark { background: #111; color: #fff; padding: 56px 20px; text-align: center; }
+  .page-dark h2 { font-size: 25px; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 8px; }
+  .page-dark p { color: rgba(255,255,255,0.55); font-weight: 500; margin: 0; }
+
+  /* ── Back link on the survey page ── */
+  .backbar { max-width: 780px; margin: 0 auto 26px; text-align: left; }
+  .backlink {
+    font-family: inherit; font-size: 14px; font-weight: 700; color: rgba(0,0,0,0.72);
+    background: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 999px; padding: 10px 20px; cursor: pointer;
+    transition: background .16s ease, color .16s ease;
+  }
+  .backlink:hover { background: #fff; color: #000; }
+  .backlink:focus-visible { outline: 3px solid rgba(0,0,0,0.55); outline-offset: 3px; }
+
   /* ── Hero ── */
   .hero {
     background: var(--pink);
-    padding: 64px 20px 72px;
+    padding: 26px 20px 72px;
     text-align: center;
     margin-bottom: 56px;
   }
@@ -147,7 +184,29 @@
 </style>
 </head>
 <body>
+  <!-- ══ View 1: the landing page ══ -->
+  <div class="view active" id="view-landing">
+    <div class="page-hero">
+      <p class="brand-lg">bossbaby</p>
+      <h1>Four science-backed formulas.<br />One for every mood.</h1>
+      <p class="lede">Be first to know when we launch.</p>
+      <button class="page-cta" type="button" id="start">HELP US BUILD IT</button>
+      <p class="page-sub">Five quick questions.</p>
+    </div>
+    <div class="page-band">
+      <h2>Pick your mood</h2>
+      <p>This page stands in for the real site, so you can see where the survey is entered from.</p>
+    </div>
+    <div class="page-dark">
+      <h2>Launching 2026</h2>
+      <p>Clicking &ldquo;Help us build it&rdquo; opens the survey as its own page.</p>
+    </div>
+  </div>
+
+  <!-- ══ View 2: the survey page ══ -->
+  <div class="view" id="view-survey">
   <header class="hero">
+    <div class="backbar"><button class="backlink" type="button" id="back">&larr; Back</button></div>
     <div class="hero-inner">
       <p class="brand">bossbaby</p>
       <span class="kicker">Help us build it</span>
@@ -211,6 +270,13 @@
 
 <script>
   const state = { gender: null, size: null, flavour: "", drinks: [], email: "" };
+
+  const show = (id) => {
+    document.querySelectorAll(".view").forEach((v) => v.classList.toggle("active", v.id === id));
+    window.scrollTo({ top: 0 });
+  };
+  document.getElementById("start").addEventListener("click", () => show("view-survey"));
+  document.getElementById("back").addEventListener("click", () => show("view-landing"));
 
   document.querySelectorAll("[data-single]").forEach((group) => {
     const key = group.dataset.single;

@@ -4,10 +4,12 @@ Two standalone prototypes of the new 5-question survey, for review.
 Not wired into the app: nothing here is imported by `frontend/`, and no
 answers are sent anywhere. Open either file directly in a browser.
 
-- `style-a-single-page.html` — a full page: all five questions laid out down
-  the page, scrolled through, one Submit at the end.
-- `style-b-stepped.html` — a popup over a blurred page, one question at a
-  time, same shell as the quiz already on the site.
+- `style-a-single-page.html` — landing page first; "Help us build it" opens
+  the survey as its own page, all five questions down it, one Submit.
+- `style-b-stepped.html` — same landing page, but "Help us build it" opens a
+  popup over it, one question at a time, like the quiz already on the site.
+
+So the choice is really: does the survey get its own page, or stay a popup?
 
 Both carry the same questions (Q1 gender, Q2 size, Q3 free-text flavour,
 Q4 multi-select drink, Q5 email), show "help us build it" instead of
