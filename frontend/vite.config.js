@@ -20,7 +20,10 @@ export default defineConfig({
     strictPort: true,
     open: true,
     proxy: {
-      '/app': {
+      // Only paths *under* /app go to the app server. Bare /app is the
+      // website's own under-construction page, so it must fall through to
+      // the SPA -- mirroring the rewrites in vercel.json.
+      '^/app/.+': {
         target: 'http://localhost:3001',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/app/, '') || '/',

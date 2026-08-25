@@ -8,6 +8,7 @@ export type PageId =
   | "askexpert"
   | "flavourlab"
   | "youpick"
+  | "app"
   | "about"
   | "impressum"
   | "privacy"
@@ -30,10 +31,9 @@ interface RouteDefinition {
 }
 
 export interface NavigationDefinition {
-  id: PageId | "app";
+  id: PageId;
   path: string;
   navigationLabel: string;
-  documentNavigation?: boolean;
 }
 
 export const routes: RouteDefinition[] = [
@@ -44,6 +44,7 @@ export const routes: RouteDefinition[] = [
   { id: "askexpert", path: "/ask-an-expert", component: lazy(() => import("../pages/BossBabyAskAnExpertPage")) },
   { id: "flavourlab", path: "/flavour-lab", component: lazy(() => import("../pages/BossBabyFlavourLabPage")) },
   { id: "youpick", path: "/you-pick", component: lazy(() => import("../features/you-pick/components/YouPickPage")) },
+  { id: "app", path: "/app", navigationLabel: "App", component: lazy(() => import("../pages/BossBabyAppPage")) },
   { id: "about", path: "/about", navigationLabel: "About", component: lazy(() => import("../pages/BossBabyAboutPage")) },
   { id: "impressum", path: "/impressum", component: lazy(() => import("../pages/BossBabyImpressumPage")) },
   { id: "privacy", path: "/privacy", component: lazy(() => import("../pages/BossBabyPrivacyPage")) },
@@ -55,16 +56,8 @@ export const routes: RouteDefinition[] = [
   { id: "admin", path: "/admin", standalone: true, component: lazy(() => import("../features/staff/components/StaffAdminPage")) },
 ];
 
-const appNavigation: NavigationDefinition = {
-  id: "app",
-  path: "/app",
-  navigationLabel: "App",
-  documentNavigation: true,
-};
-
 export const navigationRoutes: NavigationDefinition[] = routes
-  .filter((route): route is RouteDefinition & { navigationLabel: string } => Boolean(route.navigationLabel))
-  .flatMap((route) => route.id === "about" ? [appNavigation, route] : [route]);
+  .filter((route): route is RouteDefinition & { navigationLabel: string } => Boolean(route.navigationLabel));
 export const legalRoutes = routes.filter((route) =>
   (["impressum", "privacy", "terms", "accessibility"] as PageId[]).includes(route.id)
 );
