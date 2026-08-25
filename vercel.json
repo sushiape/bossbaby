@@ -17,6 +17,10 @@
   ],
   "rewrites": [
     {
+      "source": "/redirect",
+      "destination": "/redirect.html"
+    },
+    {
       "source": "/app",
       "destination": "https://bossbabyremix.vercel.app/"
     },
