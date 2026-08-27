@@ -65,3 +65,10 @@ entrypoint = "./functions/waitlist/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/staff/index.ts"
+
+# Surveys are answered anonymously from the landing page, so verify_jwt stays
+# false. A participant token is read when present but never required.
+[functions.surveys]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/surveys/index.ts"

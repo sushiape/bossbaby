@@ -1,5 +1,5 @@
 export interface WaitlistSubscriptionRepository {
-  ensureSubscription(email: string): Promise<void>;
+  ensureSubscription(email: string, source: string): Promise<void>;
 }
 
 export interface AcceptedSubscription {

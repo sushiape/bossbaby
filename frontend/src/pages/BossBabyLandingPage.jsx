@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import Header from "../shared/components/Header";
 import Footer from "../shared/components/Footer";
 import { WaitlistForm } from "../shared/components/WaitlistForm";
-import { MoodQuizDialog } from "./BossBabyLandingPage/MoodQuizDialog";
-import { useMoodQuiz } from "./BossBabyLandingPage/useMoodQuiz";
+import { ProductFitSurveyDialog } from "./BossBabyLandingPage/ProductFitSurveyDialog";
+import { useProductFitSurvey } from "./BossBabyLandingPage/useProductFitSurvey";
 
 const brand = {
   pink: "#FF89CC",
@@ -305,7 +305,7 @@ function CountdownUnit({ value, label }) {
 
 // ── Main component ──────────────────────────────────────────────────────────
 export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
-  const moodQuiz = useMoodQuiz();
+  const survey = useProductFitSurvey();
   const countdown = useCountdown("2026-10-01T00:00:00");
 
   // Scroll to hero section after animations complete
@@ -356,13 +356,13 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         >
           <button
             type="button"
-            onClick={moodQuiz.open}
+            onClick={() => survey.open("hero_button")}
             className="mb-3 rounded-full bg-black px-7 py-4 text-base font-extrabold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-white/60"
           >
-            FIND YOUR BOSSBABY MOOD
+            HELP US BUILD IT
           </button>
           <p className="mb-8 text-sm font-medium text-white/90">
-            Three quick questions. One mood match.
+            Five quick questions.
           </p>
           <p className="text-base text-white mb-4 font-medium">
             Be first to know when we launch.
@@ -382,14 +382,19 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         </motion.div>
       </section>
 
-      <MoodQuizDialog
-        isOpen={moodQuiz.isOpen}
-        step={moodQuiz.step}
-        resultKey={moodQuiz.resultKey}
-        onAnswer={moodQuiz.answer}
-        onBack={moodQuiz.back}
-        onClose={moodQuiz.close}
-        onReset={moodQuiz.reset}
+      <ProductFitSurveyDialog
+        isOpen={survey.isOpen}
+        survey={survey.survey}
+        loadStatus={survey.loadStatus}
+        submitStatus={survey.submitStatus}
+        draft={survey.draft}
+        email={survey.email}
+        onChoose={survey.choose}
+        onWriteText={survey.writeText}
+        onEmailChange={survey.setEmail}
+        onSubmit={survey.submit}
+        onRetryLoad={survey.retryLoad}
+        onClose={survey.close}
       />
 
       {/* ── 1b. Launch date ── */}

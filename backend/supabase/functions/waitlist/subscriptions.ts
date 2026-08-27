@@ -5,7 +5,7 @@ export async function subscribe(
   repository: WaitlistSubscriptionRepository,
   input: unknown,
 ): Promise<AcceptedSubscription> {
-  const { email } = validateSubscription(input);
-  await repository.ensureSubscription(email);
+  const { email, source } = validateSubscription(input);
+  await repository.ensureSubscription(email, source);
   return { status: "accepted" };
 }
