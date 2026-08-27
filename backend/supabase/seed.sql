@@ -114,3 +114,30 @@ from (values
   ('shafi.goldwasser@example.com',  'legacy_formspree', 25)
 ) as sample(email, source, age_days)
 on conflict (email) do nothing;
+
+-- The product fit survey is NOT seeded here. Migration 202608270001 inserts it,
+-- because the landing page has nowhere to send answers until the row exists in
+-- every environment. Duplicating the question set here would mean editing a
+-- prompt in two places with nothing catching the drift, so the responses below
+-- reference the migrated row instead.
+
+-- A handful of responses so local development has something to read back.
+-- Every one is complete: all four questions are required, so a response that
+-- skipped one could not have been submitted.
+insert into public.survey_responses (survey_key, participant_id, answers, created_at)
+select
+  'product_fit_v1',
+  sample.participant_id::uuid,
+  sample.answers::jsonb,
+  now() - (sample.age_days || ' days')::interval
+from (values
+  ('bbbbbbbb-0000-4000-b000-000000000001',
+   '{"gender":"Female","size":"250ml","flavour":"Mango","drinks":["Power Up, Babe","Glow Up, Babe"]}', 1),
+  ('bbbbbbbb-0000-4000-b000-000000000002',
+   '{"gender":"Female","size":"330ml","flavour":"Passionfruit","drinks":["Just Chill, Babe"]}', 2),
+  ('bbbbbbbb-0000-4000-b000-000000000003',
+   '{"gender":"Diverse","size":"100ml","flavour":"Elderflower","drinks":["Power Up, Babe"]}', 3),
+  ('bbbbbbbb-0000-4000-b000-000000000004',
+   '{"gender":"Male","size":"330ml","flavour":"Yuzu","drinks":["Just Chill, Babe"]}', 4)
+) as sample(participant_id, answers, age_days)
+on conflict (survey_key, participant_id) do nothing;

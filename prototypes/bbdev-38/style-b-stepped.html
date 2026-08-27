@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Style B · Popup — BBDEV-38</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --pink: #FF89CC;
+    --pink-deep: #FF4FA3;
+    --bg: #FFD6E9;
+    --text: rgba(0, 0, 0, 0.8);
+    --title: rgba(0, 0, 0, 0.9);
+    --muted: rgba(0, 0, 0, 0.45);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Poppins, system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  body.locked { overflow: hidden; }
+
+  /* ── Faux page behind the modal, so the blur has something to blur ── */
+  .page-hero {
+    background: var(--pink); padding: 70px 20px 80px; text-align: center;
+  }
+  .page-hero .brand { font-size: 44px; font-weight: 800; letter-spacing: -0.04em; color: #000; margin: 0 0 12px; }
+  .page-hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; letter-spacing: -0.035em; color: #000; margin: 0 0 12px; line-height: 1.1; }
+  .page-hero p { font-size: 17px; color: rgba(0,0,0,0.7); margin: 0 0 26px; font-weight: 500; }
+  .page-cta {
+    font-family: inherit; font-size: 15px; font-weight: 800; color: #fff; background: #000;
+    border: 0; border-radius: 999px; padding: 16px 30px; cursor: pointer;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+  }
+  .page-cta:hover { background: #222; transform: translateY(-2px); }
+  .page-band { background: #FFD6E9; padding: 56px 20px; text-align: center; }
+  .page-band h2 { font-size: 27px; font-weight: 800; color: var(--title); letter-spacing: -0.03em; margin: 0 0 10px; }
+  .page-band p { color: var(--muted); font-weight: 500; margin: 0; }
+  .page-dark { background: #111; color: #fff; padding: 56px 20px; text-align: center; }
+  .page-dark h2 { font-size: 25px; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 8px; }
+  .page-dark p { color: rgba(255,255,255,0.55); font-weight: 500; margin: 0; }
+
+  /* ── Backdrop ── */
+  .backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 14px; overflow-y: auto;
+    background: rgba(42, 17, 31, 0.65);
+    backdrop-filter: blur(12px);
+    animation: fade .25s ease both;
+  }
+  .backdrop[hidden] { display: none; }
+  @keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+
+  /* ── Dialog ── */
+  .dialog {
+    position: relative; margin: auto;
+    width: 100%; max-width: 640px;
+    max-height: calc(100vh - 2rem); overflow-y: auto;
+    border-radius: 32px; border: 1px solid rgba(255,255,255,0.8);
+    padding: 34px 36px 36px;
+    background: linear-gradient(145deg, #FFD6E9 0%, #FFE8F2 58%, #FFFFFF 100%);
+    box-shadow: 0 30px 90px rgba(70, 15, 48, 0.35);
+    animation: pop .28s cubic-bezier(.2,.8,.3,1) both;
+  }
+  @keyframes pop { from { opacity: 0; transform: translateY(24px) scale(.97) } to { opacity: 1; transform: none } }
+
+  .close {
+    position: absolute; right: 16px; top: 16px; z-index: 10;
+    height: 40px; width: 40px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 21px; font-weight: 700; color: rgba(0,0,0,0.6);
+    background: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.8);
+    backdrop-filter: blur(8px); cursor: pointer;
+  }
+  .close:hover { background: #fff; color: #000; }
+  .close:focus-visible { outline: 4px solid rgba(255,255,255,0.85); }
+
+  .head { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; padding-right: 48px; }
+  .brand-sm { font-size: 24px; font-weight: 800; letter-spacing: -0.04em; color: #000; }
+  .kicker {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #fff; background: #000; border-radius: 999px; padding: 5px 12px; white-space: nowrap;
+  }
+
+  .meter { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+  .track { flex: 1; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.7); overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.06); }
+  .fill { height: 100%; border-radius: 999px; background: var(--pink); transition: width .45s cubic-bezier(.4,0,.2,1); }
+  .count {
+    font-size: 12px; font-weight: 800; color: rgba(0,0,0,0.55);
+    background: rgba(255,255,255,0.65); border-radius: 999px; padding: 5px 13px; white-space: nowrap;
+  }
+
+  .step { display: none; animation: rise .35s ease both; }
+  .step.active { display: block; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
+
+  .q-title {
+    font-size: clamp(26px, 4.4vw, 36px); font-weight: 800; letter-spacing: -0.03em;
+    color: #000; margin: 0 0 22px; padding: 0; line-height: 1.08; max-width: 18ch;
+  }
+  .hint { margin: -14px 0 20px; font-size: 13px; font-weight: 500; color: var(--muted); }
+
+  .opts { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+  .opt {
+    font-family: inherit; font-size: 15px; font-weight: 800; color: #000; text-align: left;
+    background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 20px; padding: 20px 22px; cursor: pointer;
+    min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    box-shadow: 0 8px 24px rgba(163,79,126,0.08);
+    transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
+  }
+  .opt:hover { transform: translateY(-3px); background: #fff; }
+  .opt .tick {
+    height: 32px; width: 32px; flex-shrink: 0; border-radius: 999px;
+    background: var(--pink); color: #fff; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: scale(.7); transition: opacity .16s ease, transform .16s ease;
+  }
+  .opt:hover .tick { opacity: 1; transform: none; }
+  .opt[aria-pressed="true"] { background: #fff; box-shadow: 0 0 0 2.5px var(--pink), 0 10px 28px rgba(255,137,204,0.28); }
+  .opt[aria-pressed="true"] .tick { opacity: 1; transform: none; }
+  .opt:focus-visible { outline: 4px solid rgba(255,255,255,0.9); outline-offset: 2px; }
+
+  .field {
+    width: 100%; font-family: inherit; font-size: 16px; font-weight: 500; color: #000;
+    background: #fff; border: 1px solid rgba(255,255,255,0.9); border-radius: 20px;
+    padding: 18px 22px; box-shadow: 0 8px 24px rgba(163,79,126,0.08);
+    transition: box-shadow .16s ease;
+  }
+  .field::placeholder { color: rgba(0,0,0,0.32); }
+  .field:focus { outline: none; box-shadow: 0 0 0 4px rgba(255,137,204,0.4); }
+
+  .email-row { display: flex; gap: 12px; }
+  .email-row .field { flex: 1; }
+
+  .cta {
+    font-family: inherit; font-size: 15px; font-weight: 800; color: #fff; background: #000;
+    border: 0; border-radius: 20px; padding: 18px 30px; cursor: pointer; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 9px;
+    transition: transform .16s ease, background .16s ease, opacity .16s ease;
+  }
+  .cta:hover { transform: translateY(-2px); background: #222; }
+  .cta:focus-visible { outline: 4px solid rgba(255,255,255,0.9); outline-offset: 2px; }
+  .cta[disabled] { opacity: .38; cursor: not-allowed; transform: none; }
+
+  .foot { display: flex; align-items: center; gap: 12px; margin-top: 26px; }
+  .back {
+    font-family: inherit; font-size: 14px; font-weight: 700; color: rgba(0,0,0,0.55);
+    background: rgba(255,255,255,0.45); border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 999px; padding: 11px 20px; cursor: pointer;
+  }
+  .back:hover { background: #fff; color: #000; }
+  .back[hidden] { display: none; }
+  .spacer { flex: 1; }
+
+  .done-title { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.035em; color: #000; margin: 0 0 10px; line-height: 1; }
+  .done p { color: rgba(0,0,0,0.6); font-weight: 500; margin: 0 0 20px; }
+  .done pre {
+    background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 20px; padding: 18px; color: rgba(0,0,0,0.8);
+    font-size: 12.5px; line-height: 1.65; overflow-x: auto; margin: 0 0 20px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  @media (max-width: 560px) {
+    .dialog { padding: 26px 22px 28px; border-radius: 26px; }
+    .opts { grid-template-columns: 1fr; }
+    .email-row { flex-direction: column; }
+    .cta { justify-content: center; }
+  }
+</style>
+</head>
+<body class="locked">
+  <!-- Faux landing page behind the modal -->
+  <div class="page-hero">
+    <p class="brand">bossbaby</p>
+    <h1>Four science-backed formulas.<br />One for every mood.</h1>
+    <p>Be first to know when we launch.</p>
+    <button class="page-cta" type="button" id="reopen">HELP US BUILD IT</button>
+  </div>
+  <div class="page-band">
+    <h2>Pick your mood</h2>
+    <p>This page is only here so you can see the popup blur it.</p>
+  </div>
+  <div class="page-dark">
+    <h2>Launching 2026</h2>
+    <p>Scroll is locked while the popup is open, exactly like the current quiz.</p>
+  </div>
+
+  <!-- Modal -->
+  <div class="backdrop" id="backdrop" role="presentation">
+    <div class="dialog" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title">
+      <button class="close" type="button" id="close" aria-label="Close survey">&times;</button>
+
+      <div class="head">
+        <span class="brand-sm">bossbaby</span>
+        <span class="kicker">Help us build it</span>
+      </div>
+
+      <div class="meter">
+        <div class="track"><div class="fill" id="fill" style="width:20%"></div></div>
+        <span class="count" id="count">01 / 05</span>
+      </div>
+
+      <section class="step active" data-step="1">
+        <h2 class="q-title" id="dlg-title">I am&hellip;</h2>
+        <div class="opts" data-single="gender" data-advance>
+          <button type="button" class="opt" aria-pressed="false" value="Female">Female<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="opt" aria-pressed="false" value="Male">Male<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="opt" aria-pressed="false" value="Diverse">Diverse<span class="tick" aria-hidden="true">&#10003;</span></button>
+        </div>
+      </section>
+
+      <section class="step" data-step="2">
+        <h2 class="q-title">I would like to buy&hellip;</h2>
+        <div class="opts" data-single="size" data-advance>
+          <button type="button" class="opt" aria-pressed="false" value="100ml">100ml<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="opt" aria-pressed="false" value="250ml">250ml<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="opt" aria-pressed="false" value="330ml">330ml<span class="tick" aria-hidden="true">&#10003;</span></button>
+        </div>
+      </section>
+
+      <section class="step" data-step="3">
+        <h2 class="q-title">Flavour I love&hellip;</h2>
+        <input class="field" id="flavour" type="text" placeholder="Type your answer&hellip;" aria-label="Flavour I love" />
+      </section>
+
+      <section class="step" data-step="4">
+        <h2 class="q-title">Which drink would you look forward to the most?</h2>
+        <p class="hint">Pick as many as you like.</p>
+        <div class="opts" data-multi="drinks">
+          <button type="button" class="opt" aria-pressed="false" value="Power up, Babe">Power up, Babe<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="opt" aria-pressed="false" value="Glow up, Babe">Glow up, Babe<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="opt" aria-pressed="false" value="Just chill, Babe">Just chill, Babe<span class="tick" aria-hidden="true">&#10003;</span></button>
+        </div>
+      </section>
+
+      <section class="step" data-step="5">
+        <h2 class="q-title">One last thing</h2>
+        <p class="hint">Join our waitlist &mdash; we&rsquo;ll email you when Bossbaby launches.</p>
+        <form class="email-row" id="emailForm">
+          <input class="field" id="email" type="email" placeholder="Enter your email address&hellip;" aria-label="Email address" required />
+          <button class="cta" type="submit">Submit <span aria-hidden="true">&rarr;</span></button>
+        </form>
+      </section>
+
+      <section class="step done" data-step="done">
+        <h2 class="done-title">You&rsquo;re on the list ✨</h2>
+        <p>Prototype only &mdash; nothing was sent. Captured answers:</p>
+        <pre id="payload"></pre>
+        <button class="cta" type="button" id="restart">Start over</button>
+      </section>
+
+      <div class="foot" id="foot">
+        <button class="back" type="button" id="back" hidden>&larr; Back</button>
+        <div class="spacer"></div>
+        <button class="cta" type="button" id="next">Next <span aria-hidden="true">&rarr;</span></button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const TOTAL = 5;
+  const state = { gender: null, size: null, flavour: "", drinks: [], email: "" };
+  let step = 1;
+  let advanceTimer = null;
+
+  const backdrop = document.getElementById("backdrop");
+  const dialog = document.getElementById("dialog");
+  const fill = document.getElementById("fill");
+  const count = document.getElementById("count");
+  const back = document.getElementById("back");
+  const next = document.getElementById("next");
+  const foot = document.getElementById("foot");
+  const pad = (n) => String(n).padStart(2, "0");
+
+  function render() {
+    document.querySelectorAll(".step").forEach((s) => s.classList.toggle("active", s.dataset.step === String(step)));
+    const isDone = step === "done";
+    fill.style.width = isDone ? "100%" : `${(step / TOTAL) * 100}%`;
+    count.textContent = isDone ? `${pad(TOTAL)} / ${pad(TOTAL)}` : `${pad(step)} / ${pad(TOTAL)}`;
+    foot.style.display = isDone || step === 5 ? "none" : "flex";
+    back.hidden = isDone || step === 1;
+    // Free text and multi-select need an explicit Next; single-choice auto-advances.
+    next.style.display = step === 3 || step === 4 ? "inline-flex" : "none";
+    next.disabled = step === 4 && state.drinks.length === 0;
+    if (step === 3) setTimeout(() => document.getElementById("flavour").focus(), 120);
+    if (step === 5) setTimeout(() => document.getElementById("email").focus(), 120);
+  }
+  function go(to) { clearTimeout(advanceTimer); step = to; render(); }
+
+  document.querySelectorAll("[data-single]").forEach((group) => {
+    const key = group.dataset.single;
+    group.addEventListener("click", (e) => {
+      const btn = e.target.closest(".opt");
+      if (!btn) return;
+      group.querySelectorAll(".opt").forEach((b) => b.setAttribute("aria-pressed", "false"));
+      btn.setAttribute("aria-pressed", "true");
+      state[key] = btn.value;
+      if (group.hasAttribute("data-advance")) {
+        const from = Number(group.closest(".step").dataset.step);
+        clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(() => { if (step === from) go(from + 1); }, 260);
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-multi]").forEach((group) => {
+    const key = group.dataset.multi;
+    group.addEventListener("click", (e) => {
+      const btn = e.target.closest(".opt");
+      if (!btn) return;
+      btn.setAttribute("aria-pressed", btn.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      state[key] = [...group.querySelectorAll('.opt[aria-pressed="true"]')].map((b) => b.value);
+      next.disabled = state.drinks.length === 0;
+    });
+  });
+
+  next.addEventListener("click", () => {
+    if (step === 3) state.flavour = document.getElementById("flavour").value.trim();
+    go(step + 1);
+  });
+  back.addEventListener("click", () => {
+    if (step === 3) state.flavour = document.getElementById("flavour").value.trim();
+    go(step - 1);
+  });
+  document.getElementById("flavour").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); state.flavour = e.target.value.trim(); go(4); }
+  });
+  document.getElementById("emailForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    state.email = document.getElementById("email").value.trim();
+    document.getElementById("payload").textContent = JSON.stringify(state, null, 2);
+    go("done");
+  });
+
+  function openModal() {
+    backdrop.hidden = false;
+    document.body.classList.add("locked");
+    document.getElementById("close").focus();
+  }
+  function closeModal() {
+    backdrop.hidden = true;
+    document.body.classList.remove("locked");
+    document.getElementById("reopen").focus();
+  }
+  document.getElementById("close").addEventListener("click", closeModal);
+  document.getElementById("reopen").addEventListener("click", () => { openModal(); });
+  backdrop.addEventListener("mousedown", (e) => { if (e.target === backdrop) closeModal(); });
+
+  document.getElementById("restart").addEventListener("click", () => {
+    Object.assign(state, { gender: null, size: null, flavour: "", drinks: [], email: "" });
+    document.querySelectorAll(".opt").forEach((b) => b.setAttribute("aria-pressed", "false"));
+    document.getElementById("flavour").value = "";
+    document.getElementById("email").value = "";
+    go(1);
+  });
+
+  // Focus trap + Escape, matching the existing MoodQuizDialog behaviour.
+  const FOCUSABLE = "button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex='-1'])";
+  dialog.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); closeModal(); return; }
+    if (e.key !== "Tab") return;
+    const items = [...dialog.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null);
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  render();
+</script>
+</body>
+</html>
