@@ -225,10 +225,17 @@ export function ProductFitSurveyDialog({
                   </div>
                   {/* One generic message for either half of the two-call
                       submit: both are idempotent, so "try again" is the whole
-                      recovery and which one failed changes nothing. */}
+                      recovery and which one failed changes nothing. A rejection
+                      is the exception -- the same answers would be refused
+                      again, so it must not invite a retry. */}
                   {submitStatus === "failed" && (
                     <p className="mt-4 text-sm font-semibold text-[#FF89CC]" role="alert">
                       Something went wrong. Please try again.
+                    </p>
+                  )}
+                  {submitStatus === "rejected" && (
+                    <p className="mt-4 text-sm font-semibold text-[#FF89CC]" role="alert">
+                      We couldn't accept those answers. Please check them and your email address.
                     </p>
                   )}
                 </div>

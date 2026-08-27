@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   answersForSubmission,
+  isRetryable,
   marksVisitorSeen,
   shouldAutoOpen,
   toggleChoice,
@@ -65,9 +66,9 @@ test("submission drops blank text rather than sending an empty answer", () => {
 });
 
 test("the popup opens itself once per visitor and never over an active control", () => {
-  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false }), true);
-  assert.equal(shouldAutoOpen({ alreadySeen: true, userIsInteracting: false }), false);
-  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: true }), false);
+  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false, isOpen: false }), true);
+  assert.equal(shouldAutoOpen({ alreadySeen: true, userIsInteracting: false, isOpen: false }), false);
+  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: true, isOpen: false }), false);
 });
 
 // The flag records that the *timer* has had its one turn. Opening from the hero
@@ -77,4 +78,23 @@ test("the popup opens itself once per visitor and never over an active control",
 test("only the timed opening spends the once-per-visitor showing", () => {
   assert.equal(marksVisitorSeen("timer"), true);
   assert.equal(marksVisitorSeen("hero_button"), false);
+});
+
+// The timer must not reopen a dialog that is already open: open() resets the
+// draft, the email and the participant id, so a timer firing behind an open
+// popup would silently discard answers the visitor is part-way through.
+test("the timer never fires over an already-open popup", () => {
+  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false, isOpen: true }), false);
+  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false, isOpen: false }), true);
+});
+
+// "Try again" is the whole recovery for a transient failure, and useless advice
+// for a rejected submission: the same answers will be rejected identically. A
+// 400 has to say so instead of inviting an unbounded retry loop.
+test("only a transient failure is worth retrying", () => {
+  assert.equal(isRetryable(500), true);
+  assert.equal(isRetryable(503), true);
+  assert.equal(isRetryable(0), true);
+  assert.equal(isRetryable(400), false);
+  assert.equal(isRetryable(404), false);
 });

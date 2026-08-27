@@ -2,13 +2,18 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   fetchOpenSurvey,
   submitSurveyResponse,
+  SurveysApiError,
   type Survey,
   type SurveyQuestion,
 } from "../../shared/services/surveysApi";
-import { createWaitlistSubscription } from "../../shared/services/waitlistApi";
+import {
+  createWaitlistSubscription,
+  WaitlistApiError,
+} from "../../shared/services/waitlistApi";
 import {
   answersForSubmission,
   AUTO_OPEN_STORAGE_KEY,
+  isRetryable,
   marksVisitorSeen,
   PRODUCT_FIT_FAMILY,
   shouldAutoOpen,
@@ -25,7 +30,9 @@ const AUTO_OPEN_DELAY_MS = 3_000;
 const AUTO_OPEN_RETRY_MS = 5_000;
 
 export type SurveyLoadStatus = "idle" | "loading" | "ready" | "failed";
-export type SurveySubmitStatus = "idle" | "submitting" | "submitted" | "failed";
+// "failed" invites a retry; "rejected" does not, because resubmitting the same
+// answers would be refused identically.
+export type SurveySubmitStatus = "idle" | "submitting" | "submitted" | "failed" | "rejected";
 
 /** localStorage is unavailable in private modes and blocked-storage browsers. */
 function readAlreadySeen(): boolean {
@@ -58,6 +65,11 @@ export function useProductFitSurvey() {
   // response (ADR 0017). A fresh id per opening means a second person on the
   // same device gets their own row instead of overwriting the first.
   const participantId = useRef<string>("");
+
+  // Read by the auto-open timer, which must not restart every time the popup
+  // opens or closes -- a ref keeps that check out of the effect's dependencies.
+  const isOpenRef = useRef(false);
+  isOpenRef.current = isOpen;
 
   const load = useCallback(async () => {
     setLoadStatus("loading");
@@ -104,7 +116,7 @@ export function useProductFitSurvey() {
       const active = document.activeElement;
       const userIsInteracting = active instanceof HTMLElement &&
         active.matches(INTERACTIVE_SELECTOR);
-      if (!shouldAutoOpen({ alreadySeen: false, userIsInteracting })) {
+      if (!shouldAutoOpen({ alreadySeen: false, userIsInteracting, isOpen: isOpenRef.current })) {
         timer = window.setTimeout(attempt, AUTO_OPEN_RETRY_MS);
         return;
       }
@@ -133,6 +145,9 @@ export function useProductFitSurvey() {
    * upsert ignores duplicates -- so "try again" is the whole recovery, and
    * naming the half that failed would only ask the participant to reason about
    * a distinction that changes nothing they do.
+   *
+   * A rejection is the exception: the same answers will be refused again, so it
+   * has to say something other than "try again".
    */
   const submit = useCallback(async () => {
     if (!survey) return;
@@ -145,8 +160,11 @@ export function useProductFitSurvey() {
       );
       await createWaitlistSubscription(email, "survey");
       setSubmitStatus("submitted");
-    } catch {
-      setSubmitStatus("failed");
+    } catch (error) {
+      const status = error instanceof SurveysApiError || error instanceof WaitlistApiError
+        ? error.status
+        : 0;
+      setSubmitStatus(isRetryable(status) ? "failed" : "rejected");
     }
   }, [survey, draft, email]);
 

@@ -77,6 +77,20 @@ export function answersForSubmission(
   return answers;
 }
 
+/**
+ * Whether a failed submission is worth submitting again unchanged.
+ *
+ * A 4xx is the backend's considered judgement on these exact answers, so
+ * resubmitting them produces the same refusal -- telling the participant to try
+ * again would invite an unbounded loop. Anything else (a 5xx, a dropped
+ * connection reported as status 0) is transient, and retrying is exactly right:
+ * both calls are idempotent, so the half that already succeeded absorbs the
+ * repeat.
+ */
+export function isRetryable(status: number): boolean {
+  return status < 400 || status >= 500;
+}
+
 /** What caused the popup to open. */
 export type OpenTrigger = "timer" | "hero_button";
 
@@ -94,14 +108,20 @@ export function marksVisitorSeen(trigger: OpenTrigger): boolean {
 /**
  * Whether the timer may open the popup.
  *
- * Once per visitor, and never while they are mid-interaction: stealing focus
- * from someone already typing their email into the hero form is worse than not
- * showing the survey at all. The hero button is not subject to either rule --
- * an explicit tap always opens it, which is what lets a second person on one
- * device take the survey.
+ * Once per visitor, never while they are mid-interaction, and never over a
+ * popup that is already open. Stealing focus from someone typing their email
+ * into the hero form is worse than not showing the survey at all, and firing
+ * behind an open popup would be worse still: opening resets the draft, so it
+ * would discard answers already given. The hero button is subject to none of
+ * these -- an explicit tap always opens it, which is what lets a second person
+ * on one device take the survey.
  */
 export function shouldAutoOpen(
-  { alreadySeen, userIsInteracting }: { alreadySeen: boolean; userIsInteracting: boolean },
+  { alreadySeen, userIsInteracting, isOpen }: {
+    alreadySeen: boolean;
+    userIsInteracting: boolean;
+    isOpen: boolean;
+  },
 ): boolean {
-  return !alreadySeen && !userIsInteracting;
+  return !alreadySeen && !userIsInteracting && !isOpen;
 }
