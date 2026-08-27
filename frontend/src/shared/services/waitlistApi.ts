@@ -16,7 +16,16 @@ export class WaitlistApiError extends Error {
   }
 }
 
-export async function createWaitlistSubscription(email: string): Promise<void> {
+/**
+ * The channels the waitlist endpoint accepts from a browser. The backend keeps
+ * the same allowlist -- this type only stops a typo reaching it.
+ */
+export type WaitlistSource = "website" | "survey";
+
+export async function createWaitlistSubscription(
+  email: string,
+  source: WaitlistSource = "website",
+): Promise<void> {
   const { url, anonKey } = requireSupabaseConfig();
   const response = await fetch(`${url}/functions/v1/waitlist/subscriptions`, {
     method: "POST",
@@ -25,7 +34,7 @@ export async function createWaitlistSubscription(email: string): Promise<void> {
       apikey: anonKey,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email: email.trim() }),
+    body: JSON.stringify({ email: email.trim(), source }),
   });
 
   if (response.ok) return;

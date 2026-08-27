@@ -8,7 +8,7 @@ BossBaby Website contains public brand and community experiences and provides en
 A community poll where participants select packaging and flavour preferences and may propose flavours.
 
 **Participant**:
-A person who uses You Pick without needing a registered account. Participant identity distinguishes ownership and one-vote-per-poll behavior.
+A person who answers a You Pick poll or a Survey without needing a registered account. Participant identity distinguishes ownership and one-response-per-Survey behavior; it is claimed by the client, not verified, so it deduplicates rather than authenticates.
 _Avoid_: Customer, registered user
 
 **Suggestion**:
@@ -22,6 +22,22 @@ _Avoid_: Ballot submission, response
 **Vote Result**:
 Public aggregate counts or percentages derived from votes.
 _Avoid_: Vote rows, ballots
+
+**Survey**:
+An immutable set of questions asked at one time. Changing the questions produces a new Survey that supersedes the old one, so answers already given always refer to the wording they were given against. Distinct from You Pick, which is one long-running poll with fixed options.
+_Avoid_: Poll, Quiz, Form, Questionnaire
+
+**Question**:
+One item in a Survey: a key, a type (single choice, multiple choice, or free text), the prompt as the Participant reads it, and for the choice types the options they may pick. Answers are validated against it on submission, so an answer no Question allows is refused.
+_Avoid_: Field, Item
+
+**Survey Response**:
+One Participant's answers to one Survey, replaced rather than duplicated if they answer again. It holds answers and nothing else: an email address is never a Survey answer, and a flow that collects one joins the Waitlist separately.
+_Avoid_: Vote, Submission, Entry
+
+**Survey Family**:
+The name shared by every version of one Survey, so the versions can be read together and asked for as a group. A place that runs a Survey names the family rather than a version, and is given whichever version is currently open.
+_Avoid_: Survey group, campaign, series
 
 **Restricted App**:
 The unreleased Bossbaby application whose use is limited to explicitly authorized people until public launch.
@@ -88,7 +104,7 @@ A standing expression of consent to receive Bossbaby launch and exclusive-news c
 _Avoid_: Waitlist user, email row, pending subscription
 
 **Subscription Source**:
-The original channel through which a Waitlist Subscription was received. It is preserved across duplicate submissions so the team can compare how people first join as new channels are introduced.
+The original channel through which a Waitlist Subscription was received: the public signup on the website, a Survey that collected an address alongside its answers, a Staff Import, or the one-time transfer of the earlier list. It is preserved across duplicate submissions so the team can compare how people first join as new channels are introduced.
 _Avoid_: Referrer, campaign
 
 **Waitlist Removal**:

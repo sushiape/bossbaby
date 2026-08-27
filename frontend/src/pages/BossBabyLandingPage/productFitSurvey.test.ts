@@ -1,0 +1,138 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import {
+  answersForSubmission,
+  isRetryable,
+  marksVisitorSeen,
+  missingRequired,
+  shouldAutoOpen,
+  toggleChoice,
+  type SurveyDraft,
+} from "./productFitSurvey.ts";
+import type { SurveyQuestion } from "../../shared/services/surveysApi.ts";
+
+const questions: SurveyQuestion[] = [
+  { key: "gender", type: "single_choice", prompt: "I am...", options: ["Female", "Male"], required: false },
+  { key: "flavour", type: "text", prompt: "Flavour I love...", required: false, maxLength: 120 },
+  {
+    key: "drinks",
+    type: "multi_choice",
+    prompt: "Which drink?",
+    options: ["Power up, Babe", "Glow up, Babe"],
+    required: false,
+  },
+];
+
+test("a single choice replaces the previous one", () => {
+  const first = toggleChoice({}, questions[0], "Female");
+  assert.deepEqual(first, { gender: "Female" });
+  assert.deepEqual(toggleChoice(first, questions[0], "Male"), { gender: "Male" });
+});
+
+test("re-picking a single choice clears it, so a mis-tap is undoable", () => {
+  const picked = toggleChoice({}, questions[0], "Female");
+  assert.deepEqual(toggleChoice(picked, questions[0], "Female"), {});
+});
+
+test("a multi choice accumulates and removes without disturbing other answers", () => {
+  let draft: SurveyDraft = { gender: "Female" };
+  draft = toggleChoice(draft, questions[2], "Power up, Babe");
+  draft = toggleChoice(draft, questions[2], "Glow up, Babe");
+  assert.deepEqual(draft, { gender: "Female", drinks: ["Power up, Babe", "Glow up, Babe"] });
+
+  draft = toggleChoice(draft, questions[2], "Power up, Babe");
+  assert.deepEqual(draft, { gender: "Female", drinks: ["Glow up, Babe"] });
+});
+
+test("emptying a multi choice drops the key rather than sending an empty list", () => {
+  let draft = toggleChoice({}, questions[2], "Power up, Babe");
+  draft = toggleChoice(draft, questions[2], "Power up, Babe");
+  assert.deepEqual(draft, {});
+});
+
+// validateSubmission iterates the question set and refuses any key it does not
+// ask, so a stale draft from a superseded question set has to be dropped here
+// rather than posted and rejected.
+test("submission keeps only the questions the survey currently asks", () => {
+  const draft: SurveyDraft = { gender: "Female", retired: "yes", drinks: ["Glow up, Babe"] };
+  assert.deepEqual(answersForSubmission(questions, draft), {
+    gender: "Female",
+    drinks: ["Glow up, Babe"],
+  });
+});
+
+test("submission drops blank text rather than sending an empty answer", () => {
+  assert.deepEqual(answersForSubmission(questions, { flavour: "   " }), {});
+  assert.deepEqual(answersForSubmission(questions, { flavour: "  Mango " }), { flavour: "Mango" });
+});
+
+test("the popup opens itself once per visitor and never over an active control", () => {
+  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false, isOpen: false }), true);
+  assert.equal(shouldAutoOpen({ alreadySeen: true, userIsInteracting: false, isOpen: false }), false);
+  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: true, isOpen: false }), false);
+});
+
+// The flag records that the *timer* has had its one turn. Opening from the hero
+// button is an explicit request and must leave that turn unspent, otherwise
+// clicking the CTA within the first three seconds silently cancels the auto-open
+// the visitor never got.
+test("only the timed opening spends the once-per-visitor showing", () => {
+  assert.equal(marksVisitorSeen("timer"), true);
+  assert.equal(marksVisitorSeen("hero_button"), false);
+});
+
+// The timer must not reopen a dialog that is already open: it would spend the
+// visitor's one automatic showing on a popup they are already looking at.
+test("the timer never fires over an already-open popup", () => {
+  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false, isOpen: true }), false);
+  assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false, isOpen: false }), true);
+});
+
+// "Try again" is the whole recovery for a transient failure, and useless advice
+// for a rejected submission: the same answers will be rejected identically. A
+// 400 has to say so instead of inviting an unbounded retry loop.
+test("only a transient failure is worth retrying", () => {
+  assert.equal(isRetryable(500), true);
+  assert.equal(isRetryable(503), true);
+  assert.equal(isRetryable(0), true);
+  assert.equal(isRetryable(400), false);
+  assert.equal(isRetryable(404), false);
+});
+
+// Every question in the shipped survey is required, but a choice question is a
+// group of buttons and the browser validates none of it. Without this check a
+// submit would post an incomplete response and take a 400 back from the
+// backend, naming no question the participant could act on.
+test("required questions left unanswered are named, in the order asked", () => {
+  const required: SurveyQuestion[] = questions.map((question) => ({ ...question, required: true }));
+
+  assert.deepEqual(missingRequired(required, {}), ["gender", "flavour", "drinks"]);
+  assert.deepEqual(
+    missingRequired(required, { gender: "Female", drinks: ["Power up, Babe"] }),
+    ["flavour"],
+  );
+  assert.deepEqual(
+    missingRequired(required, {
+      gender: "Female",
+      flavour: "Mango",
+      drinks: ["Power up, Babe"],
+    }),
+    [],
+  );
+});
+
+// Whitespace is not an answer. answersForSubmission already drops it, and
+// missingRequired reads through that so the two cannot disagree about what
+// counts as answered.
+test("a whitespace-only answer does not satisfy a required question", () => {
+  const required: SurveyQuestion[] = [{ ...questions[1], required: true }];
+
+  assert.deepEqual(missingRequired(required, { flavour: "   " }), ["flavour"]);
+  assert.deepEqual(missingRequired(required, { flavour: "Mango" }), []);
+});
+
+// An optional question is still allowed to exist in a superseding survey; the
+// gate must only ever hold back the ones actually marked required.
+test("an optional question is never reported as missing", () => {
+  assert.deepEqual(missingRequired(questions, {}), []);
+});
