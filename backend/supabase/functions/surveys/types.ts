@@ -52,6 +52,7 @@ export type AnswerValue = string | string[];
 /** The answers one submission contributes to the opaque response blob. */
 export interface ValidatedSubmission {
   answers: Record<string, AnswerValue>;
+  participantId: string;
 }
 
 export interface SubmissionResult {

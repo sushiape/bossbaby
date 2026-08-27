@@ -395,6 +395,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
         onSubmit={survey.submit}
         onRetryLoad={survey.retryLoad}
         onClose={survey.close}
+        onStartFresh={survey.startFresh}
       />
 
       {/* ── 1b. Launch date ── */}

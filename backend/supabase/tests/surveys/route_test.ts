@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
-import { toApiError } from "../_shared/errors.ts";
-import type { SurveyRepository } from "./repository.ts";
-import type { SurveyRow } from "./types.ts";
-import { handleSurveyRequest } from "./route.ts";
+import { toApiError } from "../../functions/_shared/errors.ts";
+import type { SurveyRepository } from "../../functions/surveys/repository.ts";
+import type { SurveyRow } from "../../functions/surveys/types.ts";
+import { handleSurveyRequest } from "../../functions/surveys/route.ts";
 
 const ROW: SurveyRow = {
   key: "launch_v2",

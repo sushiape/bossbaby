@@ -60,10 +60,11 @@ export function useProductFitSurvey() {
   const [email, setEmail] = useState("");
   const [submitStatus, setSubmitStatus] = useState<SurveySubmitStatus>("idle");
 
-  // Minted per opening and never persisted. Reused across retries within one
-  // attempt, which is what makes a retry a replacement rather than a second
-  // response (ADR 0017). A fresh id per opening means a second person on the
-  // same device gets their own row instead of overwriting the first.
+  // Minted per response and never persisted. Held for as long as one response
+  // is in progress -- across a close and reopen, and across retries -- which is
+  // what makes a resubmission a replacement rather than a second response
+  // (ADR 0017). Cleared once that response is submitted, so a second person on
+  // the same device gets their own row instead of overwriting the first.
   const participantId = useRef<string>("");
 
   // Read by the auto-open timer, which must not restart every time the popup
@@ -82,12 +83,21 @@ export function useProductFitSurvey() {
     }
   }, []);
 
-  // A fresh participant id per opening, so a second person on one device gets
-  // their own row rather than replacing the first person's.
+  /**
+   * Opens the popup, keeping whatever was already typed.
+   *
+   * Closing is not abandoning: someone who shuts the popup to look at the page
+   * behind it and reopens it expects their answers to still be there, so the
+   * draft survives an open. It is cleared on a completed submission instead
+   * (see `startFresh`), which is the one point the previous answers are known
+   * to be finished with.
+   *
+   * The participant id is minted only when there is no draft in progress. A
+   * reopened part-finished response keeps its id, so submitting it replaces
+   * rather than duplicates; a second person starting clean gets their own.
+   */
   const open = useCallback((trigger: OpenTrigger = "hero_button") => {
-    participantId.current = crypto.randomUUID();
-    setDraft({});
-    setEmail("");
+    if (!participantId.current) participantId.current = crypto.randomUUID();
     setSubmitStatus("idle");
     setIsOpen(true);
     if (marksVisitorSeen(trigger)) markSeen();
@@ -97,6 +107,22 @@ export function useProductFitSurvey() {
   }, [load]);
 
   const close = useCallback(() => setIsOpen(false), []);
+
+  /**
+   * Clears the finished response so the next opening starts clean.
+   *
+   * Called when the participant dismisses the thank-you screen: their answers
+   * are recorded, so a second person on the same device must not inherit them
+   * -- nor the participant id, which would make their submission a replacement
+   * of the first person's response rather than a new one.
+   */
+  const startFresh = useCallback(() => {
+    participantId.current = "";
+    setDraft({});
+    setEmail("");
+    setSubmitStatus("idle");
+    setIsOpen(false);
+  }, []);
 
   /**
    * The timed opening, once per visitor.
@@ -171,6 +197,7 @@ export function useProductFitSurvey() {
   return {
     choose,
     close,
+    startFresh,
     draft,
     email,
     isOpen,

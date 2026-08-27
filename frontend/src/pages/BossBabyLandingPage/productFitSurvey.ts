@@ -20,8 +20,10 @@ export type SurveyDraft = Record<string, SurveyAnswer>;
 /**
  * Applies one option tap.
  *
- * Single choice replaces, and re-picking the same option clears it -- with no
- * required questions, an accidental tap must be undoable or it is permanent.
+ * Single choice replaces, and re-picking the same option clears it, so an
+ * accidental tap is undoable rather than permanent. Clearing a required
+ * question is allowed here and caught at submit by `missingRequired` -- the
+ * alternative, refusing the untap, would trap someone in a wrong answer.
  * Multi choice accumulates. Either way an emptied answer drops its key rather
  * than leaving `""` or `[]` behind, because the backend treats those as
  * unanswered anyway and a bare key is noise in the response blob.
@@ -78,6 +80,29 @@ export function answersForSubmission(
 }
 
 /**
+ * The keys of the required questions still unanswered.
+ *
+ * The browser enforces `required` on the text inputs and the email field, but a
+ * choice question is a group of buttons, which carries no native validation --
+ * so submitting would otherwise send an incomplete response that the backend
+ * rejects with a message naming no question in particular. Checking here lets
+ * the popup point at the ones that need an answer.
+ *
+ * Reuses `answersForSubmission` rather than reading the draft directly, so what
+ * counts as answered is decided in exactly one place: a whitespace-only text
+ * answer is missing here for the same reason it is dropped there.
+ */
+export function missingRequired(
+  questions: SurveyQuestion[],
+  draft: SurveyDraft,
+): string[] {
+  const answers = answersForSubmission(questions, draft);
+  return questions
+    .filter((question) => question.required && answers[question.key] === undefined)
+    .map((question) => question.key);
+}
+
+/**
  * Whether a failed submission is worth submitting again unchanged.
  *
  * A 4xx is the backend's considered judgement on these exact answers, so
@@ -111,8 +136,8 @@ export function marksVisitorSeen(trigger: OpenTrigger): boolean {
  * Once per visitor, never while they are mid-interaction, and never over a
  * popup that is already open. Stealing focus from someone typing their email
  * into the hero form is worse than not showing the survey at all, and firing
- * behind an open popup would be worse still: opening resets the draft, so it
- * would discard answers already given. The hero button is subject to none of
+ * behind an open popup would spend the visitor's one automatic showing on a
+ * popup they are already looking at. The hero button is subject to none of
  * these -- an explicit tap always opens it, which is what lets a second person
  * on one device take the survey.
  */

@@ -11,14 +11,6 @@ function invalid(message: string, details?: Record<string, string>): ApiError {
   return new ApiError(400, "VALIDATION_FAILED", message, details);
 }
 
-export async function jsonBody(request: Request): Promise<unknown> {
-  try {
-    return await request.json();
-  } catch {
-    throw invalid("Request body must contain valid JSON.");
-  }
-}
-
 function objectBody(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw invalid("Request body must be a JSON object.");
@@ -109,8 +101,21 @@ export function parseQuestions(value: unknown, surveyKey: string): Question[] {
  * than ignored, so a blob can never hold a key the question set cannot
  * explain.
  */
-export function validateSubmission(questions: Question[], value: unknown): ValidatedSubmission {
+/**
+ * Reads one submission body: who is answering, and what they answered.
+ *
+ * Both come out of the same parse. Pulling the participant id out separately
+ * would mean two readers of one body, in two modules, each casting it back to
+ * an object -- and the caller carrying a raw `unknown` it should not have to
+ * understand.
+ */
+export function validateSubmission(
+  questions: Question[],
+  value: unknown,
+  verifiedParticipant: string | null,
+): ValidatedSubmission {
   const body = objectBody(value);
+  const participant = participantId(body.participantId, verifiedParticipant);
   const rawAnswers = body.answers;
   if (!rawAnswers || typeof rawAnswers !== "object" || Array.isArray(rawAnswers)) {
     throw invalid("Answers must be a JSON object.", { answers: "invalid" });
@@ -134,7 +139,7 @@ export function validateSubmission(questions: Question[], value: unknown): Valid
     answers[question.key] = answer;
   }
 
-  return { answers };
+  return { answers, participantId: participant };
 }
 
 function validateAnswer(question: Question, value: unknown): AnswerValue | undefined {
@@ -207,7 +212,15 @@ function validateText(question: Question, value: unknown): string {
  * replacement rather than a second response. A verified JWT always wins over a
  * claimed id, so a signed-in participant cannot be impersonated.
  */
-export function participantId(claimed: unknown, verified: string | null): string {
+/**
+ * The participant this response belongs to.
+ *
+ * A verified identity wins over anything the body claims. Absent one, the
+ * claimed id is taken on trust -- it deduplicates rather than authenticates
+ * (CONTEXT.md, Participant) -- but must still be a well-formed uuid, so a
+ * client cannot claim an id that collides with someone else's by accident.
+ */
+function participantId(claimed: unknown, verified: string | null): string {
   if (verified) return verified;
   if (typeof claimed !== "string" || !UUID_PATTERN.test(claimed)) {
     throw invalid("A participant id is required.", { participantId: "invalid" });

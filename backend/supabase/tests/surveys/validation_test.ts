@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { ApiError } from "../_shared/errors.ts";
-import { parseQuestions, participantId, validateSubmission } from "./validation.ts";
-import type { Question } from "./types.ts";
+import { ApiError } from "../../functions/_shared/errors.ts";
+import { parseQuestions, validateSubmission } from "../../functions/surveys/validation.ts";
+import type { Question } from "../../functions/surveys/types.ts";
 
 const QUESTIONS: unknown[] = [
   {
@@ -30,8 +30,16 @@ function parsed(): Question[] {
   return parseQuestions(QUESTIONS, "launch_v1");
 }
 
+// These tests are about the answers, not about identity, so they submit as an
+// already-verified participant and let the identity tests below cover the rest.
+const VERIFIED = "55555555-5555-4555-8555-555555555555";
+
+function submitAnswers(questions: Question[], body: unknown) {
+  return validateSubmission(questions, body, VERIFIED);
+}
+
 Deno.test("a full submission is stored as opaque answers", () => {
-  const { answers } = validateSubmission(parsed(), {
+  const { answers } = submitAnswers(parsed(), {
     answers: {
       gender: "Female",
       size: "250ml",
@@ -53,7 +61,7 @@ Deno.test("an email is never accepted as a survey answer", () => {
   // Email lives on the waitlist, never in a response blob (ADR 0017). There is
   // no question type that could carry one, and an unasked key is refused.
   assert.throws(
-    () => validateSubmission(parsed(), { answers: { size: "250ml", email: "a@b.co" } }),
+    () => submitAnswers(parsed(), { answers: { size: "250ml", email: "a@b.co" } }),
     ApiError,
   );
   assert.throws(
@@ -64,12 +72,12 @@ Deno.test("an email is never accepted as a survey answer", () => {
 
 Deno.test("an unknown option is refused rather than stored", () => {
   assert.throws(
-    () => validateSubmission(parsed(), { answers: { gender: "Other", size: "250ml" } }),
+    () => submitAnswers(parsed(), { answers: { gender: "Other", size: "250ml" } }),
     ApiError,
   );
   assert.throws(
     () =>
-      validateSubmission(parsed(), {
+      submitAnswers(parsed(), {
         answers: { drinks: ["Power up, Babe", "Nope"], size: "250ml" },
       }),
     ApiError,
@@ -79,36 +87,36 @@ Deno.test("an unknown option is refused rather than stored", () => {
 Deno.test("a hand-written submission cannot smuggle a key past the question set", () => {
   // The frontend is not trusted: editing the form in the browser reaches here.
   assert.throws(
-    () => validateSubmission(parsed(), { answers: { sneaky: "x", size: "250ml" } }),
+    () => submitAnswers(parsed(), { answers: { sneaky: "x", size: "250ml" } }),
     ApiError,
   );
   // A single_choice answered as a list, and a multi_choice answered as a string.
   assert.throws(
-    () => validateSubmission(parsed(), { answers: { size: ["100ml", "250ml"] } }),
+    () => submitAnswers(parsed(), { answers: { size: ["100ml", "250ml"] } }),
     ApiError,
   );
   assert.throws(
-    () => validateSubmission(parsed(), { answers: { size: "250ml", drinks: "Power up, Babe" } }),
+    () => submitAnswers(parsed(), { answers: { size: "250ml", drinks: "Power up, Babe" } }),
     ApiError,
   );
   // Answers must be an object at all.
-  assert.throws(() => validateSubmission(parsed(), { answers: ["250ml"] }), ApiError);
+  assert.throws(() => submitAnswers(parsed(), { answers: ["250ml"] }), ApiError);
 });
 
 Deno.test("optional questions may be skipped and are simply absent", () => {
-  const { answers } = validateSubmission(parsed(), { answers: { size: "250ml" } });
+  const { answers } = submitAnswers(parsed(), { answers: { size: "250ml" } });
   assert.deepEqual(answers, { size: "250ml" });
 });
 
 Deno.test("a required question must be answered", () => {
-  assert.throws(() => validateSubmission(parsed(), { answers: {} }), ApiError);
-  assert.throws(() => validateSubmission(parsed(), { answers: { size: "   " } }), ApiError);
+  assert.throws(() => submitAnswers(parsed(), { answers: {} }), ApiError);
+  assert.throws(() => submitAnswers(parsed(), { answers: { size: "   " } }), ApiError);
 });
 
 Deno.test("text longer than the question allows is refused", () => {
   assert.throws(
     () =>
-      validateSubmission(parsed(), {
+      submitAnswers(parsed(), {
         answers: { size: "250ml", flavour: "x".repeat(121) },
       }),
     ApiError,
@@ -136,9 +144,25 @@ Deno.test("a question set that cannot be trusted is a server fault, not a bad re
 Deno.test("a participant id is required and a verified one wins", () => {
   const claimed = "33333333-3333-4333-8333-333333333333";
   const verified = "44444444-4444-4444-8444-444444444444";
+  const questions: Question[] = [{ key: "a", type: "text", prompt: "A" }];
+  const submit = (participantId: unknown, verifiedParticipant: string | null) =>
+    validateSubmission(questions, { participantId, answers: {} }, verifiedParticipant);
 
-  assert.equal(participantId(claimed, null), claimed);
-  assert.equal(participantId(claimed, verified), verified);
-  assert.throws(() => participantId("not-a-uuid", null), ApiError);
-  assert.throws(() => participantId(undefined, null), ApiError);
+  assert.equal(submit(claimed, null).participantId, claimed);
+  assert.equal(submit(claimed, verified).participantId, verified);
+  assert.throws(() => submit("not-a-uuid", null), ApiError);
+  assert.throws(() => submit(undefined, null), ApiError);
+});
+
+Deno.test("a claimed participant id is normalized to lower case", () => {
+  const questions: Question[] = [{ key: "a", type: "text", prompt: "A" }];
+  const claimed = "AAAAAAAA-3333-4333-8333-333333333333";
+
+  const { participantId } = validateSubmission(
+    questions,
+    { participantId: claimed, answers: {} },
+    null,
+  );
+
+  assert.equal(participantId, claimed.toLowerCase());
 });

@@ -115,50 +115,15 @@ from (values
 ) as sample(email, source, age_days)
 on conflict (email) do nothing;
 
--- The product fit survey. The migration already inserted this row, so the
--- mirror is a no-op locally; it is here so the question set is legible beside
--- the rest of the local data rather than only in a migration, and so a database
--- reset that stops short of migrations still has a survey to open.
-insert into public.surveys (key, family, title, purpose, questions, is_open)
-values (
-  'product_fit_v1',
-  'product_fit',
-  'Five questions. Then we build your drink.',
-  'What people would actually buy, before flavours, sizes and audience are fixed.',
-  '[
-    {
-      "key": "gender",
-      "type": "single_choice",
-      "prompt": "I am...",
-      "options": ["Female", "Male", "Diverse"]
-    },
-    {
-      "key": "size",
-      "type": "single_choice",
-      "prompt": "I would like to buy...",
-      "options": ["100ml", "250ml", "330ml"]
-    },
-    {
-      "key": "flavour",
-      "type": "text",
-      "prompt": "Flavour I love...",
-      "maxLength": 120
-    },
-    {
-      "key": "drinks",
-      "type": "multi_choice",
-      "prompt": "Which drink would you look forward to the most?",
-      "hint": "Pick as many as you like.",
-      "options": ["Power up, Babe", "Glow up, Babe", "Just chill, Babe"]
-    }
-  ]'::jsonb,
-  true
-)
-on conflict (key) do nothing;
+-- The product fit survey is NOT seeded here. Migration 202608270001 inserts it,
+-- because the landing page has nowhere to send answers until the row exists in
+-- every environment. Duplicating the question set here would mean editing a
+-- prompt in two places with nothing catching the drift, so the responses below
+-- reference the migrated row instead.
 
 -- A handful of responses so local development has something to read back.
--- Partial answers are deliberate: no question is required, so a response that
--- skipped one is the normal case, not a broken row.
+-- Every one is complete: all four questions are required, so a response that
+-- skipped one could not have been submitted.
 insert into public.survey_responses (survey_key, participant_id, answers, created_at)
 select
   'product_fit_v1',
@@ -167,12 +132,12 @@ select
   now() - (sample.age_days || ' days')::interval
 from (values
   ('bbbbbbbb-0000-4000-b000-000000000001',
-   '{"gender":"Female","size":"250ml","flavour":"Mango","drinks":["Power up, Babe","Glow up, Babe"]}', 1),
+   '{"gender":"Female","size":"250ml","flavour":"Mango","drinks":["Power Up, Babe","Glow Up, Babe"]}', 1),
   ('bbbbbbbb-0000-4000-b000-000000000002',
-   '{"gender":"Female","size":"330ml","flavour":"Passionfruit","drinks":["Just chill, Babe"]}', 2),
+   '{"gender":"Female","size":"330ml","flavour":"Passionfruit","drinks":["Just Chill, Babe"]}', 2),
   ('bbbbbbbb-0000-4000-b000-000000000003',
-   '{"gender":"Diverse","size":"100ml","drinks":["Power up, Babe"]}', 3),
+   '{"gender":"Diverse","size":"100ml","flavour":"Elderflower","drinks":["Power Up, Babe"]}', 3),
   ('bbbbbbbb-0000-4000-b000-000000000004',
-   '{"gender":"Male","size":"330ml","flavour":"Yuzu"}', 4)
+   '{"gender":"Male","size":"330ml","flavour":"Yuzu","drinks":["Just Chill, Babe"]}', 4)
 ) as sample(participant_id, answers, age_days)
 on conflict (survey_key, participant_id) do nothing;

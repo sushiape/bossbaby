@@ -1,7 +1,14 @@
-import { useEffect, useRef, type FormEvent, type KeyboardEvent, type MouseEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 import { motion } from "framer-motion";
 import type { SurveyQuestion } from "../../shared/services/surveysApi";
-import type { SurveyDraft } from "./productFitSurvey";
+import { missingRequired, type SurveyDraft } from "./productFitSurvey";
 import type { SurveyLoadStatus, SurveySubmitStatus } from "./useProductFitSurvey";
 
 const FOCUSABLE_SELECTOR =
@@ -9,6 +16,8 @@ const FOCUSABLE_SELECTOR =
 
 const TILE_CLASS =
   "mb-4 rounded-[20px] border border-white/90 bg-white/70 p-6 shadow-[0_8px_24px_rgba(163,79,126,0.08)]";
+// Applied only after a submit attempt found this question unanswered.
+const UNANSWERED_TILE_CLASS = "!border-[#C2185B]/45 ring-4 ring-[#C2185B]/10";
 const OPTION_CLASS =
   "rounded-2xl border-[1.5px] px-5 py-3.5 text-left text-[15px] font-bold text-black transition focus:outline-none focus:ring-4 focus:ring-[#FF4FA3]/55";
 const FIELD_CLASS =
@@ -27,6 +36,7 @@ interface ProductFitSurveyDialogProps {
   onSubmit: () => void;
   onRetryLoad: () => void;
   onClose: () => void;
+  onStartFresh: () => void;
 }
 
 function isChosen(draft: SurveyDraft, question: SurveyQuestion, option: string): boolean {
@@ -47,9 +57,13 @@ export function ProductFitSurveyDialog({
   onSubmit,
   onRetryLoad,
   onClose,
+  onStartFresh,
 }: ProductFitSurveyDialogProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  // Populated only by a submit attempt. Marking questions before anyone has
+  // tried to submit would scold a participant for not yet having reached them.
+  const [unanswered, setUnanswered] = useState<string[]>([]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -96,8 +110,26 @@ export function ProductFitSurveyDialog({
     if (event.target === event.currentTarget) onClose();
   };
 
+  /**
+   * Every question is required, but a choice question is a group of buttons and
+   * the browser will not validate it. The text and email fields carry `required`
+   * and are caught natively before this runs; the choice questions are caught
+   * here, and the first unanswered one is scrolled to rather than merely
+   * flagged, since it may be off-screen in a survey this tall.
+   */
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!survey) return;
+
+    const missing = missingRequired(survey.questions, draft);
+    setUnanswered(missing);
+    if (missing.length > 0) {
+      dialogRef.current
+        ?.querySelector(`[data-question="${missing[0]}"]`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
     onSubmit();
   };
 
@@ -186,6 +218,7 @@ export function ProductFitSurveyDialog({
                     question={question}
                     number={index + 1}
                     draft={draft}
+                    isUnanswered={unanswered.includes(question.key)}
                     onChoose={onChoose}
                     onWriteText={onWriteText}
                   />
@@ -254,9 +287,12 @@ export function ProductFitSurveyDialog({
               <p className="mb-5 text-[15px] font-medium text-black/45">
                 Thank you — your answers help decide what we build.
               </p>
+              {/* Not onClose: the response is recorded, so this clears it.
+                  Closing with the x keeps a part-finished draft, but a finished
+                  one must not be inherited by the next person on this device. */}
               <button
                 type="button"
-                onClick={onClose}
+                onClick={onStartFresh}
                 className="rounded-full border-[1.5px] border-black/10 bg-white px-[26px] py-3 text-sm font-bold text-black transition hover:border-[#FF89CC]"
               >
                 Done
@@ -273,6 +309,7 @@ interface QuestionTileProps {
   question: SurveyQuestion;
   number: number;
   draft: SurveyDraft;
+  isUnanswered: boolean;
   onChoose: (question: SurveyQuestion, option: string) => void;
   onWriteText: (question: SurveyQuestion, value: string) => void;
 }
@@ -284,10 +321,24 @@ interface QuestionTileProps {
  * superseding survey may ask anything the three types cover and this renders it
  * without a deploy.
  */
-function QuestionTile({ question, number, draft, onChoose, onWriteText }: QuestionTileProps) {
+function QuestionTile({
+  question,
+  number,
+  draft,
+  isUnanswered,
+  onChoose,
+  onWriteText,
+}: QuestionTileProps) {
   const label = String(number).padStart(2, "0");
   const isChoice = question.type === "single_choice" || question.type === "multi_choice";
   const titleId = `product-fit-q-${question.key}`;
+  const tileClass = isUnanswered ? `${TILE_CLASS} ${UNANSWERED_TILE_CLASS}` : TILE_CLASS;
+
+  const askedFor = isUnanswered && (
+    <p className="mb-3 text-[13px] font-semibold text-[#C2185B]" role="alert">
+      Please answer this one.
+    </p>
+  );
 
   const title = (
     <p
@@ -307,9 +358,10 @@ function QuestionTile({ question, number, draft, onChoose, onWriteText }: Questi
 
   if (!isChoice) {
     return (
-      <div className={TILE_CLASS}>
+      <div className={tileClass} data-question={question.key}>
         {title}
         {hint}
+        {askedFor}
         <input
           type="text"
           value={typeof draft[question.key] === "string" ? (draft[question.key] as string) : ""}
@@ -325,9 +377,10 @@ function QuestionTile({ question, number, draft, onChoose, onWriteText }: Questi
   }
 
   return (
-    <div className={TILE_CLASS} role="group" aria-labelledby={titleId}>
+    <div className={tileClass} role="group" aria-labelledby={titleId} data-question={question.key}>
       {title}
       {hint}
+      {askedFor}
       <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
         {question.options?.map((option) => {
           const chosen = isChosen(draft, question, option);

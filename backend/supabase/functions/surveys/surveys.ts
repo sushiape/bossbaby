@@ -7,7 +7,7 @@ import type {
   SurveyResource,
   SurveyRow,
 } from "./types.ts";
-import { parseQuestions, participantId, validateSubmission } from "./validation.ts";
+import { parseQuestions, validateSubmission } from "./validation.ts";
 
 function isOpen(survey: SurveyRow): boolean {
   if (!survey.is_open) return false;
@@ -77,13 +77,11 @@ export async function submitResponse(
   if (!survey || !isOpen(survey)) throw notFound();
 
   const questions = parseQuestions(survey.questions, survey.key);
-  const claimed = (body as Record<string, unknown> | null)?.participantId;
-  const participant = participantId(claimed, verifiedParticipant);
-  const { answers } = validateSubmission(questions, body);
+  const { answers, participantId } = validateSubmission(questions, body, verifiedParticipant);
 
   await repository.saveResponse({
     surveyKey: survey.key,
-    participantId: participant,
+    participantId,
     answers,
   });
 

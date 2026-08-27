@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
-import { ApiError } from "../_shared/errors.ts";
-import type { SaveResponseInput, SurveyRepository } from "./repository.ts";
-import type { SurveyRow } from "./types.ts";
-import { getOpenSurvey, getSurvey, submitResponse } from "./surveys.ts";
+import { ApiError } from "../../functions/_shared/errors.ts";
+import type { SaveResponseInput, SurveyRepository } from "../../functions/surveys/repository.ts";
+import type { SurveyRow } from "../../functions/surveys/types.ts";
+import { getOpenSurvey, getSurvey, submitResponse } from "../../functions/surveys/surveys.ts";
 
 const QUESTIONS = [
   {

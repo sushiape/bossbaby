@@ -4,6 +4,7 @@ import {
   answersForSubmission,
   isRetryable,
   marksVisitorSeen,
+  missingRequired,
   shouldAutoOpen,
   toggleChoice,
   type SurveyDraft,
@@ -80,9 +81,8 @@ test("only the timed opening spends the once-per-visitor showing", () => {
   assert.equal(marksVisitorSeen("hero_button"), false);
 });
 
-// The timer must not reopen a dialog that is already open: open() resets the
-// draft, the email and the participant id, so a timer firing behind an open
-// popup would silently discard answers the visitor is part-way through.
+// The timer must not reopen a dialog that is already open: it would spend the
+// visitor's one automatic showing on a popup they are already looking at.
 test("the timer never fires over an already-open popup", () => {
   assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false, isOpen: true }), false);
   assert.equal(shouldAutoOpen({ alreadySeen: false, userIsInteracting: false, isOpen: false }), true);
@@ -97,4 +97,42 @@ test("only a transient failure is worth retrying", () => {
   assert.equal(isRetryable(0), true);
   assert.equal(isRetryable(400), false);
   assert.equal(isRetryable(404), false);
+});
+
+// Every question in the shipped survey is required, but a choice question is a
+// group of buttons and the browser validates none of it. Without this check a
+// submit would post an incomplete response and take a 400 back from the
+// backend, naming no question the participant could act on.
+test("required questions left unanswered are named, in the order asked", () => {
+  const required: SurveyQuestion[] = questions.map((question) => ({ ...question, required: true }));
+
+  assert.deepEqual(missingRequired(required, {}), ["gender", "flavour", "drinks"]);
+  assert.deepEqual(
+    missingRequired(required, { gender: "Female", drinks: ["Power up, Babe"] }),
+    ["flavour"],
+  );
+  assert.deepEqual(
+    missingRequired(required, {
+      gender: "Female",
+      flavour: "Mango",
+      drinks: ["Power up, Babe"],
+    }),
+    [],
+  );
+});
+
+// Whitespace is not an answer. answersForSubmission already drops it, and
+// missingRequired reads through that so the two cannot disagree about what
+// counts as answered.
+test("a whitespace-only answer does not satisfy a required question", () => {
+  const required: SurveyQuestion[] = [{ ...questions[1], required: true }];
+
+  assert.deepEqual(missingRequired(required, { flavour: "   " }), ["flavour"]);
+  assert.deepEqual(missingRequired(required, { flavour: "Mango" }), []);
+});
+
+// An optional question is still allowed to exist in a superseding survey; the
+// gate must only ever hold back the ones actually marked required.
+test("an optional question is never reported as missing", () => {
+  assert.deepEqual(missingRequired(questions, {}), []);
 });
