@@ -5,7 +5,19 @@ import { getRouteByPath, navigationRoutes, routes } from "./routes.ts";
 test("places App between Bossbabes and About", () => {
   assert.deepEqual(
     navigationRoutes.map(({ navigationLabel }) => navigationLabel),
-    ["Drinks", "AI machine", "Bossbabes", "App", "About"],
+    ["Drinks", "Bossbabes", "App", "About"],
+  );
+});
+
+// BBDEV-46: the "AI machine" page described the formula engine and the modular
+// cartridge dosing. It stays off the public site until the patent application is
+// filed -- unlike /admin, being unlisted is not enough, the URL must not resolve.
+test("the AI machine page is unreachable, not merely unlisted", () => {
+  assert.equal(getRouteByPath("/how-it-works"), undefined);
+  assert.equal(
+    navigationRoutes.some(({ navigationLabel }) => navigationLabel === "AI machine"),
+    false,
+    "the AI machine tab must not appear in public navigation",
   );
 });
 
