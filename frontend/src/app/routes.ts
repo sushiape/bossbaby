@@ -3,7 +3,6 @@ import { lazy, type ComponentType } from "react";
 export type PageId =
   | "landing"
   | "products"
-  | "howitworks"
   | "community"
   | "askexpert"
   | "flavourlab"
@@ -39,7 +38,10 @@ export interface NavigationDefinition {
 export const routes: RouteDefinition[] = [
   { id: "landing", path: "/", component: lazy(() => import("../pages/BossBabyLandingPage")) },
   { id: "products", path: "/products", navigationLabel: "Drinks", component: lazy(() => import("../pages/BossBabyProductsPage")) },
-  { id: "howitworks", path: "/how-it-works", navigationLabel: "AI machine", component: lazy(() => import("../pages/BossBabyHowItWorksPage")) },
+  // Withdrawn: the "AI machine" page (/how-it-works). Its six steps describe the
+  // formula engine and the modular cartridge dosing -- disclosure that could count
+  // as prior art against the pending patent application (BBDEV-46). The page
+  // component and its assets are kept; restore this entry once the filing is in.
   { id: "community", path: "/community", navigationLabel: "Bossbabes", component: lazy(() => import("../pages/BossBabyCommunityPage")) },
   { id: "askexpert", path: "/ask-an-expert", component: lazy(() => import("../pages/BossBabyAskAnExpertPage")) },
   { id: "flavourlab", path: "/flavour-lab", component: lazy(() => import("../pages/BossBabyFlavourLabPage")) },

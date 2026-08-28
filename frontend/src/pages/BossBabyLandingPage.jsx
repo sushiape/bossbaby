@@ -714,14 +714,6 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
               and gives you the right formula on the spot. Just the nutrients you need,
               exactly when you need them.
             </motion.p>
-            <motion.div variants={fadeUp} className="mt-8">
-              <button
-                onClick={() => setCurrentPage("howitworks")}
-                className="inline-flex items-center justify-center rounded-full px-8 py-3 font-bold text-base bg-white text-black hover:bg-gray-100 transition-colors"
-              >
-                Read more
-              </button>
-            </motion.div>
           </motion.div>
         </Container>
       </section>
