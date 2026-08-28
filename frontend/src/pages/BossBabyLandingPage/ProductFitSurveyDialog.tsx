@@ -153,20 +153,17 @@ export function ProductFitSurveyDialog({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.28, ease: "easeOut" }}
       >
-        {/* The tag carries the auto margin, not the close button, so the gap
-            opens after the wordmark and the tag rides alongside the ×. */}
+        {/* The close button carries the auto margin, so the gap opens after
+            the wordmark and the × sits at the far edge. */}
         <div className="flex flex-none items-center gap-1.5 border-b border-white/60 px-4 pb-3.5 pt-5 sm:gap-2 sm:px-[30px] sm:pb-[18px] sm:pt-[26px]">
           <span className="flex-none text-[21px] font-extrabold tracking-[-0.04em] text-black sm:text-2xl">
             bossbaby
-          </span>
-          <span className="ml-auto flex-none whitespace-nowrap rounded-full bg-black px-[9px] py-[5px] text-[9px] font-extrabold uppercase tracking-[0.09em] text-white sm:px-3 sm:text-[10px] sm:tracking-[0.16em]">
-            help us build it
           </span>
           <button
             ref={closeButtonRef}
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 flex-none items-center justify-center rounded-full border border-white/80 bg-white/65 text-xl font-bold leading-none text-black/60 transition hover:bg-white hover:text-black focus:outline-none focus:ring-4 focus:ring-white/80 sm:h-10 sm:w-10"
+            className="ml-auto flex h-9 w-9 flex-none items-center justify-center rounded-full border border-white/80 bg-white/65 text-xl font-bold leading-none text-black/60 transition hover:bg-white hover:text-black focus:outline-none focus:ring-4 focus:ring-white/80 sm:h-10 sm:w-10"
             aria-label="Close survey"
           >
             ×
@@ -197,26 +194,23 @@ export function ProductFitSurveyDialog({
 
           {loadStatus === "ready" && survey && !isSubmitted && (
             <>
+              {/* The survey's stored title and purpose describe it for
+                  whoever reads the answers, not for the people giving them.
+                  What the popup shows is the brand talking. */}
               <div className="mb-[26px]">
                 <h1
                   id="product-fit-survey-title"
-                  className="mb-2.5 text-[26px] font-extrabold leading-[1.1] tracking-[-0.03em] text-black sm:text-[34px]"
+                  className="text-[26px] font-extrabold leading-[1.1] tracking-[-0.03em] text-black sm:text-[34px]"
                 >
-                  {survey.title}
+                  It&apos;s your call, babe.
                 </h1>
-                {survey.purpose && (
-                  <p className="text-[15px] font-medium leading-[1.55] text-black/60">
-                    {survey.purpose}
-                  </p>
-                )}
               </div>
 
               <form onSubmit={handleSubmit}>
-                {survey.questions.map((question, index) => (
+                {survey.questions.map((question) => (
                   <QuestionTile
                     key={question.key}
                     question={question}
-                    number={index + 1}
                     draft={draft}
                     isUnanswered={unanswered.includes(question.key)}
                     onChoose={onChoose}
@@ -227,14 +221,11 @@ export function ProductFitSurveyDialog({
                 {/* Not a Question: an address is never a survey answer
                     (ADR 0017), so it is posted to the waitlist separately. */}
                 <div className="mb-4 rounded-[20px] border border-black bg-black p-6 shadow-[0_8px_24px_rgba(163,79,126,0.08)]">
-                  <p className="mb-[18px] flex flex-wrap items-center gap-[11px] text-xl font-extrabold leading-[1.25] tracking-[-0.02em] text-white">
-                    <span className="whitespace-nowrap rounded-full bg-[#FF89CC]/20 px-[11px] py-[5px] text-[11px] font-extrabold tracking-[0.1em] text-[#FF89CC]">
-                      {String(survey.questions.length + 1).padStart(2, "0")}
-                    </span>
+                  <p className="mb-[18px] text-xl font-extrabold leading-[1.25] tracking-[-0.02em] text-white">
                     One last thing
                   </p>
                   <p className="-mt-2.5 mb-4 text-[13px] font-medium text-white/55">
-                    Join our waitlist — we'll email you when Bossbaby launches.
+                    Join our waitlist
                   </p>
                   <div className="flex flex-col gap-[11px] sm:flex-row">
                     <input
@@ -242,7 +233,7 @@ export function ProductFitSurveyDialog({
                       value={email}
                       onChange={(event) => onEmailChange(event.target.value)}
                       className={`${FIELD_CLASS} flex-1 border-transparent`}
-                      placeholder="Enter your email address…"
+                      placeholder="enter your email"
                       aria-label="Email address"
                       autoComplete="email"
                       required
@@ -307,7 +298,6 @@ export function ProductFitSurveyDialog({
 
 interface QuestionTileProps {
   question: SurveyQuestion;
-  number: number;
   draft: SurveyDraft;
   isUnanswered: boolean;
   onChoose: (question: SurveyQuestion, option: string) => void;
@@ -323,13 +313,11 @@ interface QuestionTileProps {
  */
 function QuestionTile({
   question,
-  number,
   draft,
   isUnanswered,
   onChoose,
   onWriteText,
 }: QuestionTileProps) {
-  const label = String(number).padStart(2, "0");
   const isChoice = question.type === "single_choice" || question.type === "multi_choice";
   const titleId = `product-fit-q-${question.key}`;
   const tileClass = isUnanswered ? `${TILE_CLASS} ${UNANSWERED_TILE_CLASS}` : TILE_CLASS;
@@ -343,11 +331,8 @@ function QuestionTile({
   const title = (
     <p
       id={titleId}
-      className="mb-[18px] flex flex-wrap items-center gap-[11px] text-xl font-extrabold leading-[1.25] tracking-[-0.02em] text-black"
+      className="mb-[18px] text-xl font-extrabold leading-[1.25] tracking-[-0.02em] text-black"
     >
-      <span className="whitespace-nowrap rounded-full bg-[#FF89CC]/[0.18] px-[11px] py-[5px] text-[11px] font-extrabold tracking-[0.1em] text-[#FF4FA3]">
-        {label}
-      </span>
       {question.prompt}
     </p>
   );
