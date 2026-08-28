@@ -39,6 +39,10 @@ _Avoid_: Vote, Submission, Entry
 The name shared by every version of one Survey, so the versions can be read together and asked for as a group. A place that runs a Survey names the family rather than a version, and is given whichever version is currently open.
 _Avoid_: Survey group, campaign, series
 
+**Visit Measurement**:
+Counting which pages people reach, in aggregate only. It sets no cookie, follows no one between sites, and builds no record of an individual's browsing, so it never identifies a Participant or accumulates a profile of one. This is a promise made to visitors in the privacy policy, not merely a property of the tool currently used.
+_Avoid_: Tracking, visitor analytics, user behaviour data
+
 **Restricted App**:
 The unreleased Bossbaby application whose use is limited to explicitly authorized people until public launch.
 _Avoid_: Hidden page, preview page
