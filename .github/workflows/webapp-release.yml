@@ -116,20 +116,26 @@ jobs:
               exit 1
             fi
           done
-      - name: Build validated Vercel production artifact
+      - name: Link production Vercel project
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          npx --yes vercel@59.1.3 pull --yes --environment=production --token="$VERCEL_TOKEN"
-          npx --yes vercel@59.1.3 build --prod --token="$VERCEL_TOKEN"
-      - name: Deploy validated artifact
+        run: npx --yes vercel@59.1.3 pull --yes --environment=production --token="$VERCEL_TOKEN"
+      # Vercel builds this deployment rather than receiving a prebuilt artifact. Web Analytics
+      # serves from /_vercel/insights/*, and only Vercel's builder can add those routes to a
+      # deployment -- the collector identifies the project by the domain the request arrives on,
+      # so there is no endpoint a locally built artifact could point at instead. Building here
+      # with `vercel build` and shipping it with `deploy --prebuilt` skips that injection and
+      # leaves analytics silently uncollected. This job still owns *when* the deploy happens, so
+      # the ordering behind ADR 0007 is unchanged: production-release.yml gates it on database
+      # and edge-functions succeeding first.
+      - name: Deploy validated revision
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: npx --yes vercel@59.1.3 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        run: npx --yes vercel@59.1.3 deploy --prod --token="$VERCEL_TOKEN"
       - name: Smoke-test production routes
         run: |
           set -euo pipefail
@@ -147,3 +153,19 @@ jobs:
               exit 1
             fi
           done
+      - name: Smoke-test Web Analytics collection route
+        run: |
+          set -euo pipefail
+          # Vercel injects this route only when it builds the deployment itself. A prebuilt
+          # deploy returns 404 here and collects nothing, which is invisible from the site.
+          for attempt in {1..12}; do
+            content_type="$(curl --silent --show-error --location --output /dev/null \
+              --write-out '%{content_type}' \
+              "https://www.hibossbaby.com/_vercel/insights/script.js")"
+            if [[ "$content_type" == *javascript* ]]; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Web Analytics script did not serve JavaScript; insights routes are missing." >&2
+          exit 1
