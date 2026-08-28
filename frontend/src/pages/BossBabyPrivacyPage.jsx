@@ -64,7 +64,7 @@ export default function BossBabyPrivacyPage({ currentPage, setCurrentPage }) {
 
             <div>
               <h2 className="font-bold mb-2 text-lg">8. Cookies und Tracking</h2>
-              <p>Unsere Website verwendet keine Tracking-Cookies oder Analyse-Tools von Drittanbietern. Es werden keine Nutzungsprofile erstellt.</p>
+              <p>Unsere Website verwendet keine Cookies und speichert keine Informationen auf deinem Endgerät. Es findet kein seitenübergreifendes Tracking statt, und wir erstellen keine Nutzungsprofile.</p>
             </div>
 
             <p className="text-sm text-gray-400 pt-4">Stand: August 2026</p>
