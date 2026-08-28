@@ -89,7 +89,7 @@ export default function BossBabyProductsPage({ currentPage, setCurrentPage }) {
               className="inline-flex items-center gap-2 rounded-full px-5 py-3.5 font-extrabold text-base border border-black bg-black text-white hover:-translate-y-0.5 transition-transform"
               style={{ fontWeight: 800 }}
             >
-              Explore formulas
+              Explore drinks
             </a>
             <a
               href="#waitlist"
