@@ -28,5 +28,6 @@
       "source": "/((?!_vercel/).*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "framework": null
 }
