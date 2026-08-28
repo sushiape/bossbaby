@@ -25,7 +25,7 @@
       "destination": "https://bossbabyremix.vercel.app/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!_vercel/).*)",
       "destination": "/index.html"
     }
   ]
