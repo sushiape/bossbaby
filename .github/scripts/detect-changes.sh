@@ -73,6 +73,10 @@ while IFS= read -r changed_file; do
       ;;
     .github/workflows/webapp-release.yml)
       validate_webapp=true
+      # The webapp job defines how the deploy is performed, not just how it is checked, so a
+      # change here only reaches production by deploying. Validating alone would leave the old
+      # deployment serving and the change silently inert.
+      deploy_webapp=true
       ;;
     .github/scripts/detect-changes.sh | .github/workflows/feature-ci.yml | \
       .github/workflows/promote-dev.yml | .github/workflows/production-release.yml)
