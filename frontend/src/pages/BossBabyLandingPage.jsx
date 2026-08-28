@@ -362,7 +362,7 @@ export default function BossbabyLandingPage({ currentPage, setCurrentPage }) {
             HELP US BUILD IT
           </button>
           <p className="mb-8 text-sm font-medium text-white/90">
-            Five quick questions.
+            It&apos;s your call, babe.
           </p>
           <p className="text-base text-white mb-4 font-medium">
             Be first to know when we launch.
