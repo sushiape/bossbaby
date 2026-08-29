@@ -19,7 +19,25 @@ const TILE_CLASS =
 // Applied only after a submit attempt found this question unanswered.
 const UNANSWERED_TILE_CLASS = "!border-[#C2185B]/45 ring-4 ring-[#C2185B]/10";
 const OPTION_CLASS =
-  "rounded-2xl border-[1.5px] px-5 py-3.5 text-left text-[15px] font-bold text-black transition focus:outline-none focus:ring-4 focus:ring-[#FF4FA3]/55";
+  "rounded-2xl border-[1.5px] px-5 py-3.5 text-center text-[15px] font-bold text-black transition focus:outline-none focus:ring-4 focus:ring-[#FF4FA3]/55";
+
+/**
+ * What each drink is for, shown under its name.
+ *
+ * Display only: the option string stays the whole answer, so these notes never
+ * reach a response and the drinks already chosen stay exactly as comparable as
+ * before. That is also why they live here rather than in the published question
+ * set -- an option's stored value is data, but explaining it is presentation.
+ *
+ * Keyed by option string, so a superseding survey that renames a drink simply
+ * renders it without a note rather than mislabelling it.
+ */
+const OPTION_NOTES: Record<string, string> = {
+  "Power Up, Babe": "Supports hormonal activity",
+  "Glow Up, Babe": "Supports skin & hair",
+  "Just Chill, Babe": "Supports mental clarity",
+};
+
 const FIELD_CLASS =
   "w-full rounded-2xl border-[1.5px] border-black/10 bg-white px-5 py-4 text-base font-medium text-black outline-none transition placeholder:text-black/30 focus:border-[#FF89CC] focus:ring-4 focus:ring-[#FF89CC]/20";
 
@@ -382,6 +400,15 @@ function QuestionTile({
               }`}
             >
               {option}
+              {OPTION_NOTES[option] && (
+                <span
+                  className={`mt-1 block text-[13px] font-medium ${
+                    chosen ? "text-black/55" : "text-black/45"
+                  }`}
+                >
+                  {OPTION_NOTES[option]}
+                </span>
+              )}
             </button>
           );
         })}
