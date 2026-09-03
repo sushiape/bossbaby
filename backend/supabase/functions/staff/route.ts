@@ -4,8 +4,20 @@ import { assertAllowedOrigin, corsHeaders } from "../_shared/cors.ts";
 import { ApiError } from "../_shared/errors.ts";
 import { jsonResponse } from "../_shared/response.ts";
 import { describeAccess } from "./access.ts";
-import { createStaffRepository, createSubscriptionRepository } from "./repository.ts";
-import { assertConsent, parseImport, parseSubscriptionQuery } from "./validation.ts";
+import {
+  createStaffRepository,
+  createSubscriptionRepository,
+  createSurveyResultsRepository,
+} from "./repository.ts";
+import { describeResponses, summariseSurvey } from "./results.ts";
+import {
+  assertConsent,
+  assertSurveyKey,
+  parseImport,
+  parseResponseFilter,
+  parseResponseQuery,
+  parseSubscriptionQuery,
+} from "./validation.ts";
 
 async function readJsonBody(request: Request): Promise<Record<string, unknown>> {
   try {
@@ -78,6 +90,51 @@ export async function handleStaffRequest(
       .removeSubscription(decodeURIComponent(removalMatch[1]));
     if (!removed) throw new ApiError(404, "NOT_FOUND", "That subscription no longer exists.");
     return jsonResponse(request, { removed: true });
+  }
+
+  // Survey results are read-only and gated on their own capability: survey
+  // answers are a different data class from waitlist addresses, so one can be
+  // granted without the other.
+  if (request.method === "GET" && path === "/surveys") {
+    const admin = adminFactory();
+    await staffMember(request, admin, "surveys.read");
+    const surveys = await createSurveyResultsRepository(admin).listSurveys();
+    return jsonResponse(request, { surveys });
+  }
+
+  const resultsMatch = path.match(/^\/surveys\/([^/]+)\/results$/);
+  if (request.method === "GET" && resultsMatch) {
+    const admin = adminFactory();
+    await staffMember(request, admin, "surveys.read");
+    const repository = createSurveyResultsRepository(admin);
+    const key = assertSurveyKey(decodeURIComponent(resultsMatch[1]));
+    const survey = await repository.findSurvey(key);
+    if (!survey) throw new ApiError(404, "NOT_FOUND", "That survey does not exist.");
+    const rows = await repository.allResponses(key);
+    return jsonResponse(request, {
+      results: summariseSurvey(survey, rows, parseResponseFilter(new URL(request.url))),
+    });
+  }
+
+  // The individual submissions, paginated and fetched only when opened. Kept
+  // apart from /results so the counts view stays cheap however many responses
+  // accumulate.
+  const responsesMatch = path.match(/^\/surveys\/([^/]+)\/responses$/);
+  if (request.method === "GET" && responsesMatch) {
+    const admin = adminFactory();
+    await staffMember(request, admin, "surveys.read");
+    const repository = createSurveyResultsRepository(admin);
+    const key = assertSurveyKey(decodeURIComponent(responsesMatch[1]));
+    const survey = await repository.findSurvey(key);
+    if (!survey) throw new ApiError(404, "NOT_FOUND", "That survey does not exist.");
+    const page = await repository.pageResponses(key, parseResponseQuery(new URL(request.url)));
+    const { questions, responses } = describeResponses(survey, page.rows);
+    return jsonResponse(request, {
+      questions,
+      responses,
+      total: page.total,
+      nextCursor: page.nextCursor,
+    });
   }
 
   if (["GET", "POST", "PUT", "DELETE"].includes(request.method)) {
