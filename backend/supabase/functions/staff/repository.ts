@@ -1,6 +1,8 @@
 import type { SupabaseClient } from "npm:@supabase/supabase-js@2.112.3";
 import type {
   CapabilityDescription,
+  ResponseQuery,
+  ResponseRow,
   StaffRepository,
   SubscriptionPage,
   SubscriptionQuery,
@@ -8,8 +10,6 @@ import type {
   SurveyResultsRepository,
   SurveyRowForResults,
   SurveySummary,
-  ResponseQuery,
-  ResponseRow,
 } from "./types.ts";
 
 export function createStaffRepository(client: SupabaseClient): StaffRepository {

@@ -1,14 +1,14 @@
 import { parseQuestions } from "../surveys/validation.ts";
 import type { Question } from "../surveys/types.ts";
 import type {
+  OtherAnswers,
   QuestionResult,
+  ResponseFilter,
   ResponseRow,
   SurveyResults,
   SurveyRowForResults,
-  OtherAnswers,
-  ResponseFilter,
-  TextAnswerGroup,
   Tally,
+  TextAnswerGroup,
 } from "./types.ts";
 
 /**
@@ -144,9 +144,7 @@ function groupText(question: Question, rows: ResponseRow[]): {
     })
     // Count descending, then alphabetical, so equal counts do not reshuffle
     // between requests.
-    .sort((left, right) =>
-      right.count - left.count || left.label.localeCompare(right.label)
-    );
+    .sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
 
   const repeated = ranked.filter((entry) => entry.count > 1);
   const singletons = ranked.filter((entry) => entry.count === 1);
@@ -177,7 +175,9 @@ function answeredCount(question: Question, rows: ResponseRow[]): number {
   let answered = 0;
   for (const row of rows) {
     const value = answersOf(row)[question.key];
-    if (typeof value === "string" ? value.trim() !== "" : Array.isArray(value) && value.length > 0) {
+    if (
+      typeof value === "string" ? value.trim() !== "" : Array.isArray(value) && value.length > 0
+    ) {
       answered += 1;
     }
   }
@@ -277,7 +277,9 @@ function applyFilter(
  * which is a different question than this control implies, and text has no
  * fixed set of values to offer.
  */
-function describeFilters(questions: Question[]): { key: string; prompt: string; options: string[] }[] {
+function describeFilters(
+  questions: Question[],
+): { key: string; prompt: string; options: string[] }[] {
   return questions
     .filter((question) => question.type === "single_choice")
     .map((question) => ({
