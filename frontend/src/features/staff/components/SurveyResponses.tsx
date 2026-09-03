@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { fetchSurveyResponses } from "../api/staffApi";
 import { STAFF_THEME } from "../model/theme";
-import type { ResponsePage } from "../model/types";
+import type { ResponseFilter, ResponsePage } from "../model/types";
 
 /**
  * The individual submissions, verbatim.
@@ -15,6 +15,8 @@ import type { ResponsePage } from "../model/types";
 
 interface SurveyResponsesProps {
   surveyKey: string;
+  /** The same filter the counts above use, so both describe one set. */
+  filter: ResponseFilter | null;
 }
 
 function formatWhen(value: string): string {
@@ -27,7 +29,7 @@ function formatWhen(value: string): string {
   });
 }
 
-export default function SurveyResponses({ surveyKey }: SurveyResponsesProps) {
+export default function SurveyResponses({ surveyKey, filter }: SurveyResponsesProps) {
   const [page, setPage] = useState<ResponsePage | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export default function SurveyResponses({ surveyKey }: SurveyResponsesProps) {
     setLoading(true);
     setError(null);
     try {
-      const result = await fetchSurveyResponses(surveyKey, { cursor });
+      const result = await fetchSurveyResponses(surveyKey, { cursor, filter });
       // Appending rather than replacing: paging through is reading further
       // down one list, not moving between pages.
       setPage((current) =>
@@ -49,7 +51,7 @@ export default function SurveyResponses({ surveyKey }: SurveyResponsesProps) {
     } finally {
       setLoading(false);
     }
-  }, [surveyKey]);
+  }, [surveyKey, filter]);
 
   useEffect(() => {
     setPage(null);

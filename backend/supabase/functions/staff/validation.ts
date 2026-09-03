@@ -1,5 +1,10 @@
 import { ApiError } from "../_shared/errors.ts";
-import type { RejectedImportLine, ResponseQuery, SubscriptionQuery } from "./types.ts";
+import type {
+  RejectedImportLine,
+  ResponseFilter,
+  ResponseQuery,
+  SubscriptionQuery,
+} from "./types.ts";
 
 // Same rule as the public endpoint, so an address staff can import is exactly
 // an address the public form would have accepted.
@@ -108,5 +113,35 @@ export function parseResponseQuery(url: URL): ResponseQuery {
     }
     limit = parsed;
   }
-  return { limit, cursor: url.searchParams.get("cursor") };
+  return { limit, cursor: url.searchParams.get("cursor"), filter: parseResponseFilter(url) };
+}
+
+/**
+ * Reads a results filter off the query string.
+ *
+ * Both halves or neither: a question with no value would mean "responses that
+ * answered this", which is not what the control offers, and a value with no
+ * question has nothing to match against. The question key is shape-checked
+ * because it reaches a jsonb path; whether it names a real question, and
+ * whether the value is one this survey offers, is settled against the question
+ * set where that knowledge lives.
+ */
+export function parseResponseFilter(url: URL): ResponseFilter | null {
+  const questionKey = url.searchParams.get("filter_question");
+  const value = url.searchParams.get("filter_value");
+  if (questionKey === null && value === null) return null;
+  if (questionKey === null || value === null) {
+    throw new ApiError(
+      400,
+      "VALIDATION_FAILED",
+      "A filter needs both filter_question and filter_value.",
+    );
+  }
+  if (!/^[a-z][a-z0-9_]*$/.test(questionKey)) {
+    throw new ApiError(400, "VALIDATION_FAILED", "filter_question is not a valid question key.");
+  }
+  if (!value.trim() || value.length > 200) {
+    throw new ApiError(400, "VALIDATION_FAILED", "filter_value is not a valid answer.");
+  }
+  return { questionKey, value };
 }

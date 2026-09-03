@@ -14,6 +14,7 @@ import {
   assertConsent,
   assertSurveyKey,
   parseImport,
+  parseResponseFilter,
   parseResponseQuery,
   parseSubscriptionQuery,
 } from "./validation.ts";
@@ -110,7 +111,9 @@ export async function handleStaffRequest(
     const survey = await repository.findSurvey(key);
     if (!survey) throw new ApiError(404, "NOT_FOUND", "That survey does not exist.");
     const rows = await repository.allResponses(key);
-    return jsonResponse(request, { results: summariseSurvey(survey, rows) });
+    return jsonResponse(request, {
+      results: summariseSurvey(survey, rows, parseResponseFilter(new URL(request.url))),
+    });
   }
 
   // The individual submissions, paginated and fetched only when opened. Kept

@@ -52,6 +52,24 @@ export interface Tally {
   count: number;
 }
 
+/** Folded singletons; `answers` is what opening the bucket reveals. */
+export interface OtherAnswers {
+  label: string;
+  count: number;
+  answers: string[];
+}
+
+export interface FilterableQuestion {
+  key: string;
+  prompt: string;
+  options: string[];
+}
+
+export interface ResponseFilter {
+  questionKey: string;
+  value: string;
+}
+
 /**
  * One question's results.
  *
@@ -66,6 +84,7 @@ export interface QuestionResult {
   answered: number;
   tallies?: Tally[];
   answers?: Tally[];
+  other?: OtherAnswers | null;
   distinctAnswers?: number;
 }
 
@@ -77,6 +96,8 @@ export interface SurveyResults {
   createdAt: string;
   closesAt: string | null;
   responseCount: number;
+  totalResponseCount: number;
+  filters: FilterableQuestion[];
   questions: QuestionResult[];
 }
 

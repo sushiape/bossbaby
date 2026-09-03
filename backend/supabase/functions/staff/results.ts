@@ -5,6 +5,8 @@ import type {
   ResponseRow,
   SurveyResults,
   SurveyRowForResults,
+  OtherAnswers,
+  ResponseFilter,
   TextAnswerGroup,
   Tally,
 } from "./types.ts";
@@ -30,6 +32,22 @@ import type {
 
 /** How many text answers the frequency list carries before "show all". */
 const TEXT_GROUP_LIMIT = 20;
+
+/**
+ * Answers given by exactly one person fold into "Other".
+ *
+ * Worth knowing what a count of 1 does and does not mean here. Grouping is
+ * exact-match on the trimmed, lowercased string -- nothing understands that
+ * "Passion fruit" and "Passionfruit" are one flavour, or that "something like
+ * passionfruit but less sweet" is about passionfruit at all. So a singleton is
+ * sometimes an unpopular answer and sometimes a differently-spelled popular
+ * one, and the two are indistinguishable from here.
+ *
+ * That is exactly why the bucket opens. A closed "Other" would hide both the
+ * one-off product note somebody bothered to type and the near-duplicate that
+ * reveals the grouping missed a merge.
+ */
+const OTHER_LABEL = "Other";
 
 type AnswerBlob = Record<string, unknown>;
 
@@ -91,6 +109,7 @@ function tallyChoice(question: Question, rows: ResponseRow[]): Tally[] {
  */
 function groupText(question: Question, rows: ResponseRow[]): {
   groups: TextAnswerGroup[];
+  other: OtherAnswers | null;
   distinct: number;
   answered: number;
 } {
@@ -129,8 +148,25 @@ function groupText(question: Question, rows: ResponseRow[]): {
       right.count - left.count || left.label.localeCompare(right.label)
     );
 
+  const repeated = ranked.filter((entry) => entry.count > 1);
+  const singletons = ranked.filter((entry) => entry.count === 1);
+
+  // Only fold when folding actually tidies anything. One lone singleton
+  // becomes "Other: 1", which hides a real answer behind a vaguer word and
+  // shortens nothing.
+  const fold = singletons.length > 1;
+
   return {
-    groups: ranked.slice(0, TEXT_GROUP_LIMIT),
+    groups: (fold ? repeated : ranked).slice(0, TEXT_GROUP_LIMIT),
+    other: fold
+      ? {
+        label: OTHER_LABEL,
+        count: singletons.length,
+        // Carried so the bucket can open. These are single answers, so the
+        // list is at most as long as the number of one-off responses.
+        answers: singletons.map((entry) => entry.label),
+      }
+      : null,
     distinct: ranked.length,
     answered,
   };
@@ -156,20 +192,26 @@ function answeredCount(question: Question, rows: ResponseRow[]): number {
  * the tab load instantly while the individual submissions stay behind a
  * separate paginated request.
  */
-export function summariseSurvey(survey: SurveyRowForResults, rows: ResponseRow[]): SurveyResults {
+export function summariseSurvey(
+  survey: SurveyRowForResults,
+  allRows: ResponseRow[],
+  filter: ResponseFilter | null = null,
+): SurveyResults {
   const questions = parseQuestions(survey.questions, survey.key);
+  const rows = applyFilter(questions, allRows, filter);
 
   const results: QuestionResult[] = questions.map((question) => {
     const answered = answeredCount(question, rows);
 
     if (question.type === "text") {
-      const { groups, distinct } = groupText(question, rows);
+      const { groups, other, distinct } = groupText(question, rows);
       return {
         key: question.key,
         type: question.type,
         prompt: question.prompt,
         answered,
         answers: groups,
+        other,
         distinctAnswers: distinct,
       };
     }
@@ -193,8 +235,56 @@ export function summariseSurvey(survey: SurveyRowForResults, rows: ResponseRow[]
     createdAt: survey.created_at,
     closesAt: survey.closes_at,
     responseCount: rows.length,
+    // The unfiltered total, so a narrowed view always says what it narrowed
+    // from. A count that silently halved is the failure this prevents.
+    totalResponseCount: allRows.length,
+    filters: describeFilters(questions),
     questions: results,
   };
+}
+
+/**
+ * Narrows a row set to responses whose answer to one question is one value.
+ *
+ * Generic rather than "female respondents": the filterable questions come from
+ * the question set, so this works for any single_choice question in any survey
+ * -- breaking results down by who answered is the general shape of the request,
+ * and hardcoding one demographic would need a new component for the next one.
+ *
+ * A filter naming a question the survey does not ask, or an option it does not
+ * offer, matches nothing rather than everything. Silently returning the full
+ * set would present unfiltered numbers as filtered ones.
+ */
+function applyFilter(
+  questions: Question[],
+  rows: ResponseRow[],
+  filter: ResponseFilter | null,
+): ResponseRow[] {
+  if (!filter) return rows;
+
+  const question = questions.find((candidate) => candidate.key === filter.questionKey);
+  if (!question || question.type !== "single_choice") return [];
+  if (!(question.options ?? []).includes(filter.value)) return [];
+
+  return rows.filter((row) => answersOf(row)[question.key] === filter.value);
+}
+
+/**
+ * Which questions a reader may filter by.
+ *
+ * single_choice only: one answer per response makes "responses where the answer
+ * was X" unambiguous. multi_choice would need to mean "picked X among others",
+ * which is a different question than this control implies, and text has no
+ * fixed set of values to offer.
+ */
+function describeFilters(questions: Question[]): { key: string; prompt: string; options: string[] }[] {
+  return questions
+    .filter((question) => question.type === "single_choice")
+    .map((question) => ({
+      key: question.key,
+      prompt: question.prompt,
+      options: question.options ?? [],
+    }));
 }
 
 /**

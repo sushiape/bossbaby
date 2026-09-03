@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { fetchSurveys, fetchSurveyResults } from "../api/staffApi";
 import { bespokeViewFor } from "../model/surveyViews";
 import { STAFF_THEME } from "../model/theme";
-import type { SurveyResults as Results, SurveySummary } from "../model/types";
+import type {
+  FilterableQuestion,
+  ResponseFilter,
+  SurveyResults as Results,
+  SurveySummary,
+} from "../model/types";
 import SurveyQuestionResult from "./SurveyQuestionResult";
 import SurveyResponses from "./SurveyResponses";
 
@@ -59,10 +64,62 @@ function SurveyPicker({
   );
 }
 
+/**
+ * Breaks results down by one single_choice answer.
+ *
+ * The questions offered come from the survey itself, so this is "filter by any
+ * question with fixed options" rather than a hardcoded demographic — the next
+ * breakdown someone asks for needs no new component.
+ */
+function ResultsFilter({
+  filters,
+  value,
+  onChange,
+}: {
+  filters: FilterableQuestion[];
+  value: ResponseFilter | null;
+  onChange: (next: ResponseFilter | null) => void;
+}) {
+  if (filters.length === 0) return null;
+
+  const selectedValue = value ? `${value.questionKey}::${value.value}` : "";
+
+  return (
+    <label className="flex items-center gap-2 text-xs text-black/60">
+      Filter
+      <select
+        value={selectedValue}
+        onChange={(event) => {
+          const raw = event.target.value;
+          if (!raw) return onChange(null);
+          const [questionKey, ...rest] = raw.split("::");
+          onChange({ questionKey, value: rest.join("::") });
+        }}
+        className="border rounded px-2 py-1 text-xs bg-white"
+        style={{ borderColor: STAFF_THEME.border }}
+      >
+        <option value="">Everyone</option>
+        {filters.map((question) => (
+          <optgroup key={question.key} label={question.prompt}>
+            {question.options.map((option) => (
+              <option key={option} value={`${question.key}::${option}`}>
+                {option}
+              </option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 export default function SurveyResults() {
   const [surveys, setSurveys] = useState<SurveySummary[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [results, setResults] = useState<Results | null>(null);
+  // Off by default: landing on a filtered view would show a subset without
+  // saying so. Narrowing stays a deliberate act.
+  const [filter, setFilter] = useState<ResponseFilter | null>(null);
   const [showResponses, setShowResponses] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,18 +137,24 @@ export default function SurveyResults() {
     })();
   }, []);
 
+  // A filter names a question of the survey it was chosen in, so changing
+  // survey clears it rather than carrying a key the new survey may not ask.
+  useEffect(() => {
+    setFilter(null);
+  }, [selected]);
+
   useEffect(() => {
     if (!selected) return;
     setResults(null);
     setShowResponses(false);
     void (async () => {
       try {
-        setResults(await fetchSurveyResults(selected));
+        setResults(await fetchSurveyResults(selected, filter));
       } catch (caught) {
         setError(caught instanceof Error ? caught.message : "Could not load results.");
       }
     })();
-  }, [selected]);
+  }, [selected, filter]);
 
   if (error) {
     return (
@@ -144,11 +207,24 @@ export default function SurveyResults() {
             >
               <h3 className="text-base font-semibold text-black">{results.title}</h3>
               <p className="text-xs text-black/50 mt-1">
-                {results.isOpen ? "Open" : "Closed"} · {results.responseCount} response
-                {results.responseCount === 1 ? "" : "s"} · started{" "}
-                {formatDate(results.createdAt)}
+                {results.isOpen ? "Open" : "Closed"} ·{" "}
+                {/* A narrowed view always says what it narrowed from, so a
+                    halved sample cannot pass for a whole one. */}
+                {filter
+                  ? `${results.responseCount} of ${results.totalResponseCount} responses`
+                  : `${results.responseCount} response${
+                    results.responseCount === 1 ? "" : "s"
+                  }`}{" "}
+                · started {formatDate(results.createdAt)}
                 {results.closesAt && ` · closed ${formatDate(results.closesAt)}`}
               </p>
+              <div className="mt-3">
+                <ResultsFilter
+                  filters={results.filters}
+                  value={filter}
+                  onChange={setFilter}
+                />
+              </div>
               {results.purpose && (
                 <p className="text-xs text-black/60 mt-2">{results.purpose}</p>
               )}
@@ -180,7 +256,9 @@ export default function SurveyResults() {
               >
                 {showResponses ? "Hide" : "Show"} individual responses
               </button>
-              {showResponses && selected && <SurveyResponses surveyKey={selected} />}
+              {showResponses && selected && (
+                <SurveyResponses surveyKey={selected} filter={filter} />
+              )}
             </div>
           </>
         )}

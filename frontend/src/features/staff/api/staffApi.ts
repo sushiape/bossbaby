@@ -4,6 +4,7 @@ import type {
   ResponsePage,
   StaffAccess,
   SubscriptionPage,
+  ResponseFilter,
   SurveyResults,
   SurveySummary,
 } from "../model/types";
@@ -92,9 +93,23 @@ export async function fetchSurveys(): Promise<SurveySummary[]> {
   return surveys;
 }
 
-export async function fetchSurveyResults(key: string): Promise<SurveyResults> {
+function filterParams(filter: ResponseFilter | null): URLSearchParams {
+  const query = new URLSearchParams();
+  if (filter) {
+    query.set("filter_question", filter.questionKey);
+    query.set("filter_value", filter.value);
+  }
+  return query;
+}
+
+export async function fetchSurveyResults(
+  key: string,
+  filter: ResponseFilter | null = null,
+): Promise<SurveyResults> {
+  const query = filterParams(filter);
+  const suffix = query.toString() ? `?${query}` : "";
   const { results } = await staffRequest<{ results: SurveyResults }>(
-    `/surveys/${encodeURIComponent(key)}/results`,
+    `/surveys/${encodeURIComponent(key)}/results${suffix}`,
   );
   return results;
 }
@@ -102,9 +117,11 @@ export async function fetchSurveyResults(key: string): Promise<SurveyResults> {
 /** The verbatim submissions, fetched only when that section is opened. */
 export async function fetchSurveyResponses(
   key: string,
-  params: { cursor?: string | null; limit?: number } = {},
+  params: { cursor?: string | null; limit?: number; filter?: ResponseFilter | null } = {},
 ): Promise<ResponsePage> {
-  const query = new URLSearchParams();
+  // The verbatim list follows the same filter as the counts above it: a table
+  // showing every response under filtered totals would read as the same set.
+  const query = filterParams(params.filter ?? null);
   if (params.cursor) query.set("cursor", params.cursor);
   if (params.limit) query.set("limit", String(params.limit));
   const suffix = query.toString() ? `?${query}` : "";

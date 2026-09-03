@@ -177,3 +177,80 @@ Deno.test("a malformed question set is a 500, not a wrong summary", () => {
     (error: unknown) => (error as { status?: number }).status === 500,
   );
 });
+
+Deno.test("folds one-off answers into an openable Other", () => {
+  const results = summariseSurvey(survey(), [
+    response({ flavour: "Mango" }, 1),
+    response({ flavour: "mango" }, 2),
+    response({ flavour: "Lychee" }, 3),
+    response({ flavour: "Elderflower" }, 4),
+  ]);
+
+  const flavour = questionResult(results, "flavour");
+  assert.deepEqual(flavour.answers, [{ label: "Mango", count: 2 }]);
+  assert.equal(flavour.other?.count, 2);
+  // The bucket opens: a singleton may be an unpopular answer or a
+  // differently-spelled popular one, and only the words tell them apart.
+  assert.deepEqual(flavour.other?.answers, ["Elderflower", "Lychee"]);
+});
+
+Deno.test("does not fold a single one-off answer", () => {
+  // "Other: 1" hides a real answer behind a vaguer word and shortens nothing.
+  const results = summariseSurvey(survey(), [
+    response({ flavour: "Mango" }, 1),
+    response({ flavour: "Mango" }, 2),
+    response({ flavour: "Lychee" }, 3),
+  ]);
+
+  const flavour = questionResult(results, "flavour");
+  assert.deepEqual(flavour.answers, [
+    { label: "Mango", count: 2 },
+    { label: "Lychee", count: 1 },
+  ]);
+  assert.equal(flavour.other, null);
+});
+
+Deno.test("filters every question to responses matching one answer", () => {
+  const rows = [
+    response({ size: "150ml", flavour: "Mango" }, 1),
+    response({ size: "150ml", flavour: "Yuzu" }, 2),
+    response({ size: "330ml", flavour: "Mango" }, 3),
+  ];
+  const results = summariseSurvey(survey(), rows, { questionKey: "size", value: "150ml" });
+
+  assert.equal(results.responseCount, 2);
+  // The unfiltered total stays visible, so a halved sample cannot pass for a
+  // whole one.
+  assert.equal(results.totalResponseCount, 3);
+  // Both surviving flavours are one-offs within the filtered set, so they fold
+  // -- the fold is computed after filtering, not before.
+  const flavour = questionResult(results, "flavour");
+  assert.deepEqual(flavour.answers, []);
+  assert.deepEqual(flavour.other?.answers, ["Mango", "Yuzu"]);
+});
+
+Deno.test("offers only single_choice questions as filters", () => {
+  const results = summariseSurvey(survey(), []);
+  assert.deepEqual(results.filters, [
+    { key: "size", prompt: "I would like to buy...", options: ["100ml", "150ml", "330ml"] },
+  ]);
+});
+
+Deno.test("a filter naming an unknown question or value matches nothing", () => {
+  const rows = [response({ size: "150ml" }, 1), response({ size: "100ml" }, 2)];
+
+  // Returning everything would present unfiltered numbers as filtered ones.
+  assert.equal(
+    summariseSurvey(survey(), rows, { questionKey: "nope", value: "150ml" }).responseCount,
+    0,
+  );
+  assert.equal(
+    summariseSurvey(survey(), rows, { questionKey: "size", value: "250ml" }).responseCount,
+    0,
+  );
+  // A text question has no fixed values to filter on.
+  assert.equal(
+    summariseSurvey(survey(), rows, { questionKey: "flavour", value: "Mango" }).responseCount,
+    0,
+  );
+});

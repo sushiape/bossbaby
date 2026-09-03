@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { STAFF_THEME } from "../model/theme";
 import type { QuestionResult, Tally } from "../model/types";
 
@@ -55,6 +56,7 @@ export default function SurveyQuestionResult({
   question,
   responseCount,
 }: SurveyQuestionResultProps) {
+  const [otherOpen, setOtherOpen] = useState(false);
   const isChoice = question.tallies !== undefined;
   const isText = question.answers !== undefined;
 
@@ -63,7 +65,15 @@ export default function SurveyQuestionResult({
   const multiSelect = isChoice &&
     (question.tallies ?? []).reduce((sum, entry) => sum + entry.count, 0) > question.answered;
 
-  const hidden = isText ? (question.distinctAnswers ?? 0) - (question.answers?.length ?? 0) : 0;
+  // Answers given by exactly one person are folded into an "Other" row that
+  // opens. Counted here so the row sits in the same bar list as the rest,
+  // rather than as a footnote beneath it.
+  const otherAsEntry: Tally[] = question.other
+    ? [{ label: question.other.label, count: question.other.count }]
+    : [];
+
+  const shown = (question.answers?.length ?? 0) + (question.other?.answers.length ?? 0);
+  const hidden = isText ? (question.distinctAnswers ?? 0) - shown : 0;
 
   return (
     <section className="py-4">
@@ -83,7 +93,28 @@ export default function SurveyQuestionResult({
 
       {isText && (
         <>
-          <CountList entries={question.answers ?? []} />
+          <CountList entries={[...(question.answers ?? []), ...otherAsEntry]} />
+          {question.other && (
+            <div className="mt-2">
+              <button
+                type="button"
+                onClick={() => setOtherOpen((open) => !open)}
+                aria-expanded={otherOpen}
+                className="text-xs text-black/60 hover:text-black underline underline-offset-2"
+              >
+                {otherOpen ? "Hide" : "Show"} what is in Other
+              </button>
+              {otherOpen && (
+                <ul className="mt-2 pl-4 space-y-1">
+                  {question.other.answers.map((answer) => (
+                    <li key={answer} className="text-sm text-black/70 list-disc">
+                      {answer}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
           {hidden > 0 && (
             <p className="text-xs text-black/50 mt-2">
               {hidden} less common answer{hidden === 1 ? "" : "s"} not shown — open

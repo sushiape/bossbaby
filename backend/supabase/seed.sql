@@ -178,7 +178,7 @@ from (values
   ('bbbbbbbb-0000-4000-b000-000000000012',
    '{"gender":"Female","size":"150ml","flavour":"Lychee","drinks":["Glow Up, Babe"]}', 12),
   ('bbbbbbbb-0000-4000-b000-000000000013',
-   '{"gender":"Prefer not to say","size":"100ml","flavour":"Yuzu","drinks":["Just Chill, Babe"]}', 13),
+   '{"gender":"Diverse","size":"100ml","flavour":"Yuzu","drinks":["Just Chill, Babe"]}', 13),
   ('bbbbbbbb-0000-4000-b000-000000000014',
    '{"gender":"Female","size":"150ml","flavour":"Mango","drinks":["Power Up, Babe","Glow Up, Babe","Just Chill, Babe"]}', 14),
   ('bbbbbbbb-0000-4000-b000-000000000015',

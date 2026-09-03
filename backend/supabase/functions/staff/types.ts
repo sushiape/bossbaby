@@ -80,6 +80,30 @@ export interface TextAnswerGroup {
 }
 
 /**
+ * The folded singletons. `answers` carries what is inside so the bucket can be
+ * opened: an exact-match grouping cannot tell an unpopular answer from a
+ * differently-spelled popular one, and both are worth seeing.
+ */
+export interface OtherAnswers {
+  label: string;
+  count: number;
+  answers: string[];
+}
+
+/** Narrow results to responses answering one single_choice question one way. */
+export interface ResponseFilter {
+  questionKey: string;
+  value: string;
+}
+
+/** A question results may be broken down by, and the values it offers. */
+export interface FilterableQuestion {
+  key: string;
+  prompt: string;
+  options: string[];
+}
+
+/**
  * One question's results. Choice questions carry tallies, text questions carry
  * grouped answers; the frontend switches on `type` and renders a plain fallback
  * for a type it does not know, so a fourth question type degrades rather than
@@ -93,6 +117,8 @@ export interface QuestionResult {
   answered: number;
   tallies?: Tally[];
   answers?: TextAnswerGroup[];
+  /** Singletons folded together, or null when folding would tidy nothing. */
+  other?: OtherAnswers | null;
   /** Distinct text answers before truncation, so the tail is visible as a number. */
   distinctAnswers?: number;
 }
@@ -105,6 +131,9 @@ export interface SurveyResults {
   createdAt: string;
   closesAt: string | null;
   responseCount: number;
+  /** Responses before filtering, so a narrowed view says what it narrowed from. */
+  totalResponseCount: number;
+  filters: FilterableQuestion[];
   questions: QuestionResult[];
 }
 
@@ -121,6 +150,7 @@ export interface SurveySummary {
 export interface ResponseQuery {
   limit: number;
   cursor: string | null;
+  filter: ResponseFilter | null;
 }
 
 export interface ResponsePage {

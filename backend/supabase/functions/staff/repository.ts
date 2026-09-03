@@ -170,6 +170,13 @@ export function createSurveyResultsRepository(client: SupabaseClient): SurveyRes
         .limit(query.limit + 1);
 
       if (query.cursor) request = request.lt("created_at", query.cursor);
+      // Filtering inside the jsonb blob rather than in code, so total and
+      // nextCursor describe the filtered set: paging a list that was trimmed
+      // after the query would report counts for rows the reader never sees.
+      // The key and value are passed as values, never interpolated.
+      if (query.filter) {
+        request = request.eq(`answers->>${query.filter.questionKey}`, query.filter.value);
+      }
 
       const { data, error, count } = await request;
       if (error) throw error;
