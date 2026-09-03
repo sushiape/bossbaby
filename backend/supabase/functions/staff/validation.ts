@@ -1,5 +1,5 @@
 import { ApiError } from "../_shared/errors.ts";
-import type { RejectedImportLine, SubscriptionQuery } from "./types.ts";
+import type { RejectedImportLine, ResponseQuery, SubscriptionQuery } from "./types.ts";
 
 // Same rule as the public endpoint, so an address staff can import is exactly
 // an address the public form would have accepted.
@@ -85,4 +85,28 @@ export function parseSubscriptionQuery(url: URL): SubscriptionQuery {
 
   const search = url.searchParams.get("search")?.trim().toLowerCase() || null;
   return { search, limit, cursor: url.searchParams.get("cursor") };
+}
+
+// Same shape the surveys table's CHECK constraint enforces, so a key that
+// could not exist is rejected before it reaches the database.
+const SURVEY_KEY_PATTERN = /^[a-z][a-z0-9_]*$/;
+
+export function assertSurveyKey(value: string): string {
+  if (!SURVEY_KEY_PATTERN.test(value)) {
+    throw new ApiError(400, "VALIDATION_FAILED", "Survey key is not valid.");
+  }
+  return value;
+}
+
+export function parseResponseQuery(url: URL): ResponseQuery {
+  const rawLimit = url.searchParams.get("limit");
+  let limit = DEFAULT_LIMIT;
+  if (rawLimit !== null) {
+    const parsed = Number(rawLimit);
+    if (!Number.isInteger(parsed) || parsed < 1 || parsed > MAX_LIMIT) {
+      throw new ApiError(400, "VALIDATION_FAILED", `limit must be between 1 and ${MAX_LIMIT}.`);
+    }
+    limit = parsed;
+  }
+  return { limit, cursor: url.searchParams.get("cursor") };
 }

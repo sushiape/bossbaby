@@ -1,5 +1,12 @@
 import { currentStaffSession, requireStaffConfig } from "./staffClient";
-import type { ImportSummary, StaffAccess, SubscriptionPage } from "../model/types";
+import type {
+  ImportSummary,
+  ResponsePage,
+  StaffAccess,
+  SubscriptionPage,
+  SurveyResults,
+  SurveySummary,
+} from "../model/types";
 
 interface ErrorPayload {
   error?: { code?: string; message?: string; details?: Record<string, string> };
@@ -78,4 +85,28 @@ export async function importSubscriptions(emails: string): Promise<ImportSummary
 
 export async function removeSubscription(id: string): Promise<void> {
   await staffRequest(`/waitlist/subscriptions/${encodeURIComponent(id)}`, { method: "DELETE" });
+}
+
+export async function fetchSurveys(): Promise<SurveySummary[]> {
+  const { surveys } = await staffRequest<{ surveys: SurveySummary[] }>("/surveys");
+  return surveys;
+}
+
+export async function fetchSurveyResults(key: string): Promise<SurveyResults> {
+  const { results } = await staffRequest<{ results: SurveyResults }>(
+    `/surveys/${encodeURIComponent(key)}/results`,
+  );
+  return results;
+}
+
+/** The verbatim submissions, fetched only when that section is opened. */
+export async function fetchSurveyResponses(
+  key: string,
+  params: { cursor?: string | null; limit?: number } = {},
+): Promise<ResponsePage> {
+  const query = new URLSearchParams();
+  if (params.cursor) query.set("cursor", params.cursor);
+  if (params.limit) query.set("limit", String(params.limit));
+  const suffix = query.toString() ? `?${query}` : "";
+  return staffRequest<ResponsePage>(`/surveys/${encodeURIComponent(key)}/responses${suffix}`);
 }

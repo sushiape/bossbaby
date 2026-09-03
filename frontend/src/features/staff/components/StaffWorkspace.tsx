@@ -3,6 +3,7 @@ import { availableTabs, landingTab } from "../model/access";
 import type { StaffAccess, WorkspaceTab } from "../model/types";
 import { STAFF_THEME } from "../model/theme";
 import MyAccess from "./MyAccess";
+import SurveyResults from "./SurveyResults";
 import WaitlistSubscriptions from "./WaitlistSubscriptions";
 
 interface StaffWorkspaceProps {
@@ -12,6 +13,7 @@ interface StaffWorkspaceProps {
 
 const TAB_LABELS: Record<WorkspaceTab, string> = {
   waitlist: "Waitlist",
+  surveys: "Surveys",
   access: "My access",
 };
 
@@ -56,6 +58,7 @@ export default function StaffWorkspace({ access, onSignOut }: StaffWorkspaceProp
       <main className="max-w-5xl mx-auto px-6 py-8">
         {activeTab === "access" && <MyAccess access={access} onSignOut={onSignOut} />}
         {activeTab === "waitlist" && <WaitlistSubscriptions access={access} />}
+        {activeTab === "surveys" && <SurveyResults />}
       </main>
     </div>
   );
