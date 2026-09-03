@@ -13,6 +13,7 @@ export function hasCapability(access: StaffAccess | null, capability: string): b
 export function availableTabs(access: StaffAccess | null): WorkspaceTab[] {
   const tabs: WorkspaceTab[] = [];
   if (hasCapability(access, "waitlist.read")) tabs.push("waitlist");
+  if (hasCapability(access, "surveys.read")) tabs.push("surveys");
   tabs.push("access");
   return tabs;
 }
